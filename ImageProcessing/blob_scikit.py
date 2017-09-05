@@ -65,16 +65,21 @@ def pengzhang (original_bw, dilate):
     io.show()
     return image_copy
 
-image_mask= masking(img_src, 5)
-image_dilate = dilating(image_mask, 3)
-image_pengzhang = pengzhang(img_src, image_dilate)
+# image_mask= masking(img_src, 5)
+# image_dilate = dilating(image_mask, 3)
+# image_pengzhang = pengzhang(img_src, image_dilate)
+#
+#
+#
 
 
+#blobs_log = blob_log(image_pengzhang, max_sigma=30, num_sigma=10, threshold=.1)
+blobs_log = blob_log(img_src, max_sigma=30, threshold=0.1)
+sigma = blobs_log[:, 2]
+sigma_img = np.reshape(sigma, newshape=img_src.shape)
 
-
-
-blobs_log = blob_log(image_pengzhang, max_sigma=30, num_sigma=10, threshold=.1)
-
+io.imshow(sigma_img)
+io.show()
 # Compute radii in the 3rd column.
 blobs_log[:, 2] = blobs_log[:, 2] * sqrt(2)
 

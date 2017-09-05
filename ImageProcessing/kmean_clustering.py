@@ -5,6 +5,8 @@ from skimage import io, img_as_ubyte
 from matplotlib import pyplot as plt
 from skimage import measure
 from scipy import ndimage
+import argparse
+import sys
 
 class Segment:
     def __init__(self, segments=5):
@@ -23,16 +25,12 @@ class Segment:
         segmented_image = res.reshape((image.shape))
         return label.reshape((image.shape[0], image.shape[1])),segmented_image.astype(np.uint8)
 
-    def extractComponent(self, image, label_image):
+    def kmeans_region_extractor(self, image, label_image):
         image_segmented = np.zeros(image.shape)
-        for i in range(5):
+        for i in range(3):
             image_segmented[label_image == i] = 255- i*60
-        #image_segmented[label_image ==2 ] = 255
-
         return image_segmented
-        # component = np.ones(image.shape, np.uint8)
-        # component[label_image == label] = image[label_image == label]
-        # return component
+
     def connectedComponent(self, binary_image, connectivity):
         #img_grey = cv2.cvtColor(binary_image, cv2.COLOR_BGR2GRAY)
 
@@ -59,18 +57,33 @@ class Segment:
         max_area_img = np.zeros(unit8_img.shape)
         max_area_img[labels==(max_fg_area_index+1)] = 255
 
-        return max_area_img, num_labels, stats, max_fg_area_index
+        return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
 
     def sure_fg(self, image):
-        kernel = np.ones((5,5), np.uint8)
-        erosion = cv2.erode(image, kernel, iterations=1)
+        '''
+        :param image: single channel image
+        :return: binary image. choose the largest connected component and
+        find its sure foreground
+        '''
+        kernel = np.ones((1,1), np.uint8) # 5,5
+        #erosion = cv2.erode(image, kernel, iterations=1)
+        erosion= cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
         seg.disp_img_with_title(erosion,"erosion-find_sure_fg")
         sure_fg, num_labels, stat, max_fg_index = seg.connectedComponent(erosion, 8)
-        seg.disp_img_with_title(sure_fg, "sure_fg")
-        return sure_fg
+        print("sure fg shape", sure_fg.shape)
+        dist_transform = cv2.distanceTransform(sure_fg, cv2.DIST_L2, 5)
+        ret, sure_fg_1= cv2.threshold(dist_transform, 0.1*dist_transform.max(), 255, 0)
+        seg.disp_img_with_title(sure_fg_1, "sure_fg")
+        return sure_fg, sure_fg_1
 
     def sure_bg(self, image):
-        kernel = np.ones((1,1), np.uint8)
+        '''
+
+        :param image: single channel image
+        :return: binary image. choose the largest connected component and
+        find its sure background
+        '''
+        kernel = np.ones((2,2), np.uint8)
         erosion = cv2.erode(image, kernel, iterations=1)
         seg.disp_img_with_title(erosion,"erosion-find_sure_bg")
 
@@ -82,6 +95,12 @@ class Segment:
         return sure_bg
 
     def watershed_markers(self, sure_fg, unknown):
+        '''
+
+        :param sure_fg: sure_fg binary, single channel image
+        :param unknown: unknown region contains edge of crystal (binary, single channel)
+        :return: arrays of markers that marks the regions
+        '''
         # Marker labelling
         ret, markers = cv2.connectedComponents(sure_fg)
         # Add one to all labels so that sure background is not 0, but 1
@@ -101,54 +120,67 @@ class Segment:
         image_segmented[label_image == 2] = 255
         return image_segmented
 
-    def region_prop(self, image):
-        # label_img = measure.label(image)
-        str_3D=np.array([[[0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0]],
+    # def region_prop(self, image):
+    #     # label_img = measure.label(image)
+    #     str_3D=np.array([[[0, 0, 0],
+    #     [0, 0, 0],
+    #     [0, 0, 0]],
+    #
+    #     [[0, 1, 0],
+    #         [1, 1, 1],
+    #     [0, 1, 0]],
+    #
+    #     [[0, 0, 0],
+    #         [0, 0, 0],
+    #     [0, 0, 0]]], dtype='uint8')
+    #
+    #     str_2D = np.array( [[1,1,1],
+    #          [1,1,1],
+    #          [1,1,1]])
+    #
+    #     label_img, num_of_features = ndimage.measurements.label(image, str_2D)
+    #     print("num of features ", num_of_features)
+    #     regions = measure.regionprops(label_img)
+    #     region_area = []
+    #     for region in regions:
+    #         print(region.coords)
+    #         # [_, _, label] = region.coords[0]
+    #         region_area.append(region.area)
+    #         # if label == 2:
+    #         #     region_area.append(region.area)
+    #
+    #     max_value = max(region_area)
+    #     max_index = region_area.index(max_value)
+    #     print(max_value, max_index)
+    #     max_region = regions[max_index]
+    #
+    #     # (height, width) = im.shape
+    #     # mask = np.zeros((height, width), )
+    #
+    #     result = np.zeros(image.shape, np.uint8)
+    #     print("max region 's coords", max_region.coords)
+    #     for (row, col) in max_region.coords:
+    #         result[row, col] = image[row, col]
+    #     return result
+    #     #
+    #     # for region in regions:
+    #     #     for prop in region:
+    #     #         print(prop, region[prop])
+    #
 
-        [[0, 1, 0],
-            [1, 1, 1],
-        [0, 1, 0]],
-
-        [[0, 0, 0],
-            [0, 0, 0],
-        [0, 0, 0]]], dtype='uint8')
-
-        str_2D = np.array( [[1,1,1],
-             [1,1,1],
-             [1,1,1]])
-
-        label_img, num_of_features = ndimage.measurements.label(image, str_2D)
-        print("num of features ", num_of_features)
-        regions = measure.regionprops(label_img)
-        region_area = []
-        for region in regions:
-            print(region.coords)
-            # [_, _, label] = region.coords[0]
-            region_area.append(region.area)
-            # if label == 2:
-            #     region_area.append(region.area)
-
-        max_value = max(region_area)
-        max_index = region_area.index(max_value)
-        print(max_value, max_index)
-        max_region = regions[max_index]
-
-        # (height, width) = im.shape
-        # mask = np.zeros((height, width), )
-
-        result = np.zeros(image.shape, np.uint8)
-        print("max region 's coords", max_region.coords)
-        for (row, col) in max_region.coords:
-            result[row, col] = image[row, col]
-        return result
-        #
-        # for region in regions:
-        #     for prop in region:
-        #         print(prop, region[prop])
     def thresholding(self, image, lower_val, upper_val):
-        img_copy = copy.copy(image)
+        '''
+        Do thresholding to extract pixels within range.
+        Do image enhancement with closing, dilation and erosion
+
+        TODO: add closing, dilation and erosion kernel size and iterations num
+
+        :param image: grayscale 3-channel image
+        :param lower_val: lower threshold value
+        :param upper_val: upper threshold value
+        :return: binary image (single channel)
+        '''
+        img_copy = copy.copy(image)[:, :, 0]
 
         lower_mask = img_copy<lower_val
         img_copy[lower_mask] = 0
@@ -158,15 +190,16 @@ class Segment:
         img_copy[upper_mask] =0
         seg.disp_img_with_title(img_copy, "upper mask")
 
-        unit8_img = img_as_ubyte(img_copy[:, :, 0])
+        # change to single channel
+        unit8_img = img_as_ubyte(img_copy)
         ret, thresh = cv2.threshold(unit8_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        seg.disp_img_with_title(thresh, 'theshold + ostu')
+        seg.disp_side_by_side(img_copy, thresh, 'after mask','theshold + ostu')
 
-        kernel = np.ones((3,3), np.uint8)
-
+        #remove the inner holes
         closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE,
                                    kernel=np.ones((2,2), np.uint8))
         seg.disp_img_with_title(closing, 'closing')
+
         dilation = cv2.dilate(thresh, kernel=np.ones((2,2), np.uint8), iterations=1)
         seg.disp_img_with_title(dilation, "dilation")
 
@@ -190,8 +223,7 @@ class Segment:
         plt.show()
 
 if __name__ == "__main__":
-    import argparse
-    import sys
+
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", required=True,
                     help="Path to the image")
@@ -201,7 +233,6 @@ if __name__ == "__main__":
 
     image = cv2.imread(args["image"])
 
-
     if len(sys.argv) == 3:
         seg = Segment()
         label, result = seg.kmeans(image)
@@ -209,22 +240,14 @@ if __name__ == "__main__":
         seg = Segment(args["segments"])
         label, result = seg.kmeans(image)
 
-    segmented_img = result
-    binary_crystal_3D = seg.extractComponent(result, label)
-    # io.imshow(binary_crystal_3D, cmap='gray')
-    # io.show()
+    binary_crystal_3D = seg.kmeans_region_extractor(result, label)
     seg.disp_side_by_side(image, binary_crystal_3D, "original", "kmeans")
-
-    thresh = seg.thresholding(image, 70, 100)
-    distance = cv2.distanceTransform(thresh, cv2.DIST_L2, 5)
-    seg.disp_img_with_title(distance, 'distance transform')
 
     binary_crystal = seg.extractCrystal(result[:, :, 0], label)
     io.imshow(binary_crystal)
     io.show()
 
     kernel = np.ones((3, 3), np.uint8)
-
     # closing = cv2.morphologyEx(binary_crystal, cv2.MORPH_CLOSE, kernel)
     # io.imshow(closing)
     # io.show()
@@ -238,49 +261,46 @@ if __name__ == "__main__":
     # io.imshow(dilation)
     # io.show()
 
-   # crystal, num_labels, stat, max_fg_index = seg.connectedComponent(erosion, 8)
+    # crystal, num_labels, stat, max_fg_index = seg.connectedComponent(erosion, 8)
 
+    thresh = seg.thresholding(image, 70, 110)
+    # distance = cv2.distanceTransform(thresh, cv2.DIST_L2, 5)
+    # seg.disp_img_with_title(distance, 'distance transform')
+
+    # set the holes to white
+    img = copy.copy(image)
+    img[image<10] = 255
+    seg.disp_img_with_title(img, "image without holes")
+    laplacian = cv2.Laplacian(img, cv2.CV_8U)
+    laplacian_1D = np.uint8(laplacian)[:, :, 0]
+    # ret, laplacian_thresh = cv2.threshold(laplacian_1D, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    # plt.imshow(laplacian_thresh, cmap='gray')
+    # plt.show()
+
+    label2, result2 = seg.kmeans(laplacian)
+    laplacian_kmean = seg.kmeans_region_extractor(result2, label2)
+    seg.disp_img_with_title(laplacian_kmean, "laplacian kmean")
     # sure_fg = seg.sure_fg(opening)
-    sure_fg= seg.sure_fg(thresh)
+    sure_fg, sure_fg_1= seg.sure_fg(laplacian_kmean)
     sure_fg = np.uint8(sure_fg)
+    sure_fg_1 = np.uint8(sure_fg_1)
     # sure_bg = seg.sure_bg(opening)
     sure_bg = seg.sure_bg(thresh)
     sure_bg = np.uint8(sure_bg)
-    unknown = cv2.subtract(sure_bg, sure_fg)
+    unknown = cv2.subtract(sure_fg, sure_fg_1)
     unknown = np.uint8(unknown)
     seg.disp_img_with_title(unknown,"unknown_region")
     markers = seg.watershed_markers(np.uint8(sure_fg), unknown)
 
-    # markers = np.uint32(markers)
-    binary_crystal_3D = seg.extractCrystal_3D(result, label)
-    markers = cv2.watershed(binary_crystal_3D, markers)
-    print(markers)
-
+    # # markers = np.uint32(markers)
+    # binary_crystal_3D = seg.extractCrystal_3D(result, label)
+    # markers = cv2.watershed(binary_crystal_3D, markers)
+    # print(markers)
+    markers = cv2.watershed(image, markers)
     image[markers == -1] = [255, 0, 0]
-    io.imshow(image)
-    io.show()
+    seg.disp_side_by_side(markers, image, "watershed marker", "watershed boundary")
+    seg.disp_side_by_side(sure_fg, markers, "sure_fg", "watershed marker")
 
-    # result_img = seg.extractComponent(result, label, 2) #2D image
-    # max_area_img = seg.region_prop(result_img[:, :, 0])
-    # plt.imshow(max_area_img, cmap=plt.get_cmap('gray'))
-    # plt.show()
-    #
-    # titles = ["extracted", "max area"]
-    # images = [result_img, max_area_img]
-    # for i in range(2):
-    #     plt.subplot(1, 2, i+1), plt.imshow(images[i], cmap = 'gray')
-    #     plt.title(titles[i])
-    #     plt.xticks([ ]), plt.yticks([])
-    # plt.show()
-    # titles = ["segmented", "extracted"]
-    # images = [segmented_img, result_img]
-    #
-    # for i in range(2):
-    #     plt.subplot(2, 1, i + 1), plt.imshow(images[i], 'gray')
-    #     plt.title(titles[i])
-    #     plt.xticks([]), plt.yticks([])
-    # plt.show()
 
 
 #python3 kmean_clustering.py -i /home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.png -n 3
-cv2.distanceTransform()

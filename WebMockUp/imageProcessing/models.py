@@ -10,3 +10,7 @@ class Image (models.Model):
 
     def __str__(self):
         return self.imageName + '.' +self.imageType
+
+class Post (models.Model):
+    title = models.CharField(max_length=100)
+    text = models.CharField(max_length=100)
