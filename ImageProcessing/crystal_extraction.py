@@ -33,7 +33,7 @@ class Segment:
         segmented_image = res.reshape((image.shape))
         return label.reshape((image.shape[0], image.shape[1])),segmented_image.astype(np.uint8)
 
-    def connectedComponent(self, binary_image, connectivity):
+    def extract_connected_component(self, binary_image, connectivity, label=None):
         '''
 
         :param binary_image:
@@ -43,7 +43,7 @@ class Segment:
         '''
         uint8_img = np.uint8(binary_image)
         # Perform operation on binary image
-        output = cv2.connectedComponentsWithStats(binary_image, connectivity, cv2.CV_32S)
+        output = cv2.connectedComponentsWithStats(binary_image, labels=label, connectivity=connectivity, ltype=cv2.CV_32S)
         # Get the results
         num_labels = output[0]
 
@@ -62,7 +62,8 @@ class Segment:
         max_area_img = np.zeros(uint8_img.shape)
         max_area_img[labels == max_fg_area_index] = 255
 
-        return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
+        # return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
+        return np.uint8(max_area_img)
 
     def kmeans_image(self, image, label_image):
         '''
@@ -230,6 +231,19 @@ class Segment:
         self.disp_multiple_image(image_arr, title_arr)
         return
 
+    def label_of_max_watershed_area(self, watershed_result_marker):
+        vectorized_marker = watershed_result_marker.reshape(-1)
+        unique, counts = np.unique(vectorized_marker, return_counts=True)
+        print(np.asarray((unique, counts)).T)
+        crystal_area_labels= unique[2:] #skip label -1 and 1
+        crystal_areas = counts[2:]
+        crystal_info = np.asarray((crystal_area_labels, crystal_areas)).T
+        print(crystal_info)
+        sorted_by_area = sorted(crystal_info, key=lambda tup: tup[1], reverse=True)
+        print (sorted_by_area)
+        print (sorted_by_area[0][0])
+        return sorted_by_area[0][0]
+
 
 if __name__ == "__main__":
 
@@ -313,6 +327,7 @@ if __name__ == "__main__":
     io.imshow(image_copy)
     io.show()
 
+
     kmean_image_3D = seg.kmeans_image(laplacian_3D, label)
     markers_kmean = cv2.watershed(kmean_image_3D, copy.copy(markers))
     image_copy = copy.copy(image)
@@ -320,4 +335,34 @@ if __name__ == "__main__":
     io.imshow(image_copy)
     io.show()
     seg.disp_side_by_side(markers_laplacian, markers_kmean, "marker with laplacian image", "marker with kmean image")
+
+
+    crystals_mask = np.zeros(image.shape)
+    crystals_mask[markers_laplacian>1] = 255 #markers =1 means background
+    crystals_mask = np.uint8(crystals_mask)
+
+    image_copy = copy.copy(image)
+    image_copy[crystals_mask!=255] = 0
+    seg.disp_side_by_side(crystals_mask, image_copy, "crystal mask", "all crystals")
+
+    ret, markers2= cv2.connectedComponents(kmean_crystal_mask)
+    crystals_mask_kmean = np.zeros(image.shape)
+    crystals_mask_kmean[markers2>0] = 255
+    crystals_mask_kmean = np.uint8(crystals_mask_kmean)
+
+    image_copy = copy.copy(image)
+    image_copy[crystals_mask_kmean!= 255] = 0
+    seg.disp_side_by_side(crystals_mask_kmean, image_copy, "crystal mask kmean", "all crystals")
+
+    max_area_crystal_label = seg.label_of_max_watershed_area(markers_laplacian)
+    max_area_crystal_mask = np.zeros(image.shape)
+    max_area_crystal_mask[markers_laplacian==max_area_crystal_label] =255
+    image_copy = copy.copy(image)
+    image_copy[max_area_crystal_mask != 255] = 0
+    seg.disp_side_by_side(image, image_copy, "original image", "biggest crystal")
+
+    max_area_crystal_kmean = seg.extract_connected_component(kmean_crystal_mask, 8)
+    image_copy = copy.copy(image)
+    image_copy[max_area_crystal_kmean != 255] = 0
+    seg.disp_side_by_side(image, image_copy, "original image", "biggest crystal (by kmean)")
 
