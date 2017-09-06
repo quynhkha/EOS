@@ -139,6 +139,13 @@ class Segment:
             plt.xticks([ ]), plt.yticks([])
         plt.show()
 
+    def disp_multiple_image(self, image_arr, title_arr):
+        for i in range(len(image_arr)):
+            plt.subplot(3, np.floor(len(image_arr)/3), i+1), plt.imshow(image_arr[i], cmap="gray")
+            plt.title(title_arr[i])
+            plt.xticks([]), plt.yticks([])
+        plt.show()
+
     def disp_img_with_title(self, image, title):
         plt.subplot(1, 1, 1), plt.imshow(image, cmap='gray')
         plt.title(title)
@@ -163,6 +170,63 @@ class Segment:
         laplacian_abs = np.absolute(laplacian)
         laplacian_uint8 = np.uint8(laplacian_abs)
         return laplacian_uint8
+
+    def various_closing(self, image, num_of_kernels, step_size, max_iteration):
+        image_arr =[]
+        title_arr = []
+        for i in range(0, num_of_kernels):
+            for j in range (max_iteration):
+                kernel_size = (i + 1) * step_size
+                closing_ij = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel=np.ones((kernel_size, kernel_size), np.uint8), iterations=(j+1))
+                image_arr.append(closing_ij)
+                title_ij = "kernel size " + str(kernel_size) + " iteration " + str(j+1)
+                title_arr.append(title_ij)
+
+        self.disp_multiple_image(image_arr, title_arr)
+        return
+
+    def various_opening(self, image, num_of_kernels, step_size, max_iteration):
+        image_arr =[]
+        title_arr = []
+        for i in range(0, num_of_kernels):
+            for j in range (max_iteration):
+                kernel_size = (i + 1) * step_size
+                opening_ij = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=(j+1))
+                image_arr.append(opening_ij)
+                title_ij = "kernel size " + str(kernel_size) + " iteration " + str(j+1)
+                title_arr.append(title_ij)
+
+        self.disp_multiple_image(image_arr, title_arr)
+        return
+
+    def various_erosion(self, image, num_of_kernels, step_size, max_iteration):
+        image_arr = []
+        title_arr = []
+        for i in range(0, num_of_kernels):
+            for j in range(max_iteration):
+                kernel_size = (i + 1) * step_size
+                erosion_ij = cv2.erode(image, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=(j+1))
+                image_arr.append(erosion_ij)
+                title_ij = "kernel size " + str(kernel_size) + " iteration " + str(j + 1)
+                title_arr.append(title_ij)
+
+        self.disp_multiple_image(image_arr, title_arr)
+        return
+
+    def various_dilation(self, image, num_of_kernels, step_size, max_iteration):
+        image_arr = []
+        title_arr = []
+        for i in range(0, num_of_kernels):
+            for j in range(max_iteration):
+                kernel_size = (i + 1) * step_size
+                dilation_ij = cv2.dilate(image, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=(j+1))
+                image_arr.append(dilation_ij)
+                title_ij = "kernel size " + str(kernel_size) + " iteration " + str(j + 1)
+                title_arr.append(title_ij)
+
+        self.disp_multiple_image(image_arr, title_arr)
+        return
+
 
 if __name__ == "__main__":
 
@@ -189,5 +253,18 @@ if __name__ == "__main__":
     kmean_crystal_mask = seg.extract_kmeans_binary(image, label, 0)
     seg.disp_side_by_side(image, kmean_crystal_mask, "image", "kmean crystal mask")
 
-    ret, thresh = cv2.threshold(laplacian_uint8, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-    seg.disp_side_by_side(kmean_crystal_mask, thresh, "kmean crystal mask", "laplacian thresholding")
+    # ret, thresh = cv2.threshold(laplacian_uint8, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    # seg.disp_side_by_side(kmean_crystal_mask, thresh, "kmean crystal mask", "laplacian thresholding")
+
+
+    seg.various_opening(kmean_crystal_mask, num_of_kernels=5, step_size=1, max_iteration=3)
+    # seg.various_erosion(kmean_crystal_mask, num_of_kernels=4, step_size=2, max_iteration=3)
+    # seg.various_dilation(kmean_crystal_mask, num_of_kernels=4, step_size=2, max_iteration=3)
+
+    opening = cv2.morphologyEx(kmean_crystal_mask, cv2.MORPH_OPEN, kernel=np.ones((2,2), np.uint8), iterations= 3)
+    seg.disp_side_by_side(kmean_crystal_mask, opening, "kmean crystal mask", "opening")
+    seg.various_closing(opening, num_of_kernels=5, step_size=1, max_iteration=3)
+    #closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel= np.ones())
+
+
+
