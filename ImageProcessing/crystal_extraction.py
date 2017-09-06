@@ -19,7 +19,7 @@ class Segment:
         :param image: 2D or 3D image
         :return: segmented image same dims as original image (with n segments)
         '''
-        image = cv2.GaussianBlur(image, (3,3), 0)
+        image = cv2.GaussianBlur(image, (5,5), 0)
         if (len(image.shape) == 3):
             vectorized = image.reshape(-1, 3)
         else:
@@ -64,7 +64,7 @@ class Segment:
 
         return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
 
-    def show_kmeans_regions(self, image, label_image):
+    def kmeans_image(self, image, label_image):
         '''
 
         :param image:
@@ -72,7 +72,7 @@ class Segment:
         :return: uint8 image with dif grayscale value for each kmean region
         '''
         image_segmented = np.zeros(image.shape, dtype= np.uint8)
-        num_segment = len(label_image)
+        num_segment = self.segments
         for i in range(num_segment):
             gray_level_increment = np.floor(255/num_segment)
             image_segmented[label_image == i] = i*gray_level_increment
@@ -159,17 +159,20 @@ class Segment:
             img_copy = copy.copy(image)
         return img_copy
 
-    def laplacian(self, image):
+    def laplacian(self, image, output_dim):
         '''
 
         :param image: 2D or 3D gray image
-        :return: uint8, 2D laplacian image
+        :return: uint8, 2D/3D laplacian image
         '''
-        img_1D = self.two_channel_grayscale(image)
-        laplacian = cv2.Laplacian(img_1D, cv2.CV_64F)
+        if (output_dim==2):
+            img = self.two_channel_grayscale(image)
+        else:
+            img = copy.copy(image)
+        laplacian = cv2.Laplacian(img, cv2.CV_64F)
         laplacian_abs = np.absolute(laplacian)
-        laplacian_uint8 = np.uint8(laplacian_abs)
-        return laplacian_uint8
+        laplacian_uint8_filtered = np.uint8(laplacian_abs)
+        return laplacian_uint8_filtered
 
     def various_closing(self, image, num_of_kernels, step_size, max_iteration):
         image_arr =[]
@@ -244,16 +247,23 @@ if __name__ == "__main__":
     else:
         seg = Segment(args["segments"])
 
-    laplacian_uint8 = seg.laplacian(image)
-    seg.disp_side_by_side(image, laplacian_uint8, "original image", "laplacian image")
+    laplacian_2D= seg.laplacian(image, output_dim=2)
+    seg.disp_side_by_side(image, laplacian_2D, "original image", "laplacian image")
 
-    label, kmean_image = seg.kmeans(laplacian_uint8)
-    seg.disp_side_by_side(laplacian_uint8, kmean_image, "laplacian image", "kmean_image")
+    image_2D = seg.two_channel_grayscale(image)
+    laplacian_uint8_filtered = copy.copy(laplacian_2D)
+    laplacian_uint8_filtered[image_2D<50] = 255
+    laplacian_uint8_filtered[image_2D>150] =255
+    seg.disp_side_by_side(laplacian_2D, laplacian_uint8_filtered, "laplacian image", "laplacian image filtered")
 
-    kmean_crystal_mask = seg.extract_kmeans_binary(image, label, 0)
+    label, result = seg.kmeans(laplacian_uint8_filtered)
+    kmean_image = seg.kmeans_image(laplacian_uint8_filtered, label)
+    seg.disp_side_by_side(laplacian_uint8_filtered, kmean_image, "laplacian image", "kmean_image")
+
+    kmean_crystal_mask = seg.extract_kmeans_binary(kmean_image, label, 4)
     seg.disp_side_by_side(image, kmean_crystal_mask, "image", "kmean crystal mask")
 
-    # ret, thresh = cv2.threshold(laplacian_uint8, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    # ret, thresh = cv2.threshold(laplacian_uint8_filtered, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
     # seg.disp_side_by_side(kmean_crystal_mask, thresh, "kmean crystal mask", "laplacian thresholding")
 
 
@@ -264,7 +274,50 @@ if __name__ == "__main__":
     opening = cv2.morphologyEx(kmean_crystal_mask, cv2.MORPH_OPEN, kernel=np.ones((2,2), np.uint8), iterations= 3)
     seg.disp_side_by_side(kmean_crystal_mask, opening, "kmean crystal mask", "opening")
     seg.various_closing(opening, num_of_kernels=5, step_size=1, max_iteration=3)
-    #closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel= np.ones())
+    closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel= np.ones((2,2), np.uint8), iterations= 3)
+    seg.disp_side_by_side(opening, closing, "opening", "closing")
 
+    seg.various_dilation(closing, num_of_kernels=4, step_size=2, max_iteration=3)
+    sure_bg = cv2.dilate(closing, kernel=np.ones((17,17), np.uint8), iterations=1)
+    seg.disp_side_by_side(kmean_crystal_mask, sure_bg, "kmean crystal mask", "sure_bg")
 
+    seg.various_erosion(closing, num_of_kernels=4, step_size=2, max_iteration=3)
+    sure_fg = cv2.erode(closing, kernel=np.ones((4,4), np.uint8), iterations=2)
+
+    seg.disp_side_by_side(kmean_crystal_mask, sure_fg, "kmean crystal mask", "sure_fg")
+
+    sure_fg = np.uint8(sure_fg)
+    sure_bg = np.uint8(sure_bg)
+    unknown = cv2.subtract(sure_bg, sure_fg)
+    seg.disp_side_by_side(image, unknown, "original image", "unknown region")
+
+    ret, markers = cv2.connectedComponents(sure_fg)
+    markers = markers +1
+    markers[unknown==255] = 0
+    seg.disp_side_by_side(image, markers, "original image", "watershed markers")
+
+    laplacian_3D= seg.laplacian(image, output_dim=3)
+    laplacian_3D_inv = 255- laplacian_3D
+    io.imshow(laplacian_3D_inv)
+    io.show()
+
+    markers_origin_image = cv2.watershed(image, copy.copy(markers))
+    image_copy = copy.copy(image)
+    image_copy[markers_origin_image == -1] = [255, 0, 0]
+    io.imshow(image_copy)
+    io.show()
+
+    markers_laplacian = cv2.watershed(laplacian_3D_inv, copy.copy(markers))
+    image_copy = copy.copy(image)
+    image_copy[markers_laplacian == -1] = [255, 0, 0]
+    io.imshow(image_copy)
+    io.show()
+
+    kmean_image_3D = seg.kmeans_image(laplacian_3D, label)
+    markers_kmean = cv2.watershed(kmean_image_3D, copy.copy(markers))
+    image_copy = copy.copy(image)
+    image_copy[markers_kmean == -1] = [255, 0, 0]
+    io.imshow(image_copy)
+    io.show()
+    seg.disp_side_by_side(markers_laplacian, markers_kmean, "marker with laplacian image", "marker with kmean image")
 
