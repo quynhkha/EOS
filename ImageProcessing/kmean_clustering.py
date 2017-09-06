@@ -279,7 +279,7 @@ if __name__ == "__main__":
 
     label2, result2 = seg.kmeans(laplacian)
     laplacian_kmean = seg.kmeans_region_extractor(result2, label2)
-    seg.disp_img_with_title(laplacian_kmean, "laplacian kmean")
+    seg.disp_side_by_side(laplacian_1D,laplacian_kmean,"laplacian image","laplacian kmean")
     # sure_fg = seg.sure_fg(opening)
     sure_fg, sure_fg_1= seg.sure_fg(laplacian_kmean)
     sure_fg = np.uint8(sure_fg)
