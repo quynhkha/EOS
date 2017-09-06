@@ -1,0 +1,20 @@
+Install package (without virtualenv):
+pip install -U scikit-image
+
+Update pip3:
+sudo -H pip3 install --upgrade pip
+
+Can run code, but problem with Gtk3Agg Backend 
+https://github.com/matplotlib/matplotlib/issues/2976
+
+Install cffi:
+sudo apt-get install python3-cffi
+
+sudo pip3 install --upgrade cffi
+
+Install cairocffi:
+sudo pip3 install cairocffi
+
+
+
+

@@ -1,0 +1,69 @@
+Install Django using virtualenv
+
+- Install pip3
+- Install virtualenv
+- get into virtualenv env:
+$ virtualenv env
+$ source ./env/bin/activate
+- deactivate virtualenv:
+$ deactivate
+
+Link:https://jeffknupp.com/blog/2012/02/09/starting-a-django-project-the-right-way/soru
+
+
+
+(home directory)
+$ source ./env/bin/activate
+$ python -m django --version
+
+(in a choosen folder)
+$ django-admin startproject mysite
+
+(run)
+$ python manage.py runserver
+
+(connect the database with the code)
+$ python manage.py migrate
+
+(update the music model)
+$ python manage.py makemigration music
+
+(add to database by command line)
+$ python manage.py shell
+
+>>> from music.models import Album, Song
+>>> Album.objects.all()
+<QuerySet [<Album: Album object>]>
+>>> a = Album(artist="Taylor Swift", album_title="1989", genre="Country", album_logo="http://i.dailymail.co.uk/i/pix/2015/01/15/24B10F1300000578-2912003-Imitation_game_Taylor_Swift_fan_Nadia_Afkhami_recreated_every_Po-m-69_1421351821610.jpg")
+>>> a.save()
+>>> a.artist
+'Taylor Swift'
+>>> a.album_title
+'1989'
+>>> a.pk
+2
+
+
+Album.objects.filter(artist__startswith="t")
+<QuerySet [<Album: 1989 - Taylor Swift>, <Album: 1989 - Taylor Swift>]>
+
+
+(create admin)
+$ python manage.py createsuperuser
+
+
+(create new song)
+>>> from music.models import Song, Album
+>>> Album.objects.all()
+<QuerySet [<Album: 1989 - Taylor Swift>, <Album: Purpose - Justin Bieber>]>
+>>> album1 = Album.objects.get(pk=1)
+>>> album1.artist
+'Taylor Swift'
+>>> song = Song()
+>>> song.album=album1
+>>> song.file_type='mp3'
+>>> song.song_title='Blank Space'
+>>> song.save()
+
+
+os.path.join(BASE_DIR, 'templates')
