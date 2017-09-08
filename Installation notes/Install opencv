@@ -15,6 +15,7 @@ source ~/.bashrc
 If have this error, do this:
 https://devtalk.nvidia.com/default/topic/986950/opencv-installation-problem-nppigraphcutinitalloc-not-declared/
 
+(To make opencv3++ compatible with CUDA 8++) 
 More precisely, modify this file "opencv-3.1.0/modules/cudalegacy/src/graphcuts.cpp" by replacing
 #if !defined (HAVE_CUDA) || defined (CUDA_DISABLER)
 
