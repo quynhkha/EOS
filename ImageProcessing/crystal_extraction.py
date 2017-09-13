@@ -266,15 +266,15 @@ if __name__ == "__main__":
 
     image_2D = seg.two_channel_grayscale(image)
     laplacian_uint8_filtered = copy.copy(laplacian_2D)
-    laplacian_uint8_filtered[image_2D<50] = 255
-    laplacian_uint8_filtered[image_2D>150] =255
+    laplacian_uint8_filtered[image_2D<40] = 255
+    laplacian_uint8_filtered[image_2D>160] =255
     seg.disp_side_by_side(laplacian_2D, laplacian_uint8_filtered, "laplacian image", "laplacian image filtered")
 
     label, result = seg.kmeans(laplacian_uint8_filtered)
     kmean_image = seg.kmeans_image(laplacian_uint8_filtered, label)
     seg.disp_side_by_side(laplacian_uint8_filtered, kmean_image, "laplacian image", "kmean_image")
 
-    kmean_crystal_mask = seg.extract_kmeans_binary(kmean_image, label, 4)
+    kmean_crystal_mask = seg.extract_kmeans_binary(kmean_image, label, 2)
     seg.disp_side_by_side(image, kmean_crystal_mask, "image", "kmean crystal mask")
 
     # ret, thresh = cv2.threshold(laplacian_uint8_filtered, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
@@ -292,7 +292,7 @@ if __name__ == "__main__":
     seg.disp_side_by_side(opening, closing, "opening", "closing")
 
     seg.various_dilation(closing, num_of_kernels=4, step_size=2, max_iteration=3)
-    sure_bg = cv2.dilate(closing, kernel=np.ones((17,17), np.uint8), iterations=1)
+    sure_bg = cv2.dilate(closing, kernel=np.ones((8,8), np.uint8), iterations=2)
     seg.disp_side_by_side(kmean_crystal_mask, sure_bg, "kmean crystal mask", "sure_bg")
 
     seg.various_erosion(closing, num_of_kernels=4, step_size=2, max_iteration=3)
@@ -321,6 +321,7 @@ if __name__ == "__main__":
     io.imshow(image_copy)
     io.show()
 
+    #laplacian_3D_inv = cv2.GaussianBlur(laplacian_3D_inv, (5,5), 0)
     markers_laplacian = cv2.watershed(laplacian_3D_inv, copy.copy(markers))
     image_copy = copy.copy(image)
     image_copy[markers_laplacian == -1] = [255, 0, 0]
@@ -365,4 +366,7 @@ if __name__ == "__main__":
     image_copy = copy.copy(image)
     image_copy[max_area_crystal_kmean != 255] = 0
     seg.disp_side_by_side(image, image_copy, "original image", "biggest crystal (by kmean)")
+
+    cv2.imshow(image_copy)
+    cv2.show()
 
