@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Document
+from .models import *
 
 class NameForm(forms.Form):
     your_name = forms.CharField (label = 'Your name', max_length = 100)
@@ -18,3 +18,13 @@ class DocumentForm(forms.ModelForm):
         model = Document
         # field = ('desciption', 'document', )
         fields = '__all__'
+
+class NumberInputForm(forms.ModelForm):
+    class Meta:
+        model = NumberInput
+        fields = ['input']
+        widgets = {
+            'input': forms.NumberInput(
+                attrs={'id': 'input', 'required': True, 'placeholder': 'Say something...'}
+            ),
+        }

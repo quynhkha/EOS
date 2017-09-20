@@ -8,16 +8,19 @@
 <body>
 {% block content %}
     <h1>Image Processing Demo</h1>
-  <img id="image" src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" height="400">
+    <img id="image" src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" height="400">
     {#         <img id= "image" src="/media/1947-1_plg6.png" height="400">}#}
     <br><br>
-    <button id="btn_masking" type="button" onclick="alert('Confirm to do masking?')">
-        Masking
-    </button>
+    <form>
+        Number of clusters: <input id="kmeans_input" type="number" placeholder="3">
+        <button id="btn_kmeans">Kmeans</button>
+    </form>
 
-    <button id="btn_dilating" type="button" onclick="alert('Confirm to do dilating?')">
-        Dilating
-    </button>
+    <form>
+        Lower threshold value: <input id="lower_thresh_input" type="number" placeholder="30">
+        <button id="btn_lower_thresh">Lower threshold</button>
+    </form>
+
 
     <button id="btn_pengzhang" type="button" onclick="alert('Confirm to do pengzhang?')">
         Pengzhang
@@ -32,6 +35,9 @@
     {#    <button id="btn_ostu" type="button" onclick="alert('Confirm to do ostu?')">#}
     {#        Ostu#}
     {#    </button>#}
+
+    {#    <input id="disp_val">#}
+    {#    <button id="btn_test">test</button>#}
 {% endblock %}
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
@@ -41,16 +47,51 @@
 
 {% block javascript %}
     <script>
-        $("#btn_masking").click(function (e) {
+        $("btn_test").click(function (e) {
+
+            console.log("value", $('#lower_thresh_input').val());
+            document.getElementById("disp_val").value = $('#lower_thresh_input').val();
+
+        });
+        // AJAX for posting
+        $("#btn_lower_thresh").click(function (e) {
+            e.preventDefault();
+            console.log("value", $('#lower_thresh_input').val());
+            $.ajax({
+                url: "lower-thresholding/", // the endpoint
+                type: "POST", // http method
+                data: {input: $('#lower_thresh_input').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    $('#lower_thesh_input').val(''); // remove the value from the input
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#btn_kmeans").click(function (e) {
             e.preventDefault();
             $.ajax({
-                type: "GET",
-                url: "/imageProcessing/masking",
+                url: "kmeans/",
+                type: "POST", // http method
+                data: {input: $("#kmeans_input").val()}, // data sent with the post request
 
+                // handle a successful response
                 success: function (data) {
-                    console.log('masking data', data);
-                    document.getElementById("image").src = data + '?' + new Date().getTime();
+                    $('#lower_thesh_input').val(''); // remove the value from the input
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    console.log("success"); // another sanity check
                 },
+
+                // handle a non-successful response
                 error: function (data) {
                     alert('error');
                 }
@@ -111,6 +152,7 @@
                 }
             });
         });
+
     </script>
 
     <script>

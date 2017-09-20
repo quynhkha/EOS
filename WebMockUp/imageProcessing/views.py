@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
 from imageProcessing.FindSegment import FindSegment
-from .forms import NameForm, PostForm, DocumentForm
+from .forms import *
 from .models import Image
 from .utils import *
 
@@ -13,85 +13,91 @@ import cv2
 from django.http import JsonResponse
 from .forms import UploadFileForm
 from django.views.decorators.csrf import csrf_exempt
+from .imageProcessingFunc.crystal_extractor import ProcessingFunction
 
 
-findDir = findImageDir()
-findSegment = FindSegment()
-processedImageURL =""
-db_image_dir = ""
+#
+# findDir = findImageDir()
+# findSegment = FindSegment()
+# processedImageURL =""
+# db_image_dir = ""
 
-# Create your views here.
-def showImage(request, image_id):
-    db_image = get_object_or_404(Image, pk=image_id)
-    return render(request, 'imageProcessing/imageProcessing.html', {'image': db_image})
+# # Create your views here.
+# def showImage(request, image_id):
+#     db_image = get_object_or_404(Image, pk=image_id)
+#     return render(request, 'imageProcessing/imageProcessing.html', {'image': db_image})
+#
+# def masking(request):
+#     db_image = get_object_or_404(Image, pk=2)
+#     global db_image_dir
+#     db_image_dir = findDir.imageDirfromDatabaseImg(db_image)
+#
+#     image_copy_dir = findSegment.save_an_image_copy(db_image, db_image_dir)
+#     print('imageDir: ', db_image_dir, 'image_copy_dir', image_copy_dir)
+#
+#     global processedImageURL
+#     processedImageURL= findSegment.imageMasking(image_copy_dir, 5)
+#     print("processedImageURL: ", processedImageURL)
+#     return HttpResponse(processedImageURL)
+#
+# def dilating(request):
+#     global processedImageURL
+#     print("processedImageURL", processedImageURL)
+#
+#     processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
+#     processedImageURL = findSegment.imageDilate(processed_image_dir, 3)
+#
+#     return HttpResponse(processedImageURL)
+#
+# def pengzhang(request):
+#     global processedImageURL
+#     global db_image_dir
+#     print("processedImageURL", processedImageURL)
+#
+#     processed_image_dir= findDir.imageDirfromImgURL(processedImageURL)
+#     processedImageURL = findSegment.imagePengzhang(db_image_dir, processed_image_dir)
+#
+#     return HttpResponse(processedImageURL)
+#
+# def windowing(request):
+#     global processedImageURL
+#     print("processedImageURL", processedImageURL)
+#
+#     processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
+#     processedImageURL = findSegment.imageWindowing(processed_image_dir, 20)
+#
+#     return HttpResponse(processedImageURL)
+#
+# def ostu(request):
+#     global processedImageURL
+#     print("processedImageURL", processedImageURL)
+#
+#     processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
+#     processedImageURL = findSegment.imageOstu(processed_image_dir, 8)
+#
+#     return HttpResponse(processedImageURL)
+#
+# def success_message(request):
+#     return render (request, 'imageProcessing/thankMessage.html')
+#
+# def get_name(request):
+#     if request.method == 'POST':
+#         form = NameForm(request.POST)
+#
+#         if form.is_valid():
+#             print(form.cleaned_data)
+#             return HttpResponseRedirect('/imageProcessing/success/')
+#         else:
+#             form = NameForm()
+#         return render(request, 'imageProcessing/your_name.html', {'form': form})
+#
+# def post_new(request):
+#     form = PostForm()
+#     return render (request, 'imageProcessing/post_edit.html', {'form': form})
 
-def masking(request):
-    db_image = get_object_or_404(Image, pk=2)
-    global db_image_dir
-    db_image_dir = findDir.imageDirfromDatabaseImg(db_image)
-
-    image_copy_dir = findSegment.save_an_image_copy(db_image, db_image_dir)
-    print('imageDir: ', db_image_dir, 'image_copy_dir', image_copy_dir)
-
-    global processedImageURL
-    processedImageURL= findSegment.imageMasking(image_copy_dir, 5)
-    print("processedImageURL: ", processedImageURL)
-    return HttpResponse(processedImageURL)
-
-def dilating(request):
-    global processedImageURL
-    print("processedImageURL", processedImageURL)
-
-    processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
-    processedImageURL = findSegment.imageDilate(processed_image_dir, 3)
-
-    return HttpResponse(processedImageURL)
-
-def pengzhang(request):
-    global processedImageURL
-    global db_image_dir
-    print("processedImageURL", processedImageURL)
-
-    processed_image_dir= findDir.imageDirfromImgURL(processedImageURL)
-    processedImageURL = findSegment.imagePengzhang(db_image_dir, processed_image_dir)
-
-    return HttpResponse(processedImageURL)
-
-def windowing(request):
-    global processedImageURL
-    print("processedImageURL", processedImageURL)
-
-    processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
-    processedImageURL = findSegment.imageWindowing(processed_image_dir, 20)
-
-    return HttpResponse(processedImageURL)
-
-def ostu(request):
-    global processedImageURL
-    print("processedImageURL", processedImageURL)
-
-    processed_image_dir = findDir.imageDirfromImgURL(processedImageURL)
-    processedImageURL = findSegment.imageOstu(processed_image_dir, 8)
-
-    return HttpResponse(processedImageURL)
-
-def success_message(request):
-    return render (request, 'imageProcessing/thankMessage.html')
-
-def get_name(request):
-    if request.method == 'POST':
-        form = NameForm(request.POST)
-
-        if form.is_valid():
-            print(form.cleaned_data)
-            return HttpResponseRedirect('/imageProcessing/success/')
-        else:
-            form = NameForm()
-        return render(request, 'imageProcessing/your_name.html', {'form': form})
-
-def post_new(request):
-    form = PostForm()
-    return render (request, 'imageProcessing/post_edit.html', {'form': form})
+processingFunction = ProcessingFunction()
+original_image =np.zeros((400,400), np.uint8)
+current_image = np.zeros((400,400), np.uint8)
 
 def show_base64(request):
     opencv_img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png')
@@ -108,9 +114,41 @@ def model_form_upload(request):
             print("filename", file.name, "file content type", file.content_type, "file size", file.size)
             image_file_dir = absolute_uploaded_file_dir(file.name)
             print ("image file dir", image_file_dir)
-            image = cv2.imread(image_file_dir)
-            _, image_data = cv_to_json(image)
+            global original_image
+            global current_image
+            original_image = cv2.imread(image_file_dir)
+            current_image=original_image
+            _, image_data = cv_to_json(original_image)
             return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data })
     else:
         form = DocumentForm()
     return render(request, 'imageProcessing/model_form_upload.html', {'form': form})
+
+@csrf_exempt
+def lower_thresholding(request):
+    if request.method == 'POST':
+        input = request.POST.get('input')
+        input = int(input)
+        global current_image
+        global original_image
+        current_image = processingFunction.lower_thesholding(original_image=original_image, current_image=current_image, thresh_val=input)
+        json_data, _ = cv_to_json(current_image)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data})
+
+@csrf_exempt
+def kmeans(request):
+    if request.method == 'POST':
+        input = request.POST.get('input')
+        print('input', input)
+        input = int(input)
+        global current_image
+        global original_image
+        current_image = processingFunction.kmeans(current_image=current_image, segments=input)
+        json_data, _ = cv_to_json(current_image)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data})

@@ -9,11 +9,9 @@ import argparse
 import sys
 
 class Segment:
-    def __init__(self, segments=3):
-        # define number of segments, with default 3
-        self.segments = segments
-
-    def kmeans(self, image):
+    def __init__(self):
+        """"""
+    def kmeans(self, image, segments):
         '''
 
         :param image: 2D or 3D image
@@ -27,7 +25,7 @@ class Segment:
 
         vectorized = np.float32(vectorized)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-        ret, label, center = cv2.kmeans(vectorized, self.segments, None,
+        ret, label, center = cv2.kmeans(vectorized, segments, None,
                                         criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
         res = center[label.flatten()]
         segmented_image = res.reshape((image.shape))
@@ -65,7 +63,7 @@ class Segment:
         # return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
         return np.uint8(max_area_img)
 
-    def kmeans_image(self, image, label_image):
+    def kmeans_image(self, image, label_image, segments):
         '''
 
         :param image:
@@ -73,7 +71,7 @@ class Segment:
         :return: uint8 image with dif grayscale value for each kmean region
         '''
         image_segmented = np.zeros(image.shape, dtype= np.uint8)
-        num_segment = self.segments
+        num_segment = segments
         for i in range(num_segment):
             gray_level_increment = np.floor(255/num_segment)
             image_segmented[label_image == i] = i*gray_level_increment
@@ -245,18 +243,32 @@ class Segment:
         return sorted_by_area[0][0]
 
 class ProcessingFunction:
-    def __init__(self, image_dir="/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png"):
-        self.image_dir = image_dir
+    def __init__(self):
         self.seg = Segment()
 
-    def read_image(self):
-        image = cv2.imread(self.image_dir)
+    def read_image(self, image_dir):
+        image = cv2.imread(image_dir)
         return image
 
-    def laplacian_func(self, image):
-        self.seg.laplacian(image, output_dim=2)
+    def laplacian_func(self, current_image):
+        self.seg.laplacian(current_image, output_dim=2)
 
-    # def lower_thesholding(self, image):
+    def lower_thesholding(self, original_image, current_image, thresh_val):
+        thresh_val = int(thresh_val)
+        image_2D = self.seg.two_channel_grayscale(original_image)
+        current_image[image_2D<thresh_val] = 255
+        return current_image
+
+    def upper_thresholding(self, original_image, current_image, thresh_val):
+        image_2D = self.seg.two_channel_grayscale(original_image)
+        current_image[image_2D>thresh_val] = 255
+        return current_image
+
+    def kmeans(self, current_image, segments):
+        label, result = self.seg.kmeans(current_image, segments)
+        kmean_image = self.seg.kmeans_image(current_image, label, segments)
+        return kmean_image
+
 
 
 

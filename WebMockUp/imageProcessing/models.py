@@ -15,6 +15,9 @@ class Post (models.Model):
     title = models.CharField(max_length=100)
     text = models.CharField(max_length=100)
 
+class NumberInput(models.Model):
+    input = models.IntegerField()
+
 class Document(models.Model):
     description = models.CharField(max_length=255, blank=True)
     document = models.FileField(upload_to="documents/")
