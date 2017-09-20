@@ -8,14 +8,7 @@
 <body>
 {% block content %}
     <h1>Image Processing Demo</h1>
-
-    <h2>Image File Name: {{ image.imageName }}</h2>
-
-    <p id="imagelink">Image Link: {{ image.imageData.url }}</p>
-    <!--
-    <img src="{{ image.imageLink }}">
-    -->
-    <img id="image" src="{{ image.imageData.url }}" height="400">
+  <img id="image" src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" height="400">
     {#         <img id= "image" src="/media/1947-1_plg6.png" height="400">}#}
     <br><br>
     <button id="btn_masking" type="button" onclick="alert('Confirm to do masking?')">
@@ -141,39 +134,4 @@
 
     </script>
 
-    {#     <script>#}
-    {#        $("#btn_ostu").click(function (e) {#}
-    {#            e.preventDefault();#}
-    {#            $.ajax({#}
-    {#                type: "GET",#}
-    {#                url: "/imageProcessing/ostu",#}
-    {##}
-    {#                success: function (data) {#}
-    {#                    console.log('ostu data', data);#}
-    {#                    document.getElementById("image").src = data + '?' + new Date().getTime();#}
-    {#                },#}
-    {#                error: function (data) {#}
-    {#                    alert('error');#}
-    {#                }#}
-    {#            });#}
-    {#        });#}
-    {#    </script>#}
-
 {% endblock %}
-
-
-{##}
-{#        <form action = "/imageProcessing/your_name/" method ="post">#}
-{##}
-{#            <label for="your_name">Your name: </label>#}
-{#            <input id ="your_name" type ="text"#}
-{#                   name = "your_name" value = "Long">#}
-{#            <input type = "submit" value = "OK">#}
-{#            <label for="age">Age: </label>#}
-{#            <input id = "age" type = "number"#}
-{#                   name = "age" value = "18">#}
-{#            <input type ="submit" value = "OK">#}
-{##}
-{#        </form>#}
-
-</body>

@@ -1,10 +1,19 @@
+import base64
+import json
+
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from imageProcessing.FindSegment import FindSegment
-from .forms import NameForm, PostForm
+from .forms import NameForm, PostForm, DocumentForm
 from .models import Image
-from .utils import findImageDir
+from .utils import *
+
+import cv2
+from django.http import JsonResponse
+from .forms import UploadFileForm
+from django.views.decorators.csrf import csrf_exempt
+
 
 findDir = findImageDir()
 findSegment = FindSegment()
@@ -83,3 +92,25 @@ def get_name(request):
 def post_new(request):
     form = PostForm()
     return render (request, 'imageProcessing/post_edit.html', {'form': form})
+
+def show_base64(request):
+    opencv_img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png')
+    json_data, _= cv_to_json(opencv_img)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            file= request.FILES['document']
+            print("filename", file.name, "file content type", file.content_type, "file size", file.size)
+            image_file_dir = absolute_uploaded_file_dir(file.name)
+            print ("image file dir", image_file_dir)
+            image = cv2.imread(image_file_dir)
+            _, image_data = cv_to_json(image)
+            return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data })
+    else:
+        form = DocumentForm()
+    return render(request, 'imageProcessing/model_form_upload.html', {'form': form})

@@ -7,7 +7,6 @@ from skimage import measure
 from scipy import ndimage
 import argparse
 import sys
-from brush_tool import Brushtool
 
 class Segment:
     def __init__(self, segments=3):
@@ -245,143 +244,20 @@ class Segment:
         print (sorted_by_area[0][0])
         return sorted_by_area[0][0]
 
+class ProcessingFunction:
+    def __init__(self, image_dir="/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png"):
+        self.image_dir = image_dir
+        self.seg = Segment()
 
-if __name__ == "__main__":
+    def read_image(self):
+        image = cv2.imread(self.image_dir)
+        return image
 
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--image", required=True,
-                    help="Path to the image")
-    ap.add_argument("-n", "--segments", required=False,
-                    type=int, help="# of clusters")
-    ap.add_argument('-l', "--label", required=True,
-                    type=int, help="region label of crystal")
-    ap.add_argument('-lo',"--low_thresh",required=True,
-                    type=int, help="low threshold")
-    ap.add_argument('-hi', "--high_thresh", required=True,
-                    type=int, help="high threshold")
-    ap.add_argument('-res', "--resize", required=True,
-                    type=int, help="resize image or not")
-    args = vars(ap.parse_args())
+    def laplacian_func(self, image):
+        self.seg.laplacian(image, output_dim=2)
 
-    image = cv2.imread(args["image"])
+    # def lower_thesholding(self, image):
 
-    height, width = image.shape[:2]
-    if (args["resize"]):
-        image = cv2.resize(image, (int(0.5 * width), int(0.5 * height)), interpolation=cv2.INTER_CUBIC)
-    #image = cv2.GaussianBlur(image, (5, 5), 0)
 
-    if len(sys.argv) == 7:
-        seg = Segment()
-    else:
-        seg = Segment(args["segments"])
 
-    laplacian_2D= seg.laplacian(image, output_dim=2)
-    seg.disp_side_by_side(image, laplacian_2D, "original image", "laplacian image")
-
-    image_2D = seg.two_channel_grayscale(image)
-    laplacian_uint8_filtered = copy.copy(laplacian_2D)
-    laplacian_uint8_filtered[image_2D<(args["low_thresh"])] = 255
-    laplacian_uint8_filtered[image_2D>(args["high_thresh"])] =255
-    seg.disp_side_by_side(laplacian_2D, laplacian_uint8_filtered, "laplacian image", "laplacian image filtered")
-
-    label, result = seg.kmeans(laplacian_uint8_filtered)
-    kmean_image = seg.kmeans_image(laplacian_uint8_filtered, label)
-    seg.disp_side_by_side(laplacian_uint8_filtered, kmean_image, "laplacian image", "kmean_image")
-
-    kmean_crystal_mask = seg.extract_kmeans_binary(kmean_image, label, args["label"])
-    seg.disp_side_by_side(image, kmean_crystal_mask, "image", "kmean crystal mask")
-
-    # # ret, thresh = cv2.threshold(laplacian_uint8_filtered, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-    # # seg.disp_side_by_side(kmean_crystal_mask, thresh, "kmean crystal mask", "laplacian thresholding")
-    #
-    #
-    # seg.various_opening(kmean_crystal_mask, num_of_kernels=5, step_size=1, max_iteration=3)
-    # # seg.various_erosion(kmean_crystal_mask, num_of_kernels=4, step_size=2, max_iteration=3)
-    # # seg.various_dilation(kmean_crystal_mask, num_of_kernels=4, step_size=2, max_iteration=3)
-    #
-    # opening = cv2.morphologyEx(kmean_crystal_mask, cv2.MORPH_OPEN, kernel=np.ones((2,2), np.uint8), iterations= 3)
-    # seg.disp_side_by_side(kmean_crystal_mask, opening, "kmean crystal mask", "opening")
-    # seg.various_closing(opening, num_of_kernels=5, step_size=1, max_iteration=3)
-    # closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel= np.ones((2,2), np.uint8), iterations= 3)
-    # seg.disp_side_by_side(opening, closing, "opening", "closing")
-    #
-    # seg.various_dilation(closing, num_of_kernels=4, step_size=2, max_iteration=3)
-    # sure_bg = cv2.dilate(closing, kernel=np.ones((8,8), np.uint8), iterations=2)
-    # seg.disp_side_by_side(kmean_crystal_mask, sure_bg, "kmean crystal mask", "sure_bg")
-    #
-    # seg.various_erosion(closing, num_of_kernels=4, step_size=2, max_iteration=3)
-    # sure_fg = cv2.erode(closing, kernel=np.ones((4,4), np.uint8), iterations=2)
-    #
-    # seg.disp_side_by_side(kmean_crystal_mask, sure_fg, "kmean crystal mask", "sure_fg")
-    #
-    # sure_fg = np.uint8(sure_fg)
-    # sure_bg = np.uint8(sure_bg)
-    # unknown = cv2.subtract(sure_bg, sure_fg)
-    # seg.disp_side_by_side(image, unknown, "original image", "unknown region")
-    #
-    # ret, markers = cv2.connectedComponents(sure_fg)
-    # markers = markers +1
-    # markers[unknown==255] = 0
-    # seg.disp_side_by_side(image, markers, "original image", "watershed markers")
-    #
-    # laplacian_3D= seg.laplacian(image, output_dim=3)
-    # laplacian_3D_inv = 255- laplacian_3D
-    # io.imshow(laplacian_3D_inv)
-    # io.show()
-    #
-    # markers_origin_image = cv2.watershed(image, copy.copy(markers))
-    # image_copy = copy.copy(image)
-    # image_copy[markers_origin_image == -1] = [255, 0, 0]
-    # io.imshow(image_copy)
-    # io.show()
-    #
-    # #laplacian_3D_inv = cv2.GaussianBlur(laplacian_3D_inv, (5,5), 0)
-    # markers_laplacian = cv2.watershed(laplacian_3D_inv, copy.copy(markers))
-    # image_copy = copy.copy(image)
-    # image_copy[markers_laplacian == -1] = [255, 0, 0]
-    # io.imshow(image_copy)
-    # io.show()
-    #
-    #
-    # kmean_image_3D = seg.kmeans_image(laplacian_3D, label)
-    # markers_kmean = cv2.watershed(kmean_image_3D, copy.copy(markers))
-    # image_copy = copy.copy(image)
-    # image_copy[markers_kmean == -1] = [255, 0, 0]
-    # io.imshow(image_copy)
-    # io.show()
-    # seg.disp_side_by_side(markers_laplacian, markers_kmean, "marker with laplacian image", "marker with kmean image")
-    #
-    #
-    # crystals_mask = np.zeros(image.shape)
-    # crystals_mask[markers_laplacian>1] = 255 #markers =1 means background
-    # crystals_mask = np.uint8(crystals_mask)
-    #
-    # image_copy = copy.copy(image)
-    # image_copy[crystals_mask!=255] = 0
-    # seg.disp_side_by_side(crystals_mask, image_copy, "crystal mask", "all crystals")
-    #
-    ret, markers2= cv2.connectedComponents(kmean_crystal_mask)
-    crystals_mask_kmean = np.zeros(image.shape)
-    crystals_mask_kmean[markers2>0] = 255
-    crystals_mask_kmean = np.uint8(crystals_mask_kmean)
-
-    image_copy = copy.copy(image)
-    image_copy[crystals_mask_kmean!= 255] = 0
-    seg.disp_side_by_side(crystals_mask_kmean, image_copy, "crystal mask kmean", "all crystals")
-
-    # max_area_crystal_label = seg.label_of_max_watershed_area(markers_laplacian)
-    # max_area_crystal_mask = np.zeros(image.shape)
-    # max_area_crystal_mask[markers_laplacian==max_area_crystal_label] =255
-    # image_copy = copy.copy(image)
-    # image_copy[max_area_crystal_mask != 255] = 0
-    # seg.disp_side_by_side(image, image_copy, "original image", "biggest crystal")
-
-    max_area_crystal_kmean = seg.extract_connected_component(kmean_crystal_mask, 8)
-    biggest_crystal = copy.copy(image)
-    biggest_crystal[max_area_crystal_kmean != 255] = 0
-    seg.disp_side_by_side(image, biggest_crystal, "original image", "biggest crystal (by kmean)")
-
-    # cv2.imshow('image', biggest_crystal)
-    brushtool = Brushtool()
-    brushtool.brush()
 

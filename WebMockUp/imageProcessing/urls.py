@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^ostu/$', views.ostu, name='ostu'),
     url(r'^your_name/$', views.get_name, name ='get_name'),
     url(r'^post/new/$', views.post_new, name ='post_new'),
-    url(r'^success/$', views.success_message, name='success_message')
+    url(r'^success/$', views.success_message, name='success_message'),
+    url(r'^base64/$', views.show_base64, name='show_base64'),
+    url(r'^upload/$', views.model_form_upload, name='upload')
 ]

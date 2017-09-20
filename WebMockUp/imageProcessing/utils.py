@@ -2,6 +2,8 @@ import os
 
 import PIL
 import numpy as np
+import cv2
+import base64
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class findImageDir:
@@ -40,3 +42,16 @@ class findImageDir:
 #     def saveImage(self, image_model):
 #         imageDir
 #         image = np.asarray(PIL.Image.open(imageDir))
+
+def cv_to_json(opencv_img):
+    # img_file = open("/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png", "rb")
+    # img = img_file.read()
+    #opencv_img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.tif')
+    retval, img = cv2.imencode('.jpg', opencv_img)
+    base64_bytes = base64.b64encode(img)
+    base64_string = base64_bytes.decode('utf8')
+    json_data = {'image_data': base64_string}
+    return json_data, base64_string
+
+def absolute_uploaded_file_dir(filename):
+    return str(BASE_DIR)+'/media/documents/'+filename
