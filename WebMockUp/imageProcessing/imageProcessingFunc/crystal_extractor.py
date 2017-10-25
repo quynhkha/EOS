@@ -251,25 +251,47 @@ class ProcessingFunction:
         return image
 
     def laplacian_func(self, current_image):
-        self.seg.laplacian(current_image, output_dim=2)
+        return self.seg.laplacian(current_image, output_dim=2)
 
     def lower_thesholding(self, original_image, current_image, thresh_val):
         thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
-        current_image[image_2D<thresh_val] = 255
-        return current_image
+        image_copy = copy.copy(current_image)
+        image_copy[image_2D<thresh_val] = 255
+        return image_copy
 
-    def upper_thresholding(self, original_image, current_image, thresh_val):
+    def upper_thesholding(self, original_image, current_image, thresh_val):
         image_2D = self.seg.two_channel_grayscale(original_image)
-        current_image[image_2D>thresh_val] = 255
-        return current_image
+        image_copy = copy.copy(current_image)
+        image_copy[image_2D > thresh_val] = 255
+        return image_copy
 
     def kmeans(self, current_image, segments):
-        label, result = self.seg.kmeans(current_image, segments)
-        kmean_image = self.seg.kmeans_image(current_image, label, segments)
-        return kmean_image
+        labels, result = self.seg.kmeans(current_image, segments)
+        kmean_image = self.seg.kmeans_image(current_image, labels, segments)
+        return kmean_image, labels
 
+    def extract_crystal_mask(self, current_image, labels , user_chosen_label):
+        return self.seg.extract_kmeans_binary(current_image, labels, user_chosen_label)
 
+    def show_all_crystal(self, original_image, image_mask):
+        mask = copy.copy(image_mask)
+        mask = self.seg.two_channel_grayscale(mask)
+        ret, markers2 = cv2.connectedComponents(mask)
+        crystals_mask_kmean = np.zeros(original_image.shape, np.uint8)
+        crystals_mask_kmean[markers2 > 0] = 255
+        crystals_mask_kmean = np.uint8(crystals_mask_kmean)
 
+        image_copy = copy.copy(original_image)
+        image_copy[crystals_mask_kmean != 255] = 0
+        return image_copy
+
+    def show_max_area_crystal(self, original_image, image_mask):
+        mask = copy.copy(image_mask)
+        mask = self.seg.two_channel_grayscale(mask)
+        max_area_crystal_kmean = self.seg.extract_connected_component(mask, 8)
+        biggest_crystal = copy.copy(original_image)
+        biggest_crystal[max_area_crystal_kmean != 255] = 255
+        return biggest_crystal
 
 

@@ -16,6 +16,12 @@ urlpatterns = [
     url(r'^base64/$', views.show_base64, name='show_base64'),
     url(r'^upload/$', views.model_form_upload, name='upload'),
     url(r'^upload/lower-thresholding/$', views.lower_thresholding, name='lower-thesholding'),
+    url(r'^upload/upper-thresholding/$', views.upper_thresholding, name='upper-thesholding'),
     url(r'^upload/kmeans/$', views.kmeans, name='kmeans'),
+    url(r'^laplacian/$', views.laplacian, name='laplacian'),
+    url(r'^undo/$', views.undo_last_step, name="undo"),
+    url(r'^upload/extract-crystal-mask/$', views.extract_crystal_mask, name="extract-crystal-mask"),
+    url(r'^upload/all-crystal/$', views.show_all_crystal,name='show-all-crystal'),
+    url(r'^upload/max-crystal/$', views.show_max_area_crystal, name='show-max-area-crystal'),
 
 ]
