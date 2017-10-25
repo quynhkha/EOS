@@ -53,5 +53,14 @@ def cv_to_json(opencv_img):
     json_data = {'image_data': base64_string}
     return json_data, base64_string
 
+def thumbnail_plus_img_json(image, thumbnail_arr):
+    base64_thumbnail_arr = []
+    _, base64_image = cv_to_json(image)
+    for thumbnail in thumbnail_arr:
+        _, base64_thumbnail = cv_to_json(thumbnail)
+        base64_thumbnail_arr.append(base64_thumbnail)
+    json_data = {'image_data': base64_image, 'thumbnail_arr': base64_thumbnail_arr}
+    return json_data
+
 def absolute_uploaded_file_dir(filename):
     return str(BASE_DIR)+'/media/documents/'+filename

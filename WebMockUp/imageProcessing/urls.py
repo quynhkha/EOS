@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^upload/extract-crystal-mask/$', views.extract_crystal_mask, name="extract-crystal-mask"),
     url(r'^upload/all-crystal/$', views.show_all_crystal,name='show-all-crystal'),
     url(r'^upload/max-crystal/$', views.show_max_area_crystal, name='show-max-area-crystal'),
+    url(r'^reset/$', views.reset, name="reset"),
 
 ]
