@@ -26,17 +26,15 @@
     <favorites_list name="WebMockUp" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.63072777">
+    <splitter split-orientation="horizontal" split-proportion="0.20214032">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="494">
-                  <caret line="229" column="62" lean-forward="false" selection-start-line="229" selection-start-column="62" selection-end-line="229" selection-end-column="62" />
-                  <folding>
-                    <marker date="1508950641819" expanded="true" signature="9139:9395" ph="{...}" />
-                  </folding>
+                <state relative-caret-position="8303">
+                  <caret line="437" column="46" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="470" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -64,8 +62,8 @@
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2095">
-                  <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+                <state relative-caret-position="4294">
+                  <caret line="226" column="24" lean-forward="false" selection-start-line="226" selection-start-column="24" selection-end-line="226" selection-end-column="24" />
                   <folding>
                     <element signature="e#0#13#0" expanded="true" />
                   </folding>
@@ -76,7 +74,7 @@
           <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
             <entry file="file:///usr/local/lib/python3.4/dist-packages/django/http/response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="732">
+                <state relative-caret-position="9462">
                   <caret line="519" column="8" lean-forward="false" selection-start-line="519" selection-start-column="8" selection-end-line="519" selection-end-column="8" />
                   <folding />
                 </state>
@@ -86,8 +84,8 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="456">
-                  <caret line="25" column="4" lean-forward="false" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+                <state relative-caret-position="475">
+                  <caret line="26" column="14" lean-forward="false" selection-start-line="26" selection-start-column="14" selection-end-line="26" selection-end-column="14" />
                   <folding />
                 </state>
               </provider>
@@ -106,31 +104,31 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="512">
-                  <caret line="426" column="46" lean-forward="false" selection-start-line="426" selection-start-column="46" selection-end-line="426" selection-end-column="46" />
+                <state relative-caret-position="-6532">
+                  <caret line="81" column="20" lean-forward="false" selection-start-line="81" selection-start-column="20" selection-end-line="81" selection-end-column="20" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="crystal_extractor.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="crystal_extractor.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1198">
-                  <caret line="153" column="8" lean-forward="false" selection-start-line="153" selection-start-column="8" selection-end-line="153" selection-end-column="8" />
+                <state relative-caret-position="538">
+                  <caret line="62" column="35" lean-forward="true" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="836">
+                <state relative-caret-position="950">
                   <caret line="55" column="27" lean-forward="false" selection-start-line="55" selection-start-column="27" selection-end-line="55" selection-end-column="27" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
@@ -155,8 +153,8 @@
     <findStrings>
       <find>url</find>
       <find>upload_to</find>
-      <find>undo</find>
       <find>alert</find>
+      <find>undo</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -188,13 +186,13 @@
         <option value="$PROJECT_DIR$/imageProcessing/models.py" />
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/model_form_upload.html" />
         <option value="$PROJECT_DIR$/imageProcessing/forms.py" />
-        <option value="$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py" />
         <option value="$PROJECT_DIR$/WebMockUp/settings.py" />
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/base.html" />
         <option value="$PROJECT_DIR$/imageProcessing/utils.py" />
-        <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html" />
         <option value="$PROJECT_DIR$/imageProcessing/urls.py" />
         <option value="$PROJECT_DIR$/imageProcessing/views.py" />
+        <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html" />
+        <option value="$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py" />
       </list>
     </option>
   </component>
@@ -228,6 +226,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -324,8 +324,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -593,19 +591,20 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1212" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18063314" sideWeight="0.50053936" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22955975" sideWeight="0.49595687" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32849365" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22156334" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22867514" sideWeight="0.49595687" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20871143" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09326146" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3275862" sideWeight="0.4851752" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27044025" sideWeight="0.48787063" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3493648" sideWeight="0.48787063" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -682,28 +681,43 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/imageProcessing/views.py</url>
-          <line>141</line>
+          <line>147</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/imageProcessing/views.py</url>
-          <line>146</line>
+          <line>152</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py</url>
-          <line>282</line>
-          <option name="timeStamp" value="48" />
+          <line>289</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py</url>
-          <line>285</line>
-          <option name="timeStamp" value="49" />
+          <line>291</line>
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/imageProcessing/views.py</url>
-          <line>11</line>
-          <option name="timeStamp" value="50" />
+          <url>file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py</url>
+          <line>53</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html</url>
+          <line>249</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -713,7 +727,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="51" />
+      <option name="time" value="59" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -974,41 +988,23 @@
     </entry>
     <entry file="file:///usr/local/lib/python3.4/dist-packages/django/http/response.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="732">
+        <state relative-caret-position="9462">
           <caret line="519" column="8" lean-forward="false" selection-start-line="519" selection-start-column="8" selection-end-line="519" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1198">
-          <caret line="153" column="8" lean-forward="false" selection-start-line="153" selection-start-column="8" selection-end-line="153" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="229" column="62" lean-forward="false" selection-start-line="229" selection-start-column="62" selection-end-line="229" selection-end-column="62" />
-          <folding>
-            <marker date="1508950641819" expanded="true" signature="9139:9395" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="25" column="4" lean-forward="false" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+        <state relative-caret-position="475">
+          <caret line="26" column="14" lean-forward="false" selection-start-line="26" selection-start-column="14" selection-end-line="26" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
+        <state relative-caret-position="950">
           <caret line="55" column="27" lean-forward="false" selection-start-line="55" selection-start-column="27" selection-end-line="55" selection-end-column="27" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
@@ -1016,13 +1012,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6532">
+          <caret line="81" column="20" lean-forward="false" selection-start-line="81" selection-start-column="20" selection-end-line="81" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2095">
-          <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+        <state relative-caret-position="4294">
+          <caret line="226" column="24" lean-forward="false" selection-start-line="226" selection-start-column="24" selection-end-line="226" selection-end-column="24" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageProcessing/imageProcessingFunc/crystal_extractor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="538">
+          <caret line="62" column="35" lean-forward="true" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>

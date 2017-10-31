@@ -31,7 +31,7 @@ class Segment:
         segmented_image = res.reshape((image.shape))
         return label.reshape((image.shape[0], image.shape[1])),segmented_image.astype(np.uint8)
 
-    def extract_connected_component(self, binary_image, connectivity, label=None):
+    def extract_top_area_components(self, binary_image, connectivity, num_of_crystal, label=None):
         '''
 
         :param binary_image:
@@ -52,13 +52,23 @@ class Segment:
         centroids = output[3]
 
         fg_area = stats[1:, 4] # index 0 = background
-        max_fg_area_index = np.argmax(fg_area)+1 # fg area indexs start with 1
-        max_area_coordinate = stats[max_fg_area_index + 1, 0:4]
-        max_fg_area = stats[max_fg_area_index + 1, 4]
-        max_area_centroid = centroids[max_fg_area_index + 1]
+        ascending_fg_index_arr = np.argsort(fg_area) # return the index arr of ascending crystal area
+        sorted_fg_index_arr = np.flipud(ascending_fg_index_arr) # reverse the arr
 
+        # Since here we skip the index 0 of background image, we need plus 1 to match the index here with the index of
+        # the original labels array
+        crystal_index_to_extract = sorted_fg_index_arr[0:num_of_crystal] + 1
         max_area_img = np.zeros(uint8_img.shape)
-        max_area_img[labels == max_fg_area_index] = 255
+        for crystal_index in crystal_index_to_extract:
+            max_area_img[labels == crystal_index] = 255
+
+        # max_fg_area_index = np.argmax(fg_area)+1 # fg area indexs start with 1
+        # max_area_coordinate = stats[max_fg_area_index, 0:4]
+        # max_fg_area = stats[max_fg_area_index, 4]
+        # max_area_centroid = centroids[max_fg_area_index]
+        #
+        # max_area_img = np.zeros(uint8_img.shape)
+        # max_area_img[labels == max_fg_area_index] = 255
 
         # return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
         return np.uint8(max_area_img)
@@ -283,15 +293,19 @@ class ProcessingFunction:
         crystals_mask_kmean = np.uint8(crystals_mask_kmean)
 
         image_copy = copy.copy(original_image)
-        image_copy[crystals_mask_kmean != 255] = 0
+        image_copy[crystals_mask_kmean != 255] = 255
         return image_copy
 
-    def show_max_area_crystal(self, original_image, image_mask):
+    def show_top_area_crystals(self, original_image, image_mask):
         mask = copy.copy(image_mask)
         mask = self.seg.two_channel_grayscale(mask)
-        max_area_crystal_kmean = self.seg.extract_connected_component(mask, 8)
+        max_area_crystal_kmean = self.seg.extract_top_area_components(mask, 8, 10)
         biggest_crystal = copy.copy(original_image)
         biggest_crystal[max_area_crystal_kmean != 255] = 255
         return biggest_crystal
+
+    # def show_all_crystal_larger_than(self, original_image, image_mask, ):
+
+
 
 

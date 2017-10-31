@@ -23,8 +23,8 @@ current_image = np.zeros((400,400), np.uint8)
 last_state_image = np.zeros((400,400), np.uint8)
 last_state_image_arr = []
 history_thumbnail_arr = []
-max_undo_steps = 5
-undo_depth = 0
+max_undo_steps = 6
+undo_depth = 1
 last_called_function = ""
 labels = np.zeros((400, 400), np.uint8)
 
@@ -35,7 +35,10 @@ def show_base64(request):
     return JsonResponse(json_data, safe=False)
 
 def compress_image(image):
-    (height, width, _) =image.shape
+    if len(image.shape) == 3:
+        (height, width, _) =image.shape
+    else:
+        (height, width) = image.shape
     return cv2.resize(image, (int(width/2), int(height/2)), interpolation=cv2.INTER_CUBIC)
 
 @csrf_exempt
@@ -77,6 +80,7 @@ def save_state_image():
     history_thumbnail_arr.append(compressed_image)
 
     undo_depth = len(last_state_image_arr)-1
+    print('undo depth', undo_depth)
 
 def reset_current_image(function_name):
     global last_called_function
@@ -87,6 +91,8 @@ def reset_current_image(function_name):
         current_image = last_state_image_arr[undo_depth]
 
     last_called_function = function_name
+    undo_depth = len(last_state_image_arr) - 1
+    print('undo depth', undo_depth)
 
 
 # def save_second_last_state_image():
@@ -171,11 +177,14 @@ def undo_last_step(request):
     global current_image
     global last_state_image_arr
     global undo_depth
-    current_image = last_state_image_arr[undo_depth]
-    if undo_depth>0:
-        undo_depth -=1
 
-    json_data, _ = cv_to_json(current_image)
+    if undo_depth>1:
+        undo_depth -=1
+    current_image = last_state_image_arr[undo_depth]
+    print('undo depth', undo_depth)
+    # json_data, _ = cv_to_json(current_image)
+    # save_state_image()
+    json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
     return JsonResponse(json_data, safe=False)
 
 @csrf_exempt
@@ -216,13 +225,14 @@ def show_all_crystal(request):
 @csrf_exempt
 def show_max_area_crystal(request):
     global current_image
-    save_state_image()
-
     global original_image
-    current_image = processingFunction.show_max_area_crystal(original_image=original_image,
-                                                             image_mask=current_image)
-    json_data, _ = cv_to_json(current_image)
-    return JsonResponse(json_data, safe=False)
+    current_image = processingFunction.show_top_area_crystals(original_image=original_image,
+                                                              image_mask=current_image)
+
+    save_state_image()
+    json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+    # json_data, _ = cv_to_json(current_image)
+    return JsonResponse(json_data)
 
 @csrf_exempt
 def reset(request):
@@ -239,4 +249,25 @@ def reset(request):
 
     json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
     return JsonResponse(json_data)
+
+@csrf_exempt
+def set_image_from_thumbnail(request):
+    if request.method == 'POST':
+        input = request.POST.get('input')
+        thumbnail_id = str(input)
+        id = int(thumbnail_id.split("_")[1])
+        global current_image
+        #save_state_image()
+
+        global original_image
+        global last_state_image_arr
+        global undo_depth
+
+        current_image = last_state_image_arr[id]
+        undo_depth = input
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data})
 

@@ -21,15 +21,18 @@
         #image {
             width: 100%;
         }
-        .thumbnail{
+
+        .thumbnail {
             width: 100%;
             padding: 10px 0;
         }
+
         .center {
             margin: 0 auto;
             width: 80%;
         }
-        ul{
+
+        ul {
             padding: 0;
         }
     </style>
@@ -48,7 +51,7 @@
                 <div class="col-lg-2">
                     <div class="row">
                         <div class="col-lg-1"></div>
-                        <div class = "col-lg-10">
+                        <div class="col-lg-10">
                             <ul id="hist-thumbnail"></ul>
                         </div>
                         <div class="col-lg-1"></div>
@@ -66,6 +69,17 @@
                 </div>
 
                 <div class="col-lg-3">
+
+                    <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Laplacian</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <button id="btn_laplacian" type="button">Do laplacian</button>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+                    
                     <div class="form-group row">
                         <div class="col-lg-5">
                             <label class="control-label"> Lower threshold</label>
@@ -94,15 +108,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            <label class="control-label"> Laplacian</label>
-                        </div>
-                        <div class="col-lg-5">
-                            <button id="btn_laplacian" type="button">Do laplacian</button>
-                        </div>
-                        <div class="col-lg-2"></div>
-                    </div>
 
 
                     <div class="form-group row">
@@ -167,7 +172,7 @@
                                 Undo
                             </button>
                         </div>
-                          <div class="col-lg-2">
+                        <div class="col-lg-2">
                             <button id="btn_reset" type="button" class="btn btn-primary">
                                 Reset
                             </button>
@@ -193,14 +198,43 @@
 
 {% block javascript %}
     <script>
-     function disp_hist_thumbnail(data){
-         var hist_thumbnail_data_arr = data["thumbnail_arr"];
-        $('#hist-thumbnail').empty();
-                    for (i=0; i<hist_thumbnail_data_arr.length; i++){
-                        $('#hist-thumbnail').prepend($('<img>', {id:"thumb"+i, class:"img-fluid centered thumbnail",
-                            src:"data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i]}))
-                    }
-    }
+        function disp_hist_thumbnail(data) {
+            var hist_thumbnail_data_arr = data["thumbnail_arr"];
+            $('#hist-thumbnail').empty();
+            for (i = 0; i < hist_thumbnail_data_arr.length; i++) {
+                var thumbnail_id = "thumb_" + i;
+                $('#hist-thumbnail').prepend($('<img>', {
+                    id: thumbnail_id,
+                    class: "img-fluid centered thumbnail",
+                    src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
+                    onclick: "on_click_thumbnail(id)"
+                }))
+            }
+        }
+</script>
+    <script>
+        function on_click_thumbnail(thumbnail_id){
+            console.log("thumbnail id: ", thumbnail_id);
+             $.ajax({
+                url: "img-from-thumbnail/", // the endpoint
+                type: "POST", // http method
+                data: {input: thumbnail_id}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+
+        }
     </script>
 
 
@@ -223,13 +257,6 @@
                 success: function (data) {
                     {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-{#                    var hist_thumbnail_div = document.getElementById("hist-thumbnail");#}
-{#                    var hist_thumbnail_data_arr = data["thumbnail_arr"];#}
-{#                    $('#hist-thumbnail').empty();#}
-{#                    for (i=0; i<hist_thumbnail_data_arr.length; i++){#}
-{#                        $('#hist-thumbnail').prepend($('<img>', {id:"thumb"+i, class:"img-fluid centered thumbnail",#}
-{#                            src:"data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i]}))#}
-{#                    }#}
                     disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
                 },
@@ -250,6 +277,7 @@
 
                 success: function (data) {
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                 },
                 error: function (data) {
                     console.log(data);
@@ -301,6 +329,7 @@
                 success: function (data) {
                     {#                    $('#slider-kmeans').val(''); // remove the value from the input#}
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
                 },
 
@@ -341,6 +370,7 @@
                 url: "/undo",
                 success: function (data) {
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                 },
                 error: function (data) {
                     console.log(data);
@@ -362,6 +392,7 @@
                 success: function (data) {
                     $('#lower_thesh_input').val(''); // remove the value from the input
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
                 },
 
@@ -382,6 +413,7 @@
 
                 success: function (data) {
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
                 },
 
@@ -403,6 +435,7 @@
 
                 success: function (data) {
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
                 },
 
@@ -415,7 +448,7 @@
 
     </script>
 
-     <script>
+    <script>
         $("#btn_reset").click(function (e) {
             e.preventDefault();
             $.ajax({
