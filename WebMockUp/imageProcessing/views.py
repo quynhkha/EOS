@@ -20,6 +20,7 @@ from .imageProcessingFunc.crystal_extractor import ProcessingFunction
 processingFunction = ProcessingFunction()
 original_image =np.zeros((400,400), np.uint8)
 current_image = np.zeros((400,400), np.uint8)
+current_mask = np.zeros((400,400), np.uint8)
 last_state_image = np.zeros((400,400), np.uint8)
 last_state_image_arr = []
 history_thumbnail_arr = []
@@ -202,6 +203,9 @@ def extract_crystal_mask(request):
                                                         labels=labels, user_chosen_label=input)
         #json_data, _ = cv_to_json(current_image)
         save_state_image()
+        global current_mask
+        current_mask = current_image
+
         json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -218,6 +222,7 @@ def show_all_crystal(request):
                                                         image_mask=current_image)
     #json_data, _ = cv_to_json(current_image)
     save_state_image()
+
     json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
     return JsonResponse(json_data, safe=False)
 
@@ -271,3 +276,10 @@ def set_image_from_thumbnail(request):
         _, image_data = cv_to_json(current_image)
     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data})
 
+@csrf_exempt
+def plot_histogram(request):
+    global current_image
+    global current_mask
+    hist_y_axis, hist_x_axis = processingFunction.plot_histogram(current_image, current_mask)
+    json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
+    return JsonResponse(json_data)

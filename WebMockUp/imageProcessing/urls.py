@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^upload/max-crystal/$', views.show_max_area_crystal, name='show-max-area-crystal'),
     url(r'^reset/$', views.reset, name="reset"),
 url(r'^upload/img-from-thumbnail/$', views.set_image_from_thumbnail, name="img-from-thumbnail"),
-
+    url(r'^histogram/$', views.plot_histogram, name="plot-histogram"),
 ]

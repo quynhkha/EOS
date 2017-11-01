@@ -306,6 +306,12 @@ class ProcessingFunction:
 
     # def show_all_crystal_larger_than(self, original_image, image_mask, ):
 
-
+    def plot_histogram(self, image, image_mask):
+        hist_with_mask = cv2.calcHist([image], [0], image_mask, [256], [0,256])
+        # plt.plot(hist_mask)
+        # plt.show()
+        hist_y_axis = np.reshape(hist_with_mask, 256)
+        hist_x_axis = np.arange(0,256) # create array of 0->255
+        return hist_y_axis, hist_x_axis
 
 
