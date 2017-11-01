@@ -314,4 +314,17 @@ class ProcessingFunction:
         hist_x_axis = np.arange(0,256) # create array of 0->255
         return hist_y_axis, hist_x_axis
 
+    def closing(self, image, kernel_size, num_of_iter):
+        return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
+                                 kernel=np.ones((kernel_size, kernel_size), np.uint8), iterations=num_of_iter)
 
+    def opening(self, image, kernel_size, num_of_iter):
+        return cv2.morphologyEx(image, cv2.MORPH_OPEN,
+                                kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=num_of_iter)
+
+    def erosion(self, image, kernel_size, num_of_iter):
+        return cv2.erode(image, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=num_of_iter)
+
+
+    def dilation(self, image, kernel_size, num_of_iter):
+        return cv2.dilate(image, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=num_of_iter)

@@ -141,6 +141,36 @@
                             <button id="btn_extract_crystal_mask">Extract</button>
                         </div>
                     </div>
+                    <div id ="opening">
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Opening kernel size</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-opening-kernel" type="range" min="1" max="10" value="3" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-opening-val-kernel" type="text" placeholder="3" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Opening iterations</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-opening-iter" type="range" min="1" max="5" value="1" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-opening-val-iter" type="text" placeholder="1" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-lg-5">
@@ -515,5 +545,61 @@
             }
         });
     });
+    </script>
+
+     <script>
+        $("#slider-opening-kernel").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-opening-val-kernel").val($("#slider-opening-kernel").val());
+            e.preventDefault();
+            console.log("value", $('#slider-opening-kernel').val());
+            $.ajax({
+                url: "opening/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-opening-kernel').val(),
+                        num_of_iter: $('#slider-opening-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+        </script>
+
+    <script>
+        $("#slider-opening-iter").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-opening-val-iter").val($("#slider-opening-iter").val());
+            e.preventDefault();
+            console.log("value", $('#slider-opening-iter').val());
+            $.ajax({
+                url: "opening/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-opening-kernel').val(),
+                        num_of_iter: $('#slider-opening-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
     </script>
 {% endblock %}

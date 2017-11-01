@@ -283,3 +283,22 @@ def plot_histogram(request):
     hist_y_axis, hist_x_axis = processingFunction.plot_histogram(current_image, current_mask)
     json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
     return JsonResponse(json_data)
+
+@csrf_exempt
+def do_opening(request):
+    reset_current_image('do_opening')
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+        global current_image
+        global current_mask
+
+        current_image = processingFunction.opening(current_image, kernel_size, num_of_iter)
+        save_state_image()
+        current_mask = current_image
+
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data})
