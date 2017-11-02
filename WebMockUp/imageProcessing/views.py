@@ -228,11 +228,13 @@ def show_all_crystal(request):
 
 
 @csrf_exempt
-def show_max_area_crystal(request):
+def show_top_area_crystal(request):
     global current_image
     global original_image
+    num_of_crystals = int(request.POST.get('input'))
+
     current_image = processingFunction.show_top_area_crystals(original_image=original_image,
-                                                              image_mask=current_image)
+                                                              image_mask=current_image, num_of_crystals=num_of_crystals)
 
     save_state_image()
     json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)

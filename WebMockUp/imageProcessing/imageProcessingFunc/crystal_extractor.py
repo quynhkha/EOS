@@ -296,10 +296,10 @@ class ProcessingFunction:
         image_copy[crystals_mask_kmean != 255] = 255
         return image_copy
 
-    def show_top_area_crystals(self, original_image, image_mask):
+    def show_top_area_crystals(self, original_image, image_mask, num_of_crystals):
         mask = copy.copy(image_mask)
         mask = self.seg.two_channel_grayscale(mask)
-        max_area_crystal_kmean = self.seg.extract_top_area_components(mask, 8, 10)
+        max_area_crystal_kmean = self.seg.extract_top_area_components(mask, 8, num_of_crystals)
         biggest_crystal = copy.copy(original_image)
         biggest_crystal[max_area_crystal_kmean != 255] = 255
         return biggest_crystal

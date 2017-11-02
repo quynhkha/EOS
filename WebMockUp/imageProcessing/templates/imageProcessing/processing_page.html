@@ -283,16 +283,17 @@
 
                     <div class="form-group row">
                         <div class="col-lg-5">
-                            <label class="control-label"> Max area crystal </label>
+                            <label class="control-label"> Num of top area crystals to extract: </label>
                         </div>
-                        <div class="col-lg-5">
-                            <button id="btn_max_crystal" type="button">
-                                Show crystal
-                            </button>
+                         <div class="col-lg-3">
+                            <input id="num_crystal_label" type="number" placeholder="5">
+                        </div>
+                         <div class="col-lg-1"></div>
 
+                        <div class="col-lg-3 centered">
+                            <button id="btn_extract_top_crystal">Extract</button>
                         </div>
 
-                        <div class="col-lg-2"></div>
                     </div>
 
                     <div class="form-group row">
@@ -869,6 +870,30 @@
             });
         });
 
+    </script>
+
+      <script>
+        $("#btn_extract_top_crystal").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "top-crystal/",
+                type: "POST", // http method
+                data: {input: $("#num_crystal_label").val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+{#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
     </script>
 
 {% endblock %}
