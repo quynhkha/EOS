@@ -141,6 +141,7 @@
                             <button id="btn_extract_crystal_mask">Extract</button>
                         </div>
                     </div>
+{#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
                     <div id ="opening">
                         <div class="form-group row">
                             <div class="col-lg-5">
@@ -166,6 +167,101 @@
 
                             <div class="col-lg-2">
                                 <input id="slider-opening-val-iter" type="text" placeholder="1" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+
+                        </div>
+                    </div>
+
+                     <div id ="closing">
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Closing kernel size</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-closing-kernel" type="range" min="1" max="10" value="3" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-closing-val-kernel" type="text" placeholder="3" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Closing iterations</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-closing-iter" type="range" min="1" max="5" value="1" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-closing-val-iter" type="text" placeholder="1" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                     <div id ="erosion">
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Erosing kernel size</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-erosion-kernel" type="range" min="1" max="10" value="3" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-erosion-val-kernel" type="text" placeholder="3" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Erosion iterations</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-erosion-iter" type="range" min="1" max="5" value="1" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-erosion-val-iter" type="text" placeholder="1" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                     <div id ="dilation">
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Dilation kernel size</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-dilation-kernel" type="range" min="1" max="10" value="3" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-dilation-val-kernel" type="text" placeholder="3" readonly
+                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-5">
+                                <label class="control-label"> Dilation iterations</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input id="slider-dilation-iter" type="range" min="1" max="5" value="1" step="1">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input id="slider-dilation-val-iter" type="text" placeholder="1" readonly
                                        style="border:0; color:#f6931f; font-weight:bold;">
                             </div>
 
@@ -601,5 +697,178 @@
                 }
             });
         });
+        </script>
+
+    <script>
+        $("#slider-closing-kernel").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-closing-val-kernel").val($("#slider-closing-kernel").val());
+            e.preventDefault();
+            console.log("value", $('#slider-closing-kernel').val());
+            $.ajax({
+                url: "closing/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-closing-kernel').val(),
+                        num_of_iter: $('#slider-closing-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+        </script>
+
+    <script>
+        $("#slider-closing-iter").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-closing-val-iter").val($("#slider-closing-iter").val());
+            e.preventDefault();
+            console.log("value", $('#slider-closing-iter').val());
+            $.ajax({
+                url: "closing/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-closing-kernel').val(),
+                        num_of_iter: $('#slider-closing-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+
     </script>
+
+    <script>
+        $("#slider-erosion-kernel").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-erosion-val-kernel").val($("#slider-erosion-kernel").val());
+            e.preventDefault();
+            console.log("value", $('#slider-erosion-kernel').val());
+            $.ajax({
+                url: "erosion/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-erosion-kernel').val(),
+                        num_of_iter: $('#slider-erosion-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+        </script>
+
+    <script>
+        $("#slider-erosion-iter").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-erosion-val-iter").val($("#slider-erosion-iter").val());
+            e.preventDefault();
+            console.log("value", $('#slider-erosion-iter').val());
+            $.ajax({
+                url: "erosion/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-erosion-kernel').val(),
+                        num_of_iter: $('#slider-erosion-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+
+    </script>
+
+
+    <script>
+        $("#slider-dilation-kernel").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-dilation-val-kernel").val($("#slider-dilation-kernel").val());
+            e.preventDefault();
+            console.log("value", $('#slider-dilation-kernel').val());
+            $.ajax({
+                url: "dilation/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-dilation-kernel').val(),
+                        num_of_iter: $('#slider-dilation-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+        </script>
+
+    <script>
+        $("#slider-dilation-iter").change(function (e) {
+            {#            alert($("#slider").val());#}
+            $("#slider-dilation-val-iter").val($("#slider-dilation-iter").val());
+            e.preventDefault();
+            console.log("value", $('#slider-dilation-iter').val());
+            $.ajax({
+                url: "closing/", // the endpoint
+                type: "POST", // http method
+                data: {kernel_size: $('#slider-dilation-kernel').val(),
+                        num_of_iter: $('#slider-dilation-iter').val()}, // data sent with the post request
+
+                // handle a successful response
+                success: function (data) {
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+                    disp_hist_thumbnail(data);
+                    console.log("success"); // another sanity check
+                },
+
+                // handle a non-successful response
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+
+    </script>
+
 {% endblock %}

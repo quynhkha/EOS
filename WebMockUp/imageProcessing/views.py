@@ -294,7 +294,69 @@ def do_opening(request):
         global current_mask
 
         current_image = processingFunction.opening(current_image, kernel_size, num_of_iter)
-        save_state_image()
+        # save_state_image()
+        current_mask = current_image
+
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data})
+
+
+@csrf_exempt
+def do_closing(request):
+    reset_current_image('do_closing')
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+        global current_image
+        global current_mask
+
+        current_image = processingFunction.closing(current_image, kernel_size, num_of_iter)
+        # save_state_image()
+        current_mask = current_image
+
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data})
+
+
+
+@csrf_exempt
+def do_erosion(request):
+    reset_current_image('do_erosion')
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+        global current_image
+        global current_mask
+
+        current_image = processingFunction.erosion(current_image, kernel_size, num_of_iter)
+        # save_state_image()
+        current_mask = current_image
+
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(current_image)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data})
+
+
+
+@csrf_exempt
+def do_dilation(request):
+    reset_current_image('do_dilation')
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+        global current_image
+        global current_mask
+
+        current_image = processingFunction.dilation(current_image, kernel_size, num_of_iter)
+        # save_state_image()
         current_mask = current_image
 
         json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
