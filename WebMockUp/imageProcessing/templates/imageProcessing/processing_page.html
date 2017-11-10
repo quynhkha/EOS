@@ -70,6 +70,17 @@
             position: relative;
         {#              width: 100%;#}
         }
+
+        .panel-heading h4 {
+            font-size: 1rem !important;
+
+        }
+        .panel-heading{
+                 color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+            padding: 16px;
+        }
     </style>
 </head>
 <body>
@@ -179,208 +190,249 @@
                         </div>
                     </div>
                     {#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
-                    <div id="opening">
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Opening kernel size</label>
+                    <div id="opening" class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#opening-collapse-sec">Opening operation</a>
+                                </h4>
                             </div>
-                            <div class="col-lg-5">
-                                <input id="slider-opening-kernel" type="range" min="1" max="10" value="3" step="1">
+                            <div id="opening-collapse-sec" class="panel-collapse collapse">
+                                <ul class="list-group">
+                                    <div class="form-group row ">
+                                        <div class="col-lg-5">
+                                            <label class="control-label"> Opening kernel size</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <input id="slider-opening-kernel" type="range" min="1" max="10" value="3"
+                                                   step="1">
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <input id="slider-opening-val-kernel" type="text" placeholder="3" readonly
+                                                   style="border:0; color:#f6931f; font-weight:bold;">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="control-label"> Opening iterations</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <input id="slider-opening-iter" type="range" min="1" max="5" value="1"
+                                                   step="1">
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <input id="slider-opening-val-iter" type="text" placeholder="1" readonly
+                                                   style="border:0; color:#f6931f; font-weight:bold;">
+                                        </div>
+
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="closing" class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#closing-collapse-sec">Closing operation</a>
+                                </h4>
+                            </div>
+                            <div id="closing-collapse-sec" class="panel-collapse collapse">
+                                <ul class="list-group">
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Closing kernel size</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-closing-kernel" type="range" min="1" max="10" value="3" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-closing-val-kernel" type="text" placeholder="3" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
                             </div>
 
-                            <div class="col-lg-2">
-                                <input id="slider-opening-val-kernel" type="text" placeholder="3" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Closing iterations</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-closing-iter" type="range" min="1" max="5" value="1" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-closing-val-iter" type="text" placeholder="1" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
+
+                            </div>
+
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="erosion" class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#erosion-collapse-sec">Erosion operation</a>
+                                </h4>
+                            </div>
+                            <div id="erosion-collapse-sec" class="panel-collapse collapse">
+                                <ul class="list-group">
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Erosing kernel size</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-erosion-kernel" type="range" min="1" max="10" value="3" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-erosion-val-kernel" type="text" placeholder="3" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Erosion iterations</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-erosion-iter" type="range" min="1" max="5" value="1" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-erosion-val-iter" type="text" placeholder="1" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
+
+                            </div>
+                       </ul>
+                            </div>
+                        </div>
+
+                        <div id="dilation" class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#dilation-collapse-sec">Dilation operation</a>
+                                </h4>
+                            </div>
+                            <div id="dilation-collapse-sec" class="panel-collapse collapse">
+                                <ul class="list-group">
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Dilation kernel size</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-dilation-kernel" type="range" min="1" max="10" value="3" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-dilation-val-kernel" type="text" placeholder="3" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    <label class="control-label"> Dilation iterations</label>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input id="slider-dilation-iter" type="range" min="1" max="5" value="1" step="1">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <input id="slider-dilation-val-iter" type="text" placeholder="1" readonly
+                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                </div>
+
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-lg-5">
-                                <label class="control-label"> Opening iterations</label>
+                                <label class="control-label"> All crystals</label>
                             </div>
                             <div class="col-lg-5">
-                                <input id="slider-opening-iter" type="range" min="1" max="5" value="1" step="1">
+                                <button id="btn_all_crystal" type="button">
+                                    Show crystals
+                                </button>
                             </div>
 
-                            <div class="col-lg-2">
-                                <input id="slider-opening-val-iter" type="text" placeholder="1" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div id="closing">
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Closing kernel size</label>
-                            </div>
-                            <div class="col-lg-5">
-                                <input id="slider-closing-kernel" type="range" min="1" max="10" value="3" step="1">
-                            </div>
-
-                            <div class="col-lg-2">
-                                <input id="slider-closing-val-kernel" type="text" placeholder="3" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
-                            </div>
+                            <div class="col-lg-2"></div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-lg-5">
-                                <label class="control-label"> Closing iterations</label>
+                                <label class="control-label"> Num of top area crystals to extract: </label>
                             </div>
-                            <div class="col-lg-5">
-                                <input id="slider-closing-iter" type="range" min="1" max="5" value="1" step="1">
+                            <div class="col-lg-3">
+                                <input id="num_crystal_label" type="number" placeholder="5">
                             </div>
+                            <div class="col-lg-1"></div>
 
-                            <div class="col-lg-2">
-                                <input id="slider-closing-val-iter" type="text" placeholder="1" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
+                            <div class="col-lg-3 centered">
+                                <button id="btn_extract_top_crystal">Extract</button>
                             </div>
 
                         </div>
-                    </div>
 
-
-                    <div id="erosion">
                         <div class="form-group row">
                             <div class="col-lg-5">
-                                <label class="control-label"> Erosing kernel size</label>
-                            </div>
-                            <div class="col-lg-5">
-                                <input id="slider-erosion-kernel" type="range" min="1" max="10" value="3" step="1">
-                            </div>
+                                {#                                   <p><label>Drawing tool: <select id="dtool">#}
+                                {#        <option value="line">Line</option>#}
+                                {#        <option value="rect">Rectangle</option>#}
+                                {#        <option value="pencil">Pencil</option>#}
+                                {#    </select></label></p>#}
+                                <div id="myCanvas-toolbar"></div>
+                                <div id="myCanvas-picturepanel"></div>
 
-                            <div class="col-lg-2">
-                                <input id="slider-erosion-val-kernel" type="text" placeholder="3" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-lg-5">
-                                <label class="control-label"> Erosion iterations</label>
+                                <label class="control-label"> Plot histogram </label>
                             </div>
                             <div class="col-lg-5">
-                                <input id="slider-erosion-iter" type="range" min="1" max="5" value="1" step="1">
+                                <button id="btn_histogram" type="button">
+                                    Plot histogram
+                                </button>
+
                             </div>
 
-                            <div class="col-lg-2">
-                                <input id="slider-erosion-val-iter" type="text" placeholder="1" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div id="dilation">
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Dilation kernel size</label>
-                            </div>
-                            <div class="col-lg-5">
-                                <input id="slider-dilation-kernel" type="range" min="1" max="10" value="3" step="1">
-                            </div>
-
-                            <div class="col-lg-2">
-                                <input id="slider-dilation-val-kernel" type="text" placeholder="3" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
-                            </div>
+                            <div class="col-lg-2"></div>
                         </div>
 
                         <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Dilation iterations</label>
-                            </div>
-                            <div class="col-lg-5">
-                                <input id="slider-dilation-iter" type="range" min="1" max="5" value="1" step="1">
-                            </div>
-
                             <div class="col-lg-2">
-                                <input id="slider-dilation-val-iter" type="text" placeholder="1" readonly
-                                       style="border:0; color:#f6931f; font-weight:bold;">
+                                <button id="btn_undo" type="button" class="btn btn-primary">
+                                    Undo
+                                </button>
                             </div>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            <label class="control-label"> All crystals</label>
-                        </div>
-                        <div class="col-lg-5">
-                            <button id="btn_all_crystal" type="button">
-                                Show crystals
-                            </button>
+                            <div class="col-lg-2">
+                                <button id="btn_reset" type="button" class="btn btn-primary">
+                                    Reset
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="col-lg-2"></div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            <label class="control-label"> Num of top area crystals to extract: </label>
-                        </div>
-                        <div class="col-lg-3">
-                            <input id="num_crystal_label" type="number" placeholder="5">
-                        </div>
-                        <div class="col-lg-1"></div>
-
-                        <div class="col-lg-3 centered">
-                            <button id="btn_extract_top_crystal">Extract</button>
-                        </div>
 
                     </div>
-
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            {#                                   <p><label>Drawing tool: <select id="dtool">#}
-                            {#        <option value="line">Line</option>#}
-                            {#        <option value="rect">Rectangle</option>#}
-                            {#        <option value="pencil">Pencil</option>#}
-                            {#    </select></label></p>#}
-                            <div id="myCanvas-toolbar"></div>
-                            <div id="myCanvas-picturepanel"></div>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            <label class="control-label"> Plot histogram </label>
-                        </div>
-                        <div class="col-lg-5">
-                            <button id="btn_histogram" type="button">
-                                Plot histogram
-                            </button>
-
-                        </div>
-
-                        <div class="col-lg-2"></div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-lg-2">
-                            <button id="btn_undo" type="button" class="btn btn-primary">
-                                Undo
-                            </button>
-                        </div>
-                        <div class="col-lg-2">
-                            <button id="btn_reset" type="button" class="btn btn-primary">
-                                Reset
-                            </button>
-                        </div>
-                    </div>
-
 
                 </div>
 
             </div>
 
         </div>
-
-    </div>
 
     </div>
 
@@ -1088,39 +1140,6 @@
             return elt("span", null, "Brush size: ", select);
         };
 
-        {#controls.save = function(cx) {#}
-        {#  var link = elt("a", {href: "/"}, "Save");#}
-        {#  function update() {#}
-        {#    try {#}
-        {#      link.href = cx.canvas.toDataURL();#}
-        {#    } catch (e) {#}
-        {#      if (e instanceof SecurityError)#}
-        {#        link.href = "javascript:alert(" +#}
-        {#          JSON.stringify("Can't save: " + e.toString()) + ")";#}
-        {#      else#}
-        {#        throw e;#}
-        {#    }#}
-        {#  }#}
-        {#  link.addEventListener("mouseover", update);#}
-        {#  link.addEventListener("focus", update);#}
-        {#  return link;#}
-        {
-            #};
-            #}
-
-            {#function loadImageURL(cx, url) {#}
-            {#  var image = document.createElement("img");#}
-            {#  image.addEventListener("load", function() {#}
-            {#    var color = cx.fillStyle, size = cx.lineWidth;#}
-            {#    cx.canvas.width = image.width;#}
-            {#    cx.canvas.height = image.height;#}
-            {#    cx.drawImage(image, 0, 0);#}
-            {#    cx.fillStyle = color;#}
-            {#    cx.strokeStyle = color;#}
-            {#    cx.lineWidth = size;#}
-            {#  });#}
-            {#  image.src = url;#}
-            {#}#}
 
                 function updateImageChange(cx) {
                     var image = document.getElementById("image");
@@ -1146,76 +1165,18 @@
                     return form;
                 };
 
-                {#controls.openFile = function(cx) {#}
-                {#  var input = elt("input", {type: "file"});#}
-                {#  input.addEventListener("change", function() {#}
-                {#    if (input.files.length == 0) return;#}
-                {#    var reader = new FileReader();#}
-                {#    reader.addEventListener("load", function() {#}
-                {#      loadImageURL(cx, reader.result);#}
-                {#    });#}
-                {#    reader.readAsDataURL(input.files[0]);#}
-                {#  });#}
-                {#  return elt("div", null, "Open file: ", input);#}
-                {
-                    #};
-                    #}
-                    {##}
-                    {#controls.openURL = function(cx) {#}
-                    {#  var input = elt("input", {type: "text"});#}
-                    {#  var form = elt("form", null,#}
-                    {#                 "Open URL: ", input,#}
-                    {#                 elt("button", {type: "submit"}, "load"));#}
-                    {#  form.addEventListener("submit", function(event) {#}
-                    {#    event.preventDefault();#}
-                    {#    loadImageURL(cx, input.value);#}
-                    {#  });#}
-                    {#  return form;#}
-                    {
-                        #};
-                        #}
 
-                        {#tools.Text = function(event, cx) {#}
-                        {#  var text = prompt("Text:", "");#}
-                        {#  if (text) {#}
-                        {#    var pos = relativePos(event, cx.canvas);#}
-                        {#    cx.font = Math.max(7, cx.lineWidth) + "px sans-serif";#}
-                        {#    cx.fillText(text, pos.x, pos.y);#}
-                        {#  }#}
-                        {
-                            #};
-                            #}
-                            {##}
-                            {#tools.Spray = function(event, cx) {#}
-                            {#  var radius = cx.lineWidth / 2;#}
-                            {#  var area = radius * radius * Math.PI;#}
-                            {#  var dotsPerTick = Math.ceil(area / 30);#}
-                            {##}
-                            {#  var currentPos = relativePos(event, cx.canvas);#}
-                            {#  var spray = setInterval(function() {#}
-                            {#    for (var i = 0; i < dotsPerTick; i++) {#}
-                            {#      var offset = randomPointInRadius(radius);#}
-                            {#      cx.fillRect(currentPos.x + offset.x,#}
-                            {#                  currentPos.y + offset.y, 1, 1);#}
-                            {#    }#}
-                            {#  }, 25);#}
-                            {#  trackDrag(function(event) {#}
-                            {#    currentPos = relativePos(event, cx.canvas);#}
-                            {#  }, function() {#}
-                            {#    clearInterval(spray);#}
-                            {#  });#}
-                            {
-                                #};
-                                #}
 
                                 function randomPointInRadius(radius) {
                                     for (; ;) {
                                         var x = Math.random() * 2 - 1;
                                         var y = Math.random() * 2 - 1;
-                                        if (x * x + y * y <= 1)
+                                        if (x * x + y * y <= 1) {
                                             return {x: x * radius, y: y * radius};
+                                        }
                                     }
                                 }
+
 
     </script>
     <script>createPaint(document.getElementById('canvas-wrapper'));</script>
