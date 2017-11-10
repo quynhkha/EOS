@@ -6,9 +6,7 @@
     <title>Image Processing Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-            crossorigin="anonymous"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -16,7 +14,11 @@
             integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
             crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+
 
     <style>
         #image {
@@ -35,6 +37,38 @@
 
         ul {
             padding: 0;
+        }
+
+        .picturepanel {
+
+            width: -moz-fit-content;
+        {#            height: fit-content;#}{#  width: fit-content;#} max-width: 100%;
+        {#  max-height: 50%;#} border: 2px solid silver;
+            overflow: auto;
+        {#  position: absolute;#}{#            top: 50%;#}
+
+        }
+
+        .picturepanel canvas {
+            display: block;
+        }
+
+        .toolbar > * {
+            margin: 10px auto;
+            justify-content: center;
+            display: inline-block;
+        }
+
+        canvas {
+            display: block;
+            margin: 50px auto;
+
+        }
+
+        #canvas-wrapper {
+            margin-top: 50px;
+            position: relative;
+        {#              width: 100%;#}
         }
     </style>
 </head>
@@ -61,11 +95,15 @@
                 </div>
 
                 <div class="col-lg-7">
-                    <div id="main-image">
+                    {#                       <div> <canvas id="myCanvas"></canvas></div>#}
+                    <div id="imageView">
+
                         <img id="image" class="img-fluid centered"
                              src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}">
                         {#         <img id= "image" src="/media/1947-1_plg6.png" height="400">}#}
                     </div>
+
+                    <div id="canvas-wrapper"></div>
 
                     <div id="histogram"></div>
 
@@ -82,7 +120,7 @@
                         </div>
                         <div class="col-lg-2"></div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <div class="col-lg-5">
                             <label class="control-label"> Lower threshold</label>
@@ -110,7 +148,6 @@
                                    style="border:0; color:#f6931f; font-weight:bold;">
                         </div>
                     </div>
-
 
 
                     <div class="form-group row">
@@ -141,8 +178,8 @@
                             <button id="btn_extract_crystal_mask">Extract</button>
                         </div>
                     </div>
-{#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
-                    <div id ="opening">
+                    {#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
+                    <div id="opening">
                         <div class="form-group row">
                             <div class="col-lg-5">
                                 <label class="control-label"> Opening kernel size</label>
@@ -173,7 +210,7 @@
                         </div>
                     </div>
 
-                     <div id ="closing">
+                    <div id="closing">
                         <div class="form-group row">
                             <div class="col-lg-5">
                                 <label class="control-label"> Closing kernel size</label>
@@ -205,7 +242,7 @@
                     </div>
 
 
-                     <div id ="erosion">
+                    <div id="erosion">
                         <div class="form-group row">
                             <div class="col-lg-5">
                                 <label class="control-label"> Erosing kernel size</label>
@@ -237,7 +274,7 @@
                     </div>
 
 
-                     <div id ="dilation">
+                    <div id="dilation">
                         <div class="form-group row">
                             <div class="col-lg-5">
                                 <label class="control-label"> Dilation kernel size</label>
@@ -285,15 +322,28 @@
                         <div class="col-lg-5">
                             <label class="control-label"> Num of top area crystals to extract: </label>
                         </div>
-                         <div class="col-lg-3">
+                        <div class="col-lg-3">
                             <input id="num_crystal_label" type="number" placeholder="5">
                         </div>
-                         <div class="col-lg-1"></div>
+                        <div class="col-lg-1"></div>
 
                         <div class="col-lg-3 centered">
                             <button id="btn_extract_top_crystal">Extract</button>
                         </div>
 
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-5">
+                            {#                                   <p><label>Drawing tool: <select id="dtool">#}
+                            {#        <option value="line">Line</option>#}
+                            {#        <option value="rect">Rectangle</option>#}
+                            {#        <option value="pencil">Pencil</option>#}
+                            {#    </select></label></p>#}
+                            <div id="myCanvas-toolbar"></div>
+                            <div id="myCanvas-picturepanel"></div>
+
+                        </div>
                     </div>
 
                     <div class="form-group row">
@@ -333,7 +383,9 @@
     </div>
 
     </div>
+
     </body>
+    </html>
 
 {% endblock %}
 
@@ -343,6 +395,7 @@
 {#-->#}
 
 {% block javascript %}
+
     <script>
         function disp_hist_thumbnail(data) {
             var hist_thumbnail_data_arr = data["thumbnail_arr"];
@@ -358,22 +411,22 @@
             }
         }
 
-        function plot_histogram(data){
+        function plot_histogram(data) {
 
             var hist_data = [{
-               x: data["x"],
-               y: data["y"],
-{#                x: [1,2,3],#}
-{#                y: [10,11,12],#}
+                x: data["x"],
+                y: data["y"],
+                {#                x: [1,2,3],#}
+                {#                y: [10,11,12],#}
                 type: 'bar'
             }];
             Plotly.newPlot('histogram', hist_data);
         }
-</script>
+    </script>
     <script>
-        function on_click_thumbnail(thumbnail_id){
+        function on_click_thumbnail(thumbnail_id) {
             console.log("thumbnail id: ", thumbnail_id);
-             $.ajax({
+            $.ajax({
                 url: "img-from-thumbnail/", // the endpoint
                 type: "POST", // http method
                 data: {input: thumbnail_id}, // data sent with the post request
@@ -627,24 +680,24 @@
     </script>
 
     <script>
-    $("#btn_histogram").click(function (e) {
-        e.preventDefault();
-        $.ajax({
-            type: "GET",
-            url: "/histogram",
+        $("#btn_histogram").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: "/histogram",
 
-            success: function (data) {
-                plot_histogram(data);
-            },
-            error: function (data) {
-                console.log(data);
-                alert('error');
-            }
+                success: function (data) {
+                    plot_histogram(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('error');
+                }
+            });
         });
-    });
     </script>
 
-     <script>
+    <script>
         $("#slider-opening-kernel").change(function (e) {
             {#            alert($("#slider").val());#}
             $("#slider-opening-val-kernel").val($("#slider-opening-kernel").val());
@@ -653,8 +706,10 @@
             $.ajax({
                 url: "opening/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-opening-kernel').val(),
-                        num_of_iter: $('#slider-opening-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-opening-kernel').val(),
+                    num_of_iter: $('#slider-opening-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -670,7 +725,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
     <script>
         $("#slider-opening-iter").change(function (e) {
@@ -681,8 +736,10 @@
             $.ajax({
                 url: "opening/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-opening-kernel').val(),
-                        num_of_iter: $('#slider-opening-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-opening-kernel').val(),
+                    num_of_iter: $('#slider-opening-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -698,7 +755,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
     <script>
         $("#slider-closing-kernel").change(function (e) {
@@ -709,8 +766,10 @@
             $.ajax({
                 url: "closing/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-closing-kernel').val(),
-                        num_of_iter: $('#slider-closing-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-closing-kernel').val(),
+                    num_of_iter: $('#slider-closing-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -726,7 +785,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
     <script>
         $("#slider-closing-iter").change(function (e) {
@@ -737,8 +796,10 @@
             $.ajax({
                 url: "closing/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-closing-kernel').val(),
-                        num_of_iter: $('#slider-closing-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-closing-kernel').val(),
+                    num_of_iter: $('#slider-closing-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -766,8 +827,10 @@
             $.ajax({
                 url: "erosion/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-erosion-kernel').val(),
-                        num_of_iter: $('#slider-erosion-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-erosion-kernel').val(),
+                    num_of_iter: $('#slider-erosion-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -783,7 +846,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
     <script>
         $("#slider-erosion-iter").change(function (e) {
@@ -794,8 +857,10 @@
             $.ajax({
                 url: "erosion/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-erosion-kernel').val(),
-                        num_of_iter: $('#slider-erosion-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-erosion-kernel').val(),
+                    num_of_iter: $('#slider-erosion-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -824,8 +889,10 @@
             $.ajax({
                 url: "dilation/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-dilation-kernel').val(),
-                        num_of_iter: $('#slider-dilation-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-dilation-kernel').val(),
+                    num_of_iter: $('#slider-dilation-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -841,7 +908,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
     <script>
         $("#slider-dilation-iter").change(function (e) {
@@ -852,8 +919,10 @@
             $.ajax({
                 url: "closing/", // the endpoint
                 type: "POST", // http method
-                data: {kernel_size: $('#slider-dilation-kernel').val(),
-                        num_of_iter: $('#slider-dilation-iter').val()}, // data sent with the post request
+                data: {
+                    kernel_size: $('#slider-dilation-kernel').val(),
+                    num_of_iter: $('#slider-dilation-iter').val()
+                }, // data sent with the post request
 
                 // handle a successful response
                 success: function (data) {
@@ -872,7 +941,7 @@
 
     </script>
 
-      <script>
+    <script>
         $("#btn_extract_top_crystal").click(function (e) {
             e.preventDefault();
             $.ajax({
@@ -882,7 +951,7 @@
 
                 // handle a successful response
                 success: function (data) {
-{#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
+                    {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
                     document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
                     disp_hist_thumbnail(data);
                     console.log("success"); // another sanity check
@@ -896,4 +965,258 @@
         });
     </script>
 
+    <script>
+        /**
+         * Created by long on 10/11/17.
+         */
+        function elt(name, attributes) {
+            var node = document.createElement(name);
+            {#            var node = document.getElementById(name);#}
+            if (attributes) {
+                for (var attr in attributes)
+                    if (attributes.hasOwnProperty(attr))
+                        node.setAttribute(attr, attributes[attr]);
+            }
+            for (var i = 2; i < arguments.length; i++) {
+                var child = arguments[i];
+                if (typeof child == "string")
+                    child = document.createTextNode(child);
+                node.appendChild(child);
+            }
+            return node;
+        }
+
+        var controls = Object.create(null);
+
+        function createPaint(parent) {
+            var canvas = elt("canvas", {width: 500, height: 400});
+            {#    var canvas = document.getElementById("myCanvas");#}
+            {#    var canvas = elt("myCanvas", {width: 500, height: 300});#}
+            var cx = canvas.getContext("2d");
+            var image = document.getElementById("image");
+            var color = cx.fillStyle, size = cx.lineWidth;
+            {#    cx.canvas.width = image.width;#}
+            {#    cx.canvas.height = image.height;#}
+            cx.drawImage(image, 0, 0);
+            cx.fillStyle = color;
+            cx.strokeStyle = color;
+            cx.lineWidth = size;
+            var toolbar = elt("div", {class: "toolbar"});
+            for (var name in controls)
+                toolbar.appendChild(controls[name](cx));
+
+            var panel = elt("div", {class: "picturepanel"}, canvas);
+            parent.appendChild(elt("div", null, panel, toolbar));
+        }
+
+        var tools = Object.create(null);
+
+        controls.tool = function (cx) {
+            var select = elt("select");
+            for (var name in tools)
+                select.appendChild(elt("option", null, name));
+
+            cx.canvas.addEventListener("mousedown", function (event) {
+                if (event.which == 1) {
+                    tools[select.value](event, cx);
+                    event.preventDefault();
+                }
+            });
+
+            return elt("span", null, "Tool: ", select);
+        };
+
+        function relativePos(event, element) {
+            var rect = element.getBoundingClientRect();
+            return {
+                x: Math.floor(event.clientX - rect.left),
+                y: Math.floor(event.clientY - rect.top)
+            };
+        }
+
+        function trackDrag(onMove, onEnd) {
+            function end(event) {
+                removeEventListener("mousemove", onMove);
+                removeEventListener("mouseup", end);
+                if (onEnd)
+                    onEnd(event);
+            }
+
+            addEventListener("mousemove", onMove);
+            addEventListener("mouseup", end);
+        }
+
+        tools.Line = function (event, cx, onEnd) {
+            cx.lineCap = "round";
+
+            var pos = relativePos(event, cx.canvas);
+            trackDrag(function (event) {
+                cx.beginPath();
+                cx.moveTo(pos.x, pos.y);
+                pos = relativePos(event, cx.canvas);
+                cx.lineTo(pos.x, pos.y);
+                cx.stroke();
+            }, onEnd);
+        };
+
+        tools.Erase = function (event, cx) {
+            cx.globalCompositeOperation = "destination-out";
+            tools.Line(event, cx, function () {
+                cx.globalCompositeOperation = "source-over";
+            });
+        };
+
+        controls.color = function (cx) {
+            var input = elt("input", {type: "color"});
+            input.addEventListener("change", function () {
+                cx.fillStyle = input.value;
+                cx.strokeStyle = input.value;
+            });
+            return elt("span", null, "Color: ", input);
+        };
+
+        controls.brushSize = function (cx) {
+            var select = elt("select");
+            var sizes = [1, 2, 3, 5, 8, 12, 25, 35, 50, 75, 100];
+            sizes.forEach(function (size) {
+                select.appendChild(elt("option", {value: size},
+                    size + " pixels"));
+            });
+            select.addEventListener("change", function () {
+                cx.lineWidth = select.value;
+            });
+            return elt("span", null, "Brush size: ", select);
+        };
+
+        {#controls.save = function(cx) {#}
+        {#  var link = elt("a", {href: "/"}, "Save");#}
+        {#  function update() {#}
+        {#    try {#}
+        {#      link.href = cx.canvas.toDataURL();#}
+        {#    } catch (e) {#}
+        {#      if (e instanceof SecurityError)#}
+        {#        link.href = "javascript:alert(" +#}
+        {#          JSON.stringify("Can't save: " + e.toString()) + ")";#}
+        {#      else#}
+        {#        throw e;#}
+        {#    }#}
+        {#  }#}
+        {#  link.addEventListener("mouseover", update);#}
+        {#  link.addEventListener("focus", update);#}
+        {#  return link;#}
+        {
+            #};
+            #}
+
+            {#function loadImageURL(cx, url) {#}
+            {#  var image = document.createElement("img");#}
+            {#  image.addEventListener("load", function() {#}
+            {#    var color = cx.fillStyle, size = cx.lineWidth;#}
+            {#    cx.canvas.width = image.width;#}
+            {#    cx.canvas.height = image.height;#}
+            {#    cx.drawImage(image, 0, 0);#}
+            {#    cx.fillStyle = color;#}
+            {#    cx.strokeStyle = color;#}
+            {#    cx.lineWidth = size;#}
+            {#  });#}
+            {#  image.src = url;#}
+            {#}#}
+
+                function updateImageChange(cx) {
+                    var image = document.getElementById("image");
+
+                    var color = cx.fillStyle, size = cx.lineWidth;
+                    {#    cx.canvas.width = image.width;#}
+                    {#    cx.canvas.height = image.height;#}
+                    cx.drawImage(image, 0, 0);
+                    cx.fillStyle = color;
+                    cx.strokeStyle = color;
+                    cx.lineWidth = size;
+
+                }
+
+                controls.updateImage = function (cx) {
+
+                    var form = elt("form", null,
+                        elt("button", {type: "submit"}, "Load image changes"));
+                    form.addEventListener("submit", function (event) {
+                        event.preventDefault();
+                        updateImageChange(cx);
+                    });
+                    return form;
+                };
+
+                {#controls.openFile = function(cx) {#}
+                {#  var input = elt("input", {type: "file"});#}
+                {#  input.addEventListener("change", function() {#}
+                {#    if (input.files.length == 0) return;#}
+                {#    var reader = new FileReader();#}
+                {#    reader.addEventListener("load", function() {#}
+                {#      loadImageURL(cx, reader.result);#}
+                {#    });#}
+                {#    reader.readAsDataURL(input.files[0]);#}
+                {#  });#}
+                {#  return elt("div", null, "Open file: ", input);#}
+                {
+                    #};
+                    #}
+                    {##}
+                    {#controls.openURL = function(cx) {#}
+                    {#  var input = elt("input", {type: "text"});#}
+                    {#  var form = elt("form", null,#}
+                    {#                 "Open URL: ", input,#}
+                    {#                 elt("button", {type: "submit"}, "load"));#}
+                    {#  form.addEventListener("submit", function(event) {#}
+                    {#    event.preventDefault();#}
+                    {#    loadImageURL(cx, input.value);#}
+                    {#  });#}
+                    {#  return form;#}
+                    {
+                        #};
+                        #}
+
+                        {#tools.Text = function(event, cx) {#}
+                        {#  var text = prompt("Text:", "");#}
+                        {#  if (text) {#}
+                        {#    var pos = relativePos(event, cx.canvas);#}
+                        {#    cx.font = Math.max(7, cx.lineWidth) + "px sans-serif";#}
+                        {#    cx.fillText(text, pos.x, pos.y);#}
+                        {#  }#}
+                        {
+                            #};
+                            #}
+                            {##}
+                            {#tools.Spray = function(event, cx) {#}
+                            {#  var radius = cx.lineWidth / 2;#}
+                            {#  var area = radius * radius * Math.PI;#}
+                            {#  var dotsPerTick = Math.ceil(area / 30);#}
+                            {##}
+                            {#  var currentPos = relativePos(event, cx.canvas);#}
+                            {#  var spray = setInterval(function() {#}
+                            {#    for (var i = 0; i < dotsPerTick; i++) {#}
+                            {#      var offset = randomPointInRadius(radius);#}
+                            {#      cx.fillRect(currentPos.x + offset.x,#}
+                            {#                  currentPos.y + offset.y, 1, 1);#}
+                            {#    }#}
+                            {#  }, 25);#}
+                            {#  trackDrag(function(event) {#}
+                            {#    currentPos = relativePos(event, cx.canvas);#}
+                            {#  }, function() {#}
+                            {#    clearInterval(spray);#}
+                            {#  });#}
+                            {
+                                #};
+                                #}
+
+                                function randomPointInRadius(radius) {
+                                    for (; ;) {
+                                        var x = Math.random() * 2 - 1;
+                                        var y = Math.random() * 2 - 1;
+                                        if (x * x + y * y <= 1)
+                                            return {x: x * radius, y: y * radius};
+                                    }
+                                }
+
+    </script>
+    <script>createPaint(document.getElementById('canvas-wrapper'));</script>
 {% endblock %}
