@@ -26,7 +26,7 @@
     <favorites_list name="WebMockUp" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.25842696">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
@@ -73,10 +73,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="excanvas.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="excanvas.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="852">
+                <state relative-caret-position="3351">
                   <caret line="1419" column="0" lean-forward="false" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
                   <folding>
                     <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
@@ -88,7 +88,7 @@
           <file leaf-file-name="canvas_html.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
+                <state relative-caret-position="255">
                   <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
                   <folding />
                 </state>
@@ -98,7 +98,7 @@
           <file leaf-file-name="brush_tool.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
+                <state relative-caret-position="17">
                   <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
                   <folding />
                 </state>
@@ -108,18 +108,18 @@
           <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="152">
-                  <caret line="1106" column="26" lean-forward="true" selection-start-line="1106" selection-start-column="26" selection-end-line="1106" selection-end-column="26" />
+                <state relative-caret-position="391">
+                  <caret line="23" column="11" lean-forward="false" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="120" column="60" lean-forward="false" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
+                <state relative-caret-position="2091">
+                  <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -139,11 +139,75 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="232">
-                  <caret line="1114" column="13" lean-forward="false" selection-start-line="1114" selection-start-column="8" selection-end-line="1114" selection-end-column="13" />
+                <state relative-caret-position="1683">
+                  <caret line="399" column="4" lean-forward="false" selection-start-line="399" selection-start-column="4" selection-end-line="399" selection-end-column="4" />
+                  <folding>
+                    <element signature="n#div#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#src#0;n#img#0;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                    <element signature="n#div#0;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#1;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#2;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#3;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#4;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#1;n#ul#0;n#div#1;n#div#0;n#div#5;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#0;n#div#1;n#ul#0;n#div#1;n#div#0;n#div#5;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#6;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#9;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#10;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#12;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                    <element signature="n#div#13;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="processing_page.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/static/js/processing_page.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-11560">
+                  <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding>
+                    <marker date="1510749923557" expanded="true" signature="687:770" ph="[...]" />
+                    <marker date="1510749923557" expanded="true" signature="688:749" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="1367:1900" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="1392:1737" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="2603:3136" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="2628:2973" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="4351:4885" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="4376:4722" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="5331:5860" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="5356:5697" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="11108:11641" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="11133:11478" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="12367:12900" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="12392:12737" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="13634:14167" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="13659:14004" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="14893:15426" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="14918:15263" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="16161:16694" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="16186:16531" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="17420:17953" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="17445:17790" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="18696:19229" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="18721:19066" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="19961:20494" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="19986:20331" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="20893:21426" ph="{...}" />
+                    <marker date="1510749923557" expanded="true" signature="20918:21263" ph="{...}" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="processing_page.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/static/css/processing_page.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="782">
+                  <caret line="46" column="9" lean-forward="false" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
                   <folding />
                 </state>
               </provider>
@@ -169,6 +233,7 @@
         <option value="Python Script" />
         <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -182,6 +247,10 @@
       <find>reset</find>
       <find>static</find>
       <find>tools</find>
+      <find>image</find>
+      <find>&lt;script&gt;</find>
+      <find>&lt;/script&gt;</find>
+      <find>base</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -224,8 +293,10 @@
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas.js" />
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_example_html.html" />
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas-example.js" />
+        <option value="$PROJECT_DIR$/static/processing_page.css" />
         <option value="$PROJECT_DIR$/WebMockUp/settings.py" />
         <option value="$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html" />
+        <option value="$PROJECT_DIR$/static/js/processing_page.js" />
       </list>
     </option>
   </component>
@@ -240,9 +311,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
-    <option name="y" value="-4" />
+    <option name="y" value="24" />
     <option name="width" value="1855" />
-    <option name="height" value="1084" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -295,6 +366,42 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WebMockUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WebMockUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WebMockUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WebMockUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -313,46 +420,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WebMockUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WebMockUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imageProcessing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WebMockUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WebMockUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imageProcessing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imageProcessing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -363,18 +430,19 @@
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/imageProcessing" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/imageProcessing/templates/imageProcessing" />
-      <recent name="$PROJECT_DIR$/imageProcessing/static/imageProcessing" />
-      <recent name="$PROJECT_DIR$/imageProcessing/templates" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/imageProcessing/imageProcessingFunc" />
       <recent name="$PROJECT_DIR$/media" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/css" />
+      <recent name="$PROJECT_DIR$/imageProcessing/templates/" />
+      <recent name="$PROJECT_DIR$/imageProcessing" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/imageProcessing/templates/imageProcessing" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -623,7 +691,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -631,7 +699,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19366853" sideWeight="0.49595687" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4837067" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32914045" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18436658" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32586557" sideWeight="0.4851752" order="5" side_tool="false" content_ui="tabs" />
@@ -731,11 +799,6 @@
           <line>312</line>
           <option name="timeStamp" value="62" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html</url>
-          <line>526</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -749,28 +812,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/media/1947-1_plg6_copy.png" />
-    <entry file="file:///usr/local/lib/python3.4/dist-packages/PIL/Image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="2268" column="4" lean-forward="false" selection-start-line="2268" selection-start-column="4" selection-end-line="2268" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WebMockUp/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/apps.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -994,14 +1035,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1038,37 +1071,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="120" column="60" lean-forward="false" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas-example.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="20" column="56" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="852">
-          <caret line="1419" column="0" lean-forward="false" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
-          <folding>
-            <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1080,11 +1087,121 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/pycharm.jar!/resources/html5-schema/html5/meta.rnc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="52" column="16" lean-forward="false" selection-start-line="52" selection-start-column="16" selection-end-line="52" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3351">
+          <caret line="1419" column="0" lean-forward="false" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
+          <folding>
+            <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css/processing_page.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="9" lean-forward="false" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebMockUp/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2091">
+          <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="1114" column="13" lean-forward="false" selection-start-line="1114" selection-start-column="8" selection-end-line="1114" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="1683">
+          <caret line="399" column="4" lean-forward="false" selection-start-line="399" selection-start-column="4" selection-end-line="399" selection-end-column="4" />
+          <folding>
+            <element signature="n#div#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#src#0;n#img#0;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#0;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#3;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#4;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#ul#0;n#div#1;n#div#0;n#div#5;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#1;n#ul#0;n#div#1;n#div#0;n#div#5;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#6;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#9;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#10;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#12;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#13;n#div#2;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/js/processing_page.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-11560">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1510749923557" expanded="true" signature="687:770" ph="[...]" />
+            <marker date="1510749923557" expanded="true" signature="688:749" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="1367:1900" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="1392:1737" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="2603:3136" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="2628:2973" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="4351:4885" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="4376:4722" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="5331:5860" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="5356:5697" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="11108:11641" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="11133:11478" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="12367:12900" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="12392:12737" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="13634:14167" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="13659:14004" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="14893:15426" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="14918:15263" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="16161:16694" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="16186:16531" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="17420:17953" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="17445:17790" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="18696:19229" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="18721:19066" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="19961:20494" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="19986:20331" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="20893:21426" ph="{...}" />
+            <marker date="1510749923557" expanded="true" signature="20918:21263" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
