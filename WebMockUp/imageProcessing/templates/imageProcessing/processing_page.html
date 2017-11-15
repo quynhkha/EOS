@@ -75,10 +75,11 @@
             font-size: 1rem !important;
 
         }
-        .panel-heading{
-                 color: #333;
-    background-color: #f5f5f5;
-    border-color: #ddd;
+
+        .panel-heading {
+            color: #333;
+            background-color: #f5f5f5;
+            border-color: #ddd;
             padding: 16px;
         }
     </style>
@@ -235,206 +236,219 @@
                         </div>
 
                         <div id="closing" class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#closing-collapse-sec">Closing operation</a>
-                                </h4>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#closing-collapse-sec">Closing operation</a>
+                                    </h4>
+                                </div>
+                                <div id="closing-collapse-sec" class="panel-collapse collapse">
+                                    <ul class="list-group">
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                <label class="control-label"> Closing kernel size</label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input id="slider-closing-kernel" type="range" min="1" max="10"
+                                                       value="3" step="1">
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <input id="slider-closing-val-kernel" type="text" placeholder="3"
+                                                       readonly
+                                                       style="border:0; color:#f6931f; font-weight:bold;">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                <label class="control-label"> Closing iterations</label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input id="slider-closing-iter" type="range" min="1" max="5" value="1"
+                                                       step="1">
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <input id="slider-closing-val-iter" type="text" placeholder="1" readonly
+                                                       style="border:0; color:#f6931f; font-weight:bold;">
+                                            </div>
+
+                                        </div>
+
+
+                                    </ul>
+                                </div>
                             </div>
-                            <div id="closing-collapse-sec" class="panel-collapse collapse">
-                                <ul class="list-group">
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Closing kernel size</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-closing-kernel" type="range" min="1" max="10" value="3" step="1">
+
+                            <div id="erosion" class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="#erosion-collapse-sec">Erosion operation</a>
+                                        </h4>
+                                    </div>
+                                    <div id="erosion-collapse-sec" class="panel-collapse collapse">
+                                        <ul class="list-group">
+                                            <div class="form-group row">
+                                                <div class="col-lg-5">
+                                                    <label class="control-label"> Erosing kernel size</label>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="slider-erosion-kernel" type="range" min="1" max="10"
+                                                           value="3" step="1">
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <input id="slider-erosion-val-kernel" type="text" placeholder="3"
+                                                           readonly
+                                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-lg-5">
+                                                    <label class="control-label"> Erosion iterations</label>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="slider-erosion-iter" type="range" min="1" max="5"
+                                                           value="1" step="1">
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <input id="slider-erosion-val-iter" type="text" placeholder="1"
+                                                           readonly
+                                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                                </div>
+
+                                            </div>
+                                        </ul>
+                                    </div>
                                 </div>
 
-                                <div class="col-lg-2">
-                                    <input id="slider-closing-val-kernel" type="text" placeholder="3" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
+                                <div id="dilation" class="panel-group">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" href="#dilation-collapse-sec">Dilation
+                                                    operation</a>
+                                            </h4>
+                                        </div>
+                                        <div id="dilation-collapse-sec" class="panel-collapse collapse">
+                                            <ul class="list-group">
+                                                <div class="form-group row">
+                                                    <div class="col-lg-5">
+                                                        <label class="control-label"> Dilation kernel size</label>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <input id="slider-dilation-kernel" type="range" min="1" max="10"
+                                                               value="3" step="1">
+                                                    </div>
+
+                                                    <div class="col-lg-2">
+                                                        <input id="slider-dilation-val-kernel" type="text"
+                                                               placeholder="3" readonly
+                                                               style="border:0; color:#f6931f; font-weight:bold;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-lg-5">
+                                                        <label class="control-label"> Dilation iterations</label>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <input id="slider-dilation-iter" type="range" min="1" max="5"
+                                                               value="1" step="1">
+                                                    </div>
+
+                                                    <div class="col-lg-2">
+                                                        <input id="slider-dilation-val-iter" type="text" placeholder="1"
+                                                               readonly
+                                                               style="border:0; color:#f6931f; font-weight:bold;">
+                                                    </div>
+
+                                                </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                <label class="control-label"> All crystals</label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <button id="btn_all_crystal" type="button">
+                                                    Show crystals
+                                                </button>
+                                            </div>
+
+                                            <div class="col-lg-2"></div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                <label class="control-label"> Num of top area crystals to
+                                                    extract: </label>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <input id="num_crystal_label" type="number" placeholder="5">
+                                            </div>
+                                            <div class="col-lg-1"></div>
+
+                                            <div class="col-lg-3 centered">
+                                                <button id="btn_extract_top_crystal">Extract</button>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                {#                                   <p><label>Drawing tool: <select id="dtool">#}
+                                                {#        <option value="line">Line</option>#}
+                                                {#        <option value="rect">Rectangle</option>#}
+                                                {#        <option value="pencil">Pencil</option>#}
+                                                {#    </select></label></p>#}
+                                                <div id="myCanvas-toolbar"></div>
+                                                <div id="myCanvas-picturepanel"></div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-5">
+                                                <label class="control-label"> Plot histogram </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <button id="btn_histogram" type="button">
+                                                    Plot histogram
+                                                </button>
+
+                                            </div>
+
+                                            <div class="col-lg-2"></div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-2">
+                                                <button id="btn_undo" type="button" class="btn btn-primary">
+                                                    Undo
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button id="btn_reset" type="button" class="btn btn-primary">
+                                                    Reset
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
                                 </div>
+
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Closing iterations</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-closing-iter" type="range" min="1" max="5" value="1" step="1">
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input id="slider-closing-val-iter" type="text" placeholder="1" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
-                                </div>
-
-                            </div>
-
-
-                                </ul>
-                            </div>
                         </div>
-
-                        <div id="erosion" class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#erosion-collapse-sec">Erosion operation</a>
-                                </h4>
-                            </div>
-                            <div id="erosion-collapse-sec" class="panel-collapse collapse">
-                                <ul class="list-group">
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Erosing kernel size</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-erosion-kernel" type="range" min="1" max="10" value="3" step="1">
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input id="slider-erosion-val-kernel" type="text" placeholder="3" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Erosion iterations</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-erosion-iter" type="range" min="1" max="5" value="1" step="1">
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input id="slider-erosion-val-iter" type="text" placeholder="1" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
-                                </div>
-
-                            </div>
-                       </ul>
-                            </div>
-                        </div>
-
-                        <div id="dilation" class="panel-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#dilation-collapse-sec">Dilation operation</a>
-                                </h4>
-                            </div>
-                            <div id="dilation-collapse-sec" class="panel-collapse collapse">
-                                <ul class="list-group">
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Dilation kernel size</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-dilation-kernel" type="range" min="1" max="10" value="3" step="1">
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input id="slider-dilation-val-kernel" type="text" placeholder="3" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-lg-5">
-                                    <label class="control-label"> Dilation iterations</label>
-                                </div>
-                                <div class="col-lg-5">
-                                    <input id="slider-dilation-iter" type="range" min="1" max="5" value="1" step="1">
-                                </div>
-
-                                <div class="col-lg-2">
-                                    <input id="slider-dilation-val-iter" type="text" placeholder="1" readonly
-                                           style="border:0; color:#f6931f; font-weight:bold;">
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> All crystals</label>
-                            </div>
-                            <div class="col-lg-5">
-                                <button id="btn_all_crystal" type="button">
-                                    Show crystals
-                                </button>
-                            </div>
-
-                            <div class="col-lg-2"></div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Num of top area crystals to extract: </label>
-                            </div>
-                            <div class="col-lg-3">
-                                <input id="num_crystal_label" type="number" placeholder="5">
-                            </div>
-                            <div class="col-lg-1"></div>
-
-                            <div class="col-lg-3 centered">
-                                <button id="btn_extract_top_crystal">Extract</button>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                {#                                   <p><label>Drawing tool: <select id="dtool">#}
-                                {#        <option value="line">Line</option>#}
-                                {#        <option value="rect">Rectangle</option>#}
-                                {#        <option value="pencil">Pencil</option>#}
-                                {#    </select></label></p>#}
-                                <div id="myCanvas-toolbar"></div>
-                                <div id="myCanvas-picturepanel"></div>
-
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Plot histogram </label>
-                            </div>
-                            <div class="col-lg-5">
-                                <button id="btn_histogram" type="button">
-                                    Plot histogram
-                                </button>
-
-                            </div>
-
-                            <div class="col-lg-2"></div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-2">
-                                <button id="btn_undo" type="button" class="btn btn-primary">
-                                    Undo
-                                </button>
-                            </div>
-                            <div class="col-lg-2">
-                                <button id="btn_reset" type="button" class="btn btn-primary">
-                                    Reset
-                                </button>
-                            </div>
-                        </div>
-
 
                     </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 
     </body>
     </html>
@@ -1141,41 +1155,40 @@
         };
 
 
-                function updateImageChange(cx) {
-                    var image = document.getElementById("image");
+        function updateImageChange(cx) {
+            var image = document.getElementById("image");
 
-                    var color = cx.fillStyle, size = cx.lineWidth;
-                    {#    cx.canvas.width = image.width;#}
-                    {#    cx.canvas.height = image.height;#}
-                    cx.drawImage(image, 0, 0);
-                    cx.fillStyle = color;
-                    cx.strokeStyle = color;
-                    cx.lineWidth = size;
+            var color = cx.fillStyle, size = cx.lineWidth;
+            {#    cx.canvas.width = image.width;#}
+            {#    cx.canvas.height = image.height;#}
+            cx.drawImage(image, 0, 0);
+            cx.fillStyle = color;
+            cx.strokeStyle = color;
+            cx.lineWidth = size;
 
+        }
+
+        controls.updateImage = function (cx) {
+
+            var form = elt("form", null,
+                elt("button", {type: "submit"}, "Load image changes"));
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                updateImageChange(cx);
+            });
+            return form;
+        };
+
+
+        function randomPointInRadius(radius) {
+            for (; ;) {
+                var x = Math.random() * 2 - 1;
+                var y = Math.random() * 2 - 1;
+                if (x * x + y * y <= 1) {
+                    return {x: x * radius, y: y * radius};
                 }
-
-                controls.updateImage = function (cx) {
-
-                    var form = elt("form", null,
-                        elt("button", {type: "submit"}, "Load image changes"));
-                    form.addEventListener("submit", function (event) {
-                        event.preventDefault();
-                        updateImageChange(cx);
-                    });
-                    return form;
-                };
-
-
-
-                                function randomPointInRadius(radius) {
-                                    for (; ;) {
-                                        var x = Math.random() * 2 - 1;
-                                        var y = Math.random() * 2 - 1;
-                                        if (x * x + y * y <= 1) {
-                                            return {x: x * radius, y: y * radius};
-                                        }
-                                    }
-                                }
+            }
+        }
 
 
     </script>

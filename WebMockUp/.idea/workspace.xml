@@ -26,117 +26,142 @@
     <favorites_list name="WebMockUp" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="329" column="12" lean-forward="true" selection-start-line="329" selection-start-column="12" selection-end-line="329" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="canvas.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="32" column="13" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="33" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#39#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="canvas_example_html.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_example_html.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="589">
-              <caret line="31" column="68" lean-forward="true" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="68" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="canvas-example.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas-example.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-114">
-              <caret line="20" column="56" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="excanvas.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26923">
-              <caret line="1419" column="0" lean-forward="true" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
-              <folding>
-                <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="canvas_html.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="brush_tool.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1491">
-              <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="519">
-              <caret line="1177" column="33" lean-forward="false" selection-start-line="1177" selection-start-column="33" selection-end-line="1177" selection-end-column="33" />
-              <folding>
-                <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#41667#41722#0#HTML" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1757">
-              <caret line="120" column="60" lean-forward="true" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imageProcessing/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="24" column="51" lean-forward="false" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="329" column="12" lean-forward="false" selection-start-line="329" selection-start-column="12" selection-end-line="329" selection-end-column="12" />
+                  <folding>
+                    <element signature="e#0#13#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="canvas.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="32" column="13" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="33" selection-end-column="24" />
+                  <folding>
+                    <element signature="e#0#39#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="canvas_example_html.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_example_html.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="31" column="68" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="68" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="canvas-example.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas-example.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="20" column="56" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="excanvas.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="852">
+                  <caret line="1419" column="0" lean-forward="false" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
+                  <folding>
+                    <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="canvas_html.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="brush_tool.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="152">
+                  <caret line="1106" column="26" lean-forward="true" selection-start-line="1106" selection-start-column="26" selection-end-line="1106" selection-end-column="26" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="120" column="60" lean-forward="false" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/urls.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="24" column="51" lean-forward="false" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="processing_page.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="232">
+                  <caret line="1114" column="13" lean-forward="false" selection-start-line="1114" selection-start-column="8" selection-end-line="1114" selection-end-column="13" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="DHTML.js" pinned="false" current-in-tab="false">
+            <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="252">
+                  <caret line="1339" column="0" lean-forward="false" selection-start-line="1339" selection-start-column="0" selection-end-line="1339" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -156,6 +181,7 @@
       <find>empty</find>
       <find>reset</find>
       <find>static</find>
+      <find>tools</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -213,9 +239,9 @@
     <handled-path value="$PROJECT_DIR$/front-end/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="150" />
-    <option name="y" value="96" />
-    <option name="width" value="1803" />
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1855" />
     <option name="height" value="1084" />
   </component>
   <component name="ProjectView">
@@ -233,8 +259,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -331,10 +355,12 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="configurable.group.project" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
   </component>
@@ -597,21 +623,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="150" y="96" width="1803" height="1084" extended-state="0" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18063314" sideWeight="0.50053936" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19366853" sideWeight="0.49595687" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19366853" sideWeight="0.49595687" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20162933" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18446602" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4837067" sideWeight="0.49946064" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18436658" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32681563" sideWeight="0.4851752" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32586557" sideWeight="0.4851752" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.358473" sideWeight="0.48787063" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -707,7 +733,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html</url>
-          <line>512</line>
+          <line>526</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
@@ -954,7 +980,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
+        <state relative-caret-position="0">
           <caret line="24" column="51" lean-forward="false" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
           <folding />
         </state>
@@ -970,7 +996,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../ImageProcessing/brush_tool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1491">
+        <state relative-caret-position="0">
           <caret line="11" column="94" lean-forward="false" selection-start-line="11" selection-start-column="94" selection-end-line="11" selection-end-column="94" />
           <folding />
         </state>
@@ -978,19 +1004,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="329" column="12" lean-forward="true" selection-start-line="329" selection-start-column="12" selection-end-line="329" selection-end-column="12" />
+        <state relative-caret-position="0">
+          <caret line="329" column="12" lean-forward="false" selection-start-line="329" selection-start-column="12" selection-end-line="329" selection-end-column="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-516">
-          <caret line="1726" column="0" lean-forward="false" selection-start-line="1726" selection-start-column="0" selection-end-line="1726" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1004,8 +1022,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="32" column="13" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="33" selection-end-column="24" />
+        <state relative-caret-position="0">
+          <caret line="32" column="13" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="33" selection-end-column="24" />
           <folding>
             <element signature="e#0#39#0" expanded="false" />
           </folding>
@@ -1014,54 +1032,59 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_example_html.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="31" column="68" lean-forward="true" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="68" />
+        <state relative-caret-position="0">
+          <caret line="31" column="68" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="68" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WebMockUp/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1757">
-          <caret line="120" column="60" lean-forward="true" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
+        <state relative-caret-position="0">
+          <caret line="120" column="60" lean-forward="false" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="60" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26923">
-          <caret line="1419" column="0" lean-forward="true" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
-          <folding>
-            <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas-example.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-114">
-          <caret line="20" column="56" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="20" column="56" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/canvas_html.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
+        <state relative-caret-position="0">
           <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/excanvas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="852">
+          <caret line="1419" column="0" lean-forward="false" selection-start-line="1419" selection-start-column="0" selection-end-line="1419" selection-end-column="0" />
+          <folding>
+            <marker date="1510251117202" expanded="true" signature="38250:38365" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="1339" column="0" lean-forward="false" selection-start-line="1339" selection-start-column="0" selection-end-line="1339" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/imageProcessing/templates/imageProcessing/processing_page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="519">
-          <caret line="1177" column="33" lean-forward="false" selection-start-line="1177" selection-start-column="33" selection-end-line="1177" selection-end-column="33" />
-          <folding>
-            <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#41667#41722#0#HTML" expanded="false" />
-          </folding>
+        <state relative-caret-position="232">
+          <caret line="1114" column="13" lean-forward="false" selection-start-line="1114" selection-start-column="8" selection-end-line="1114" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
