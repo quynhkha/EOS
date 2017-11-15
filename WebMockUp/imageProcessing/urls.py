@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^upload/closing/$', views.do_closing, name='closing'),
     url(r'^upload/erosion/$', views.do_erosion, name='erosion'),
     url(r'^upload/dilation/$', views.do_opening, name='dilation'),
+    url(r'^upload/update-mask/$', views.update_mask, name='update-mask'),
 ]

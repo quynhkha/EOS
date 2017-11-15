@@ -366,3 +366,13 @@ def do_dilation(request):
     else:
         _, image_data = cv_to_json(current_image)
     return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data})
+
+
+@csrf_exempt
+def update_mask(request):
+    if request.method == 'POST':
+        mask_data = request.POST.get('mask');
+        mask = json_to_cv(mask_data)
+
+        json_data = thumbnail_plus_img_json(mask, history_thumbnail_arr)
+        return JsonResponse(json_data, safe=False)
