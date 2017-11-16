@@ -539,6 +539,10 @@ $("#btn_extract_top_crystal").click(function (e) {
 /**
  * Created by long on 10/11/17.
  */
+var image = document.getElementById('image');
+var naturalWidth = image.naturalWidth;
+var naturalHeight = image.naturalHeight;
+
 function elt(name, attributes) {
     var node = document.createElement(name);
     // {#            var node = document.getElementById(name);#}
@@ -565,8 +569,11 @@ function createPaint(parent) {
     var cx = canvas.getContext("2d");
     var image = document.getElementById("image");
     var color = cx.fillStyle, size = cx.lineWidth;
-    // {#    cx.canvas.width = image.width;#}
-    // {#    cx.canvas.height = image.height;#}
+    color = 'rgb(0, 255, 0)';
+    // cx.canvas.width = image.width;
+    // cx.canvas.height = image.height;
+    cx.canvas.width = naturalWidth;
+    cx.canvas.height = naturalHeight;
     // {#            cx.drawImage(image, 0, 0);#}
     cx.fillStyle = color;
     cx.strokeStyle = color;
@@ -575,8 +582,12 @@ function createPaint(parent) {
     for (var name in controls)
         toolbar.appendChild(controls[name](cx));
 
-    var panel = elt("div", {class: "picturepanel"}, canvas);
-    parent.appendChild(elt("div", null, panel, toolbar));
+    // var panel = elt("div", {class: "picturepanel"}, canvas);
+    var canvasWrapper = document.getElementById('canvas-wrapper');
+    // parent.appendChild(elt("div", null, panel, toolbar));
+    canvasWrapper.appendChild(canvas);
+    var canvasToolbar = document.getElementById('canvas-toolbar');
+    canvasToolbar.appendChild(toolbar);
 }
 
 var tools = Object.create(null);
@@ -636,13 +647,25 @@ tools.Erase = function (event, cx) {
     });
 };
 
-controls.color = function (cx) {
-    var input = elt("input", {type: "color"});
-    input.addEventListener("change", function () {
+controls.option = function (cx) {
+    // var input = elt("input", {type: "color"});
+    // input.addEventListener("change", function () {
+    //     cx.fillStyle = input.value;
+    //     cx.strokeStyle = input.value;
+    // });
+    // return elt("span", null, "Color: ", input);
+    var input = elt("select");
+    var options = {'add': 'rgb(0, 255, 0)', 'remove': 'rgb(255, 64, 64)' };
+    for (option in options){
+
+            input.appendChild(elt("option", {value: options[option]}, option ));
+
+    };
+    input.addEventListener("change", function(){
         cx.fillStyle = input.value;
         cx.strokeStyle = input.value;
     });
-    return elt("span", null, "Color: ", input);
+    return elt("span", null, "Option: ", input);
 };
 
 controls.brushSize = function (cx) {

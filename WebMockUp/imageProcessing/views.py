@@ -371,8 +371,23 @@ def do_dilation(request):
 @csrf_exempt
 def update_mask(request):
     if request.method == 'POST':
-        mask_data = request.POST.get('mask');
-        mask = json_to_cv(mask_data)
+        rgb_mask_data = request.POST.get('mask');
+        rgb_mask = json_to_cv(rgb_mask_data)
 
-        json_data = thumbnail_plus_img_json(mask, history_thumbnail_arr)
+        global current_mask
+        global original_image
+        global current_image
+
+
+        current_image, current_mask = processingFunction.handle_mask(rgb_mask, current_mask, original_image)
+
+
+        # current_image = processingFunction.show_all_crystal(original_image=original_image,
+        #                                                     image_mask=current_mask)
+        # json_data, _ = cv_to_json(current_image)
+        save_state_image()
+
+        json_data = thumbnail_plus_img_json(current_image, history_thumbnail_arr)
         return JsonResponse(json_data, safe=False)
+        # json_data = thumbnail_plus_img_json(mask, history_thumbnail_arr)
+        # return JsonResponse(json_data, safe=False)

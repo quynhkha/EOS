@@ -328,3 +328,25 @@ class ProcessingFunction:
 
     def dilation(self, image, kernel_size, num_of_iter):
         return cv2.dilate(image, kernel=np.ones((kernel_size,kernel_size), np.uint8), iterations=num_of_iter)
+
+    def handle_addition_mask(self, rgb_mask, current_mask):
+        #opencv bgr
+        green_mask = rgb_mask[:, :, 1]
+        # addition_mask = np.zeros(green_mask.shape, np.uint8)
+        current_mask[green_mask==255] = 255
+        return current_mask
+
+    def handle_removal_mask(self, rgb_mask, current_mask):
+        blue_mask = rgb_mask[:,:, 0]
+        green_mask = rgb_mask[: , :, 1]
+        # removal_mask = np.zeros(red_mask.shape, np.uint8)
+        current_mask[green_mask==64] = 0
+        return current_mask
+
+    def handle_mask(self, rgb_mask, current_mask, original_image):
+        current_mask = self.handle_removal_mask(rgb_mask, current_mask)
+        current_mask = self.handle_addition_mask(rgb_mask, current_mask)
+        image_copy = copy.copy(original_image)
+        image_copy[current_mask!=255] = 255
+
+        return image_copy, current_mask
