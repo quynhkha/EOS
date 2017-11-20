@@ -9,7 +9,7 @@ class Brushtool:
         self.show_brush_region = True
         self.brush_size = 5
 
-        self.img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png')
+        self.img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.png')
         ############### Note ##############
         # need to convert img to uint8 to have same type with final mask apply on image (so that cv2.addWeighted can run)
         # need to use np.int8 mask instead of np.uint8 mask for calculation to avoid overflow when value becomes negative
@@ -41,6 +41,7 @@ class Brushtool:
 
         elif event == cv2.EVENT_MOUSEMOVE:
             if self.is_drawing == True:
+                print(x, y)
                 if self.is_add == True:
                     # mask_add[mask_int8 == 0] = 0
                     # mask_subtract[mask_int8 == 0] = 0

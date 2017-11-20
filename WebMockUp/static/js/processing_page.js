@@ -1,17 +1,4 @@
-function disp_hist_thumbnail(data) {
-    var hist_thumbnail_data_arr = data["thumbnail_arr"];
-    $('#hist-thumbnail').empty();
-    for (i = 0; i < hist_thumbnail_data_arr.length; i++) {
-        var thumbnail_id = "thumb_" + i;
-        $('#hist-thumbnail').prepend($('<img>', {
-            id: thumbnail_id,
-            class: "img-fluid centered thumbnail",
-            src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
-            onclick: "on_click_thumbnail(id)"
-        }))
-    }
-}
-
+/************** HISTOGRAM ***************/
 var original_hist = {};
 // var truncated_hist = {};
 function plot_histogram(data) {
@@ -29,17 +16,17 @@ function plot_histogram(data) {
     Plotly.newPlot('histogram', hist_data);
 }
 
-function plot_truncated_histogram(data, min_thresh, max_thresh){
+function plot_truncated_histogram(data, min_thresh, max_thresh) {
     range = max_thresh - min_thresh;
     var x_arr = [];
     var y_arr = [];
-    if (range>=100){
-        step = parseInt(range/100)+1 //floor()
-        var j=0;
-        for (i=0; i<100; i++){
+    if (range >= 100) {
+        step = parseInt(range / 100) + 1 //floor()
+        var j = 0;
+        for (i = 0; i < 100; i++) {
             var x = 0;
             var y = 0;
-            while(j<i*step && j<256){
+            while (j < i * step && j < 256) {
                 x = i;
                 y = y + data["y"][j];
                 j++;
@@ -48,7 +35,7 @@ function plot_truncated_histogram(data, min_thresh, max_thresh){
             y_arr.push(y);
         }
     }
-    console.log(x_arr, y_arr);  
+    console.log(x_arr, y_arr);
 
     var truncated_hist_data = [{
         x: x_arr,
@@ -58,270 +45,161 @@ function plot_truncated_histogram(data, min_thresh, max_thresh){
     Plotly.newPlot('truncated-histogram', truncated_hist_data);
 }
 
+/****************** THUMBNAIL ******************/
+function disp_hist_thumbnail(data) {
+    var hist_thumbnail_data_arr = data["thumbnail_arr"];
+    $('#hist-thumbnail').empty();
+    for (i = 0; i < hist_thumbnail_data_arr.length; i++) {
+        var thumbnail_id = "thumb_" + i;
+        $('#hist-thumbnail').prepend($('<img>', {
+            id: thumbnail_id,
+            class: "img-fluid centered thumbnail",
+            src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
+            onclick: "on_click_thumbnail(id)"
+        }));
+    }
+}
+
 function on_click_thumbnail(thumbnail_id) {
     console.log("thumbnail id: ", thumbnail_id);
-    $.ajax({
-        url: "img-from-thumbnail/", // the endpoint
-        type: "POST", // http method
-        data: {input: thumbnail_id}, // data sent with the post request
+    do_ajax_post_val_only(thumbnail_id, 'input', '/img-from-thumbnail/');
 
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
 
 }
 
-
-function do_ajax(domName){
-
-}
-
-function disp_slider_val(sliderDom, dispDom){
-    $("#"+sliderDom"").val($("#'dispDom'").val());
-}
-
-
-
-$("#slider-lower-thresh").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    // $("#slider-val-lower-thresh").val($("#slider-lower-thresh").val());
-    disp_slider_val('')
+/**************** UTIL FUNCTIONS ******************/
+function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
     e.preventDefault();
-    console.log("value", $('#slider-lower-thresh').val());
-    $.ajax({
-        url: "lower-thresholding/", // the endpoint
-        type: "POST", // http method
-        data: {input: $('#slider-lower-thresh').val()}, // data sent with the post request
+    // var json_data ="{"+inputName+":"+ $("#"+domName+"").val()+"}";
+    var json_data = {};
+    for (i = 0; i < domNameArr.length; i++) {
+        inputName = inputNameArr[i];
+        domName = domNameArr[i];
+        json_data[inputName] = $("#" + domName + "").val();
+    }
 
-        // handle a successful response
+    $.ajax({
+        url: targetUrl,
+        type: "POST",
+        // data: {inputName: $("#"+domName+"").val()},
+        data: json_data,
+
         success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+            update_image(data);
             disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
         },
 
-        // handle a non-successful response
         error: function (data) {
             alert('error');
         }
     });
+}
+
+function do_ajax_post_val_only(val, inputName, targetUrl){
+    // e.preventDefault();
+
+    var json_data ={};
+    json_data[inputName] = val;
+
+    $.ajax({
+        url: targetUrl,
+        type: "POST",
+        data: json_data,
+
+        success: function(data){
+            update_image(data);
+            disp_hist_thumbnail(data);
+        },
+
+        error: function (data){
+            alert('error');
+        }
+    });
+}
+
+function do_ajax_get(e, targetUrl) {
+    e.preventDefault();
+    $.ajax({
+        url: targetUrl,
+        type: "GET",
+
+        success: function (data) {
+            update_image(data);
+            disp_hist_thumbnail(data);
+        },
+
+        error: function (data) {
+            alert('error');
+        }
+
+    });
+}
+
+function disp_slider_val(dispDom, sliderDom) {
+    $("#" + dispDom + "").val($("#" + sliderDom + "").val());
+}
+
+function update_image(data) {
+    document.getElementById('image').src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+}
+
+/******************* DOM EVENT HANDLING *********************/
+$("#slider-lower-thresh").change(function (e) {
+    disp_slider_val('slider-val-lower-thresh', 'slider-lower-thresh');
+    do_ajax_post(e, ['slider-lower-thresh'], ['input'], '/lower-thresholding/');
 });
 
 $("#btn_laplacian").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "/laplacian",
-
-        success: function (data) {
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-        },
-        error: function (data) {
-            console.log(data);
-            alert('error');
-        }
-    });
+    do_ajax_get(e, '/laplacian/');
 });
 
 
-// AJAX for posting
 $("#slider-upper-thresh").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-val-upper-thresh").val($("#slider-upper-thresh").val());
-    e.preventDefault();
-    console.log("value", $('#slider-upper-thresh').val());
-    $.ajax({
-        url: "upper-thresholding/", // the endpoint
-        type: "POST", // http method
-        data: {input: $('#slider-upper-thresh').val()}, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#upper_thresh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-val-upper-thresh', 'slider-upper-thresh');
+    do_ajax_post(e, ['slider-upper-thresh'], ['input'], '/upper-thresholding/');
 });
 
 $("#slider-kmeans").click(function (e) {
-    $("#slider-val-kmeans").val($("#slider-kmeans").val());
-    e.preventDefault();
-    $.ajax({
-        url: "kmeans/",
-        type: "POST", // http method
-        data: {input: $("#slider-kmeans").val()}, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#slider-kmeans').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-val-kmeans', 'slider-kmeans');
+    do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/');
 });
 
 
 $("#btn_base64").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "/base64",
-        success: function (data) {
-            var image = document.createElement('img');
-            image.src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            document.querySelector('#imageContainer').innerHTML = image.outerHTML;//where to insert your image
-            // {#                    console.log(data);#}
-        },
-        error: function (data) {
-            console.log(data);
-            alert('error');
-        }
-    })
+    do_ajax_get(e, '/base64/');
 })
 
 
 $("#btn_undo").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "/undo",
-        success: function (data) {
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-        },
-        error: function (data) {
-            console.log(data);
-            alert('error');
-        }
-    })
+    do_ajax_get(e, '/undo/');
 })
 
 
 $("#btn_extract_crystal_mask").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        url: "extract-crystal-mask/",
-        type: "POST", // http method
-        data: {input: $("#crystal_label").val()}, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            $('#lower_thesh_input').val(''); // remove the value from the input
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/');
 });
 
 
 $("#btn_all_crystal").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "all-crystal/",
-
-        success: function (data) {
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    do_ajax_get(e, '/all-crystal/');
 });
 
 
 $("#btn_max_crystal").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "max-crystal/",
-
-        success: function (data) {
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    do_ajax_get(e, '/max-crystal/');
 });
 
 
 $("#btn_reset").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "/reset",
-
-        success: function (data) {
-            $('#histogram').empty();
-            $('#truncated-histogram').empty();
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-        },
-        error: function (data) {
-            console.log(data);
-            alert('error');
-        }
-    });
+    do_ajax_get(e, '/reset/');
 });
 
 
 $("#btn_histogram").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        type: "GET",
-        url: "/histogram",
-
-        success: function (data) {
-            plot_histogram(data);
-        },
-        error: function (data) {
-            console.log(data);
-            alert('error');
-        }
-    });
+    do_ajax_get(e, '/histogram/');
 });
 
-$("#btn_truncated_hist").click(function(e){
+$("#btn_truncated_hist").click(function (e) {
     e.preventDefault();
     hist_min_thresh = $("#hist_min_thresh").val();
     hist_max_thresh = $("#hist_max_thresh").val();
@@ -331,263 +209,59 @@ $("#btn_truncated_hist").click(function(e){
 
 
 $("#slider-opening-kernel").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-opening-val-kernel").val($("#slider-opening-kernel").val());
-    e.preventDefault();
-    console.log("value", $('#slider-opening-kernel').val());
-    $.ajax({
-        url: "opening/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-opening-kernel').val(),
-            num_of_iter: $('#slider-opening-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');
+    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
 });
 
 
 $("#slider-opening-iter").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-opening-val-iter").val($("#slider-opening-iter").val());
-    e.preventDefault();
-    console.log("value", $('#slider-opening-iter').val());
-    $.ajax({
-        url: "opening/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-opening-kernel').val(),
-            num_of_iter: $('#slider-opening-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-opening-val-iter', 'slider-opening-iter');
+    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
 });
 
 
 $("#slider-closing-kernel").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-closing-val-kernel").val($("#slider-closing-kernel").val());
-    e.preventDefault();
-    console.log("value", $('#slider-closing-kernel').val());
-    $.ajax({
-        url: "closing/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-closing-kernel').val(),
-            num_of_iter: $('#slider-closing-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-closing-val-kernel', 'slider-closing-kernel');
+    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
 });
 
 
 $("#slider-closing-iter").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-closing-val-iter").val($("#slider-closing-iter").val());
-    e.preventDefault();
-    console.log("value", $('#slider-closing-iter').val());
-    $.ajax({
-        url: "closing/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-closing-kernel').val(),
-            num_of_iter: $('#slider-closing-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-closing-val-iter', 'slider-closing-iter');
+    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
 });
 
 
 $("#slider-erosion-kernel").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-erosion-val-kernel").val($("#slider-erosion-kernel").val());
-    e.preventDefault();
-    console.log("value", $('#slider-erosion-kernel').val());
-    $.ajax({
-        url: "erosion/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-erosion-kernel').val(),
-            num_of_iter: $('#slider-erosion-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-erosion-val-kernel', 'slider-erosion-kernel');
+    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
 });
 
 
 $("#slider-erosion-iter").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-erosion-val-iter").val($("#slider-erosion-iter").val());
-    e.preventDefault();
-    console.log("value", $('#slider-erosion-iter').val());
-    $.ajax({
-        url: "erosion/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-erosion-kernel').val(),
-            num_of_iter: $('#slider-erosion-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-erosion-val-iter', 'slider-erosion-iter');
+    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
 });
 
 
 $("#slider-dilation-kernel").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-dilation-val-kernel").val($("#slider-dilation-kernel").val());
-    e.preventDefault();
-    console.log("value", $('#slider-dilation-kernel').val());
-    $.ajax({
-        url: "dilation/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-dilation-kernel').val(),
-            num_of_iter: $('#slider-dilation-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-dilation-val-kernel', 'slider-dilation-kernel');
+    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 });
 
 
 $("#slider-dilation-iter").change(function (e) {
-    // {#            alert($("#slider").val());#}
-    $("#slider-dilation-val-iter").val($("#slider-dilation-iter").val());
-    e.preventDefault();
-    console.log("value", $('#slider-dilation-iter').val());
-    $.ajax({
-        url: "closing/", // the endpoint
-        type: "POST", // http method
-        data: {
-            kernel_size: $('#slider-dilation-kernel').val(),
-            num_of_iter: $('#slider-dilation-iter').val()
-        }, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    disp_slider_val('slider-dilation-val-iter', 'slider-dilation-iter');
+    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 });
 
 
 $("#btn_extract_top_crystal").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-        url: "top-crystal/",
-        type: "POST", // http method
-        data: {input: $("#num_crystal_label").val()}, // data sent with the post request
-
-        // handle a successful response
-        success: function (data) {
-            // {#                    $('#lower_thesh_input').val(''); // remove the value from the input#}
-            document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-            console.log("success"); // another sanity check
-        },
-
-        // handle a non-successful response
-        error: function (data) {
-            alert('error');
-        }
-    });
+    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/');
 });
 
 
-/**
- * Created by long on 10/11/17.
- */
+/*********************** CANVAS **************************/
 var image = document.getElementById('image');
 var naturalWidth = image.naturalWidth;
 var naturalHeight = image.naturalHeight;
@@ -706,13 +380,14 @@ controls.option = function (cx) {
     // });
     // return elt("span", null, "Color: ", input);
     var input = elt("select");
-    var options = {'add': 'rgb(0, 255, 0)', 'remove': 'rgb(255, 64, 64)' };
-    for (option in options){
+    var options = {'add': 'rgb(0, 255, 0)', 'remove': 'rgb(255, 64, 64)'};
+    for (option in options) {
 
-            input.appendChild(elt("option", {value: options[option]}, option ));
+        input.appendChild(elt("option", {value: options[option]}, option));
 
-    };
-    input.addEventListener("change", function(){
+    }
+    ;
+    input.addEventListener("change", function () {
         cx.fillStyle = input.value;
         cx.strokeStyle = input.value;
     });
@@ -768,26 +443,14 @@ function saveCanvas(cx) {
     var image = document.getElementById('image');
     // image.src = jpegUrl;
 
-    $.ajax({
-        url: "update-mask/",
-        type: "POST",
-        data: {
-            mask: jpegUrl,
-        },
-        success: function(data){
-            image.src =  "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-            disp_hist_thumbnail(data);
-        },
-        error: function(data){
-            alert('error');
-        }
-    });
+    do_ajax_post_val_only(jpegUrl, 'mask', '/update-mask/');
+
 }
 
 controls.saveDrawing = function (cx) {
     var form = elt("form", null,
-        elt("button", {type: "submit"},"Save the drawing"
-    ));
+        elt("button", {type: "submit"}, "Save the drawing"
+        ));
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         saveCanvas(cx);

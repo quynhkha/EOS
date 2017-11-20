@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
@@ -11,5 +12,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # IDEA
-.idea/*
+*.idea/*
 
+# Image 
+WebMockUp/media/documents/*
