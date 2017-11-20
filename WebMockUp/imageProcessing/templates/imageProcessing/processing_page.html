@@ -61,6 +61,7 @@
                     <div id="canvas-toolbar"></div>
 
                     <div id="histogram"></div>
+                    <div id = "truncated-histogram"></div>
 
                 </div>
 
@@ -374,6 +375,22 @@
                         </div>
 
                         <div class="col-lg-2"></div>
+                    </div>
+
+                       <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Custom histogram </label>
+                        </div>
+                        <div class="col-lg-2">
+                            <input id="hist_min_thresh" type="number" placeholder="10">
+                        </div>
+                        <div class="col-lg-2">
+                            <input id="hist_max_thresh" type ="number" placeholder="110">
+                        </div>
+
+                        <div class="col-lg-3 centered">
+                            <button id="btn_truncated_hist">Plot histogram</button>
+                        </div>
                     </div>
 
                     <div class="form-group row">

@@ -12,7 +12,12 @@ function disp_hist_thumbnail(data) {
     }
 }
 
+var original_hist = {};
+// var truncated_hist = {};
 function plot_histogram(data) {
+
+    original_hist = {x: data["x"], y: data["y"]};
+    console.log(original_hist);
 
     var hist_data = [{
         x: data["x"],
@@ -22,6 +27,35 @@ function plot_histogram(data) {
         type: 'bar'
     }];
     Plotly.newPlot('histogram', hist_data);
+}
+
+function plot_truncated_histogram(data, min_thresh, max_thresh){
+    range = max_thresh - min_thresh;
+    var x_arr = [];
+    var y_arr = [];
+    if (range>=100){
+        step = parseInt(range/100)+1 //floor()
+        var j=0;
+        for (i=0; i<100; i++){
+            var x = 0;
+            var y = 0;
+            while(j<i*step && j<256){
+                x = i;
+                y = y + data["y"][j];
+                j++;
+            }
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+    }
+    console.log(x_arr, y_arr);  
+
+    var truncated_hist_data = [{
+        x: x_arr,
+        y: y_arr,
+        type: 'bar'
+    }];
+    Plotly.newPlot('truncated-histogram', truncated_hist_data);
 }
 
 function on_click_thumbnail(thumbnail_id) {
@@ -47,15 +81,21 @@ function on_click_thumbnail(thumbnail_id) {
 
 }
 
-//
-//
-// {#}
-// {#$("#ex5").slider();#}
-// {##}
-// {##}
+
+function do_ajax(domName){
+
+}
+
+function disp_slider_val(sliderDom, dispDom){
+    $("#"+sliderDom"").val($("#'dispDom'").val());
+}
+
+
+
 $("#slider-lower-thresh").change(function (e) {
     // {#            alert($("#slider").val());#}
-    $("#slider-val-lower-thresh").val($("#slider-lower-thresh").val());
+    // $("#slider-val-lower-thresh").val($("#slider-lower-thresh").val());
+    disp_slider_val('')
     e.preventDefault();
     console.log("value", $('#slider-lower-thresh').val());
     $.ajax({
@@ -253,6 +293,7 @@ $("#btn_reset").click(function (e) {
 
         success: function (data) {
             $('#histogram').empty();
+            $('#truncated-histogram').empty();
             document.getElementById("image").src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
             disp_hist_thumbnail(data);
         },
@@ -279,6 +320,14 @@ $("#btn_histogram").click(function (e) {
         }
     });
 });
+
+$("#btn_truncated_hist").click(function(e){
+    e.preventDefault();
+    hist_min_thresh = $("#hist_min_thresh").val();
+    hist_max_thresh = $("#hist_max_thresh").val();
+    console.log(hist_min_thresh, hist_max_thresh);
+    plot_truncated_histogram(original_hist, hist_min_thresh, hist_max_thresh);
+})
 
 
 $("#slider-opening-kernel").change(function (e) {
@@ -543,6 +592,8 @@ var image = document.getElementById('image');
 var naturalWidth = image.naturalWidth;
 var naturalHeight = image.naturalHeight;
 
+image.addEventListener("change", updateImageChange);
+
 function elt(name, attributes) {
     var node = document.createElement(name);
     // {#            var node = document.getElementById(name);#}
@@ -682,8 +733,7 @@ controls.brushSize = function (cx) {
 };
 
 
-function updateImageChange(cx) {
-    var image = document.getElementById("image");
+function updateImageChange() {
     //
     // {#            var color = cx.fillStyle, size = cx.lineWidth;#}
     // {#                cx.canvas.width = image.width;#}
@@ -702,7 +752,7 @@ controls.updateImage = function (cx) {
         elt("button", {type: "submit"}, "Load image changes"));
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        updateImageChange(cx);
+        updateImageChange();
     });
     return form;
 };
