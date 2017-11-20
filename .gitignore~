@@ -12,7 +12,8 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # IDEA
-*.idea/*
+WebMockUp/.idea/*
+ImageProcessing/.idea/*
 
 # Image 
 WebMockUp/media/documents/*

@@ -308,7 +308,7 @@ function createPaint(parent) {
         toolbar.appendChild(controls[name](cx));
 
     // var panel = elt("div", {class: "picturepanel"}, canvas);
-    var canvasWrapper = document.getElementById('canvas-wrapper');
+    var canvasWrapper = document.getElementById('image');
     // parent.appendChild(elt("div", null, panel, toolbar));
     canvasWrapper.appendChild(canvas);
     var canvasToolbar = document.getElementById('canvas-toolbar');
