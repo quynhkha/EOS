@@ -306,7 +306,8 @@ function initPaint(parent) {
     canvasHidden = elt("canvas", {
         width: naturalWidth,
         height: naturalHeight,
-        id: 'canvas-hidden'
+        id: 'canvas-hidden',
+        hidden: true,
     });
     // {#    var canvas = document.getElementById("myCanvas");#}
     // {#    var canvas = elt("myCanvas", {width: 500, height: 300});#}

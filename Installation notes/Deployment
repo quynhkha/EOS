@@ -1,0 +1,6 @@
+Deploy with apache2 and mod_wsgi
+- Guides:
+https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-16-04
+https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/modwsgi/
+-Install wsgi:
+sudo apt-get install python3-pip apache2 libapache2-mod-wsgi-py3

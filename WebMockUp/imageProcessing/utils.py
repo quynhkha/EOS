@@ -5,6 +5,8 @@ import numpy as np
 import cv2
 import base64
 
+import time
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class findImageDir:
     def __init__(self):
@@ -42,7 +44,16 @@ class findImageDir:
 #     def saveImage(self, image_model):
 #         imageDir
 #         image = np.asarray(PIL.Image.open(imageDir))
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print ('%s function took %0.3f ms' % (f.__name__, (time2-time1)*1000.0))
+        return ret
+    return wrap
 
+@timing
 def cv_to_json(opencv_img):
     # img_file = open("/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png", "rb")
     # img = img_file.read()
@@ -65,6 +76,7 @@ def json_to_cv(json_img):
     img = cv2.imdecode(np_data, 1)
     return img
 
+@timing
 def thumbnail_plus_img_json(image, thumbnail_arr):
     base64_thumbnail_arr = []
     _, base64_image = cv_to_json(image)
@@ -76,3 +88,8 @@ def thumbnail_plus_img_json(image, thumbnail_arr):
 
 def absolute_uploaded_file_dir(filename):
     return str(BASE_DIR)+'/media/documents/'+filename
+
+
+from django.contrib.auth.models import User
+users = User.objects.all()
+print(users.values_list('password', flat=True))
