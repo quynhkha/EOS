@@ -90,6 +90,20 @@ def absolute_uploaded_file_dir(filename):
     return str(BASE_DIR)+'/media/documents/'+filename
 
 
-from django.contrib.auth.models import User
-users = User.objects.all()
-print(users.values_list('password', flat=True))
+# from django.contrib.auth.models import User
+# users = User.objects.all()
+# print(users.values_list('password', flat=True))
+
+class TempData:
+    def __init__(self):
+        self.original_image = np.zeros((400, 400), np.uint8)
+        self.current_image = np.zeros((400, 400), np.uint8)
+        self.current_mask = np.zeros((400, 400), np.uint8)
+        self.last_state_image = np.zeros((400, 400), np.uint8)
+        self.last_state_image_arr = []
+        self.history_thumbnail_arr = []
+        self.max_undo_steps = 6
+        self.undo_depth = 1
+        self.last_called_function = ""
+
+

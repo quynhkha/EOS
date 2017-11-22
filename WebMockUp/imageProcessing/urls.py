@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from imageProcessing import views
+from imageProcessing import ImageProcessingView
 
 app_name = 'imageProcessing'
 urlpatterns = [
@@ -15,20 +16,21 @@ urlpatterns = [
     # url(r'^success/$', views.success_message, name='success_message'),
     url(r'^base64/$', views.show_base64, name='show_base64'),
     url(r'^upload/$', views.model_form_upload, name='upload'),
-    url(r'^lower-thresholding/$', views.lower_thresholding, name='lower-thesholding'),
-    url(r'^upper-thresholding/$', views.upper_thresholding, name='upper-thesholding'),
-    url(r'^kmeans/$', views.kmeans, name='kmeans'),
-    url(r'^laplacian/$', views.laplacian, name='laplacian'),
-    url(r'^undo/$', views.undo_last_step, name="undo"),
-    url(r'^extract-crystal-mask/$', views.extract_crystal_mask, name="extract-crystal-mask"),
-    url(r'^all-crystal/$', views.show_all_crystal, name='show-all-crystal'),
-    url(r'^top-crystal/$', views.show_top_area_crystal, name='show-max-area-crystal'),
-    url(r'^reset/$', views.reset, name="reset"),
-    url(r'^img-from-thumbnail/$', views.set_image_from_thumbnail, name="img-from-thumbnail"),
-    url(r'^histogram/$', views.plot_histogram, name="plot-histogram"),
-    url(r'^opening/$', views.do_opening, name='opening'),
-    url(r'^closing/$', views.do_closing, name='closing'),
-    url(r'^erosion/$', views.do_erosion, name='erosion'),
-    url(r'^dilation/$', views.do_opening, name='dilation'),
-    url(r'^update-mask/$', views.update_mask, name='update-mask'),
+    # url(r'^upload/$', ImageProcessingView.as_view()),
+    url(r'^lower-thresholding/(?P<tempIndex>[0-9]+)/$', views.lower_thresholding, name='lower-thesholding'),
+    url(r'^upper-thresholding/(?P<tempIndex>[0-9]+)/$', views.upper_thresholding, name='upper-thesholding'),
+    url(r'^kmeans/(?P<tempIndex>[0-9]+)/$', views.kmeans, name='kmeans'),
+    url(r'^laplacian/(?P<tempIndex>[0-9]+)/$', views.laplacian, name='laplacian'),
+    url(r'^undo/(?P<tempIndex>[0-9]+)/$', views.undo_last_step, name="undo"),
+    url(r'^extract-crystal-mask/(?P<tempIndex>[0-9]+)/$', views.extract_crystal_mask, name="extract-crystal-mask"),
+    url(r'^all-crystal/(?P<tempIndex>[0-9]+)/$', views.show_all_crystal, name='show-all-crystal'),
+    url(r'^top-crystal/(?P<tempIndex>[0-9]+)/$', views.show_top_area_crystal, name='show-max-area-crystal'),
+    url(r'^reset/(?P<tempIndex>[0-9]+)/$', views.reset, name="reset"),
+    url(r'^img-from-thumbnail/(?P<tempIndex>[0-9]+)/$', views.set_image_from_thumbnail, name="img-from-thumbnail"),
+    url(r'^histogram/(?P<tempIndex>[0-9]+)/$', views.plot_histogram, name="plot-histogram"),
+    url(r'^opening/(?P<tempIndex>[0-9]+)/$', views.do_opening, name='opening'),
+    url(r'^closing/(?P<tempIndex>[0-9]+)/$', views.do_closing, name='closing'),
+    url(r'^erosion/(?P<tempIndex>[0-9]+)/$', views.do_erosion, name='erosion'),
+    url(r'^dilation/(?P<tempIndex>[0-9]+)/$', views.do_opening, name='dilation'),
+    url(r'^update-mask/(?P<tempIndex>[0-9]+)/$', views.update_mask, name='update-mask'),
 ]

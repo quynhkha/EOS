@@ -78,9 +78,9 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
         domName = domNameArr[i];
         json_data[inputName] = $("#" + domName + "").val();
     }
-
+    var URL = targetUrl+get_temp_index()+"/";
     $.ajax({
-        url: targetUrl,
+        url: URL,
         type: "POST",
         // data: {inputName: $("#"+domName+"").val()},
         data: json_data,
@@ -101,9 +101,9 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
 
     var json_data = {};
     json_data[inputName] = val;
-
+    var URL = targetUrl+get_temp_index()+"/";
     $.ajax({
-        url: targetUrl,
+        url: URL,
         type: "POST",
         data: json_data,
 
@@ -120,8 +120,9 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
 
 function do_ajax_get(e, targetUrl) {
     e.preventDefault();
+    var URL = targetUrl+get_temp_index()+"/";
     $.ajax({
-        url: targetUrl,
+        url: URL,
         type: "GET",
 
         success: function (data) {
@@ -144,6 +145,10 @@ function update_image(data) {
     document.getElementById('image').src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
     canvasWrapper = document.getElementById('canvas-wrapper');
     canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
+}
+function get_temp_index(){
+    tempIndexText = document.getElementById('temp-index').innerText.toString();
+    return parseInt(tempIndexText);
 }
 
 /******************* DOM EVENT HANDLING *********************/
