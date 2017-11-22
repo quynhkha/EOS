@@ -41,14 +41,18 @@ canvas {
     display: block;
     /*margin: 50px auto;*/
     margin: auto;
-}
 
+}
+#wrap{
+    width:100%;
+}
 #canvas-wrapper {
     /*margin-top: 50px;*/
     position: relative;
     /*{#              width: 100%;#}*/
      background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .panel-heading h4 {

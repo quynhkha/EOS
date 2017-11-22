@@ -57,12 +57,13 @@
                     <div id="imageView">
 
                         <img id="image" class="img-fluid centered"
-                             src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}">
-                        {#         <img id= "image" src="/media/1947-1_plg6.png" height="400">}#}
-                    </div>
+                             src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" hidden>
 
-                    <div id="canvas-wrapper"></div>
-                    <div id="canvas-toolbar"></div>
+                    </div>
+                   <div id="canvas-wrapper"></div>
+                    <div id="canvas-img-data"></div>
+
+
 
                     <div id="histogram"></div>
                     <div id = "truncated-histogram"></div>
@@ -410,6 +411,9 @@
                         </div>
                     </div>
 
+                      <div id="canvas-toolbar"></div>
+{#                    <div id="canvas-hidden-wrapper"></div>#}
+
 
                 </div>
 
@@ -434,5 +438,5 @@
 
 {% block javascript %}
 
-    <script>createPaint(document.getElementById('image'));</script>
+    <script>initPaint(document.getElementById('canvas-wrapper'));</script>
 {% endblock %}

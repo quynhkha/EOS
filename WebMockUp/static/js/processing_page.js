@@ -1,5 +1,6 @@
 /************** HISTOGRAM ***************/
 var original_hist = {};
+
 // var truncated_hist = {};
 function plot_histogram(data) {
 
@@ -95,10 +96,10 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
     });
 }
 
-function do_ajax_post_val_only(val, inputName, targetUrl){
+function do_ajax_post_val_only(val, inputName, targetUrl) {
     // e.preventDefault();
 
-    var json_data ={};
+    var json_data = {};
     json_data[inputName] = val;
 
     $.ajax({
@@ -106,12 +107,12 @@ function do_ajax_post_val_only(val, inputName, targetUrl){
         type: "POST",
         data: json_data,
 
-        success: function(data){
+        success: function (data) {
             update_image(data);
             disp_hist_thumbnail(data);
         },
 
-        error: function (data){
+        error: function (data) {
             alert('error');
         }
     });
@@ -141,6 +142,8 @@ function disp_slider_val(dispDom, sliderDom) {
 
 function update_image(data) {
     document.getElementById('image').src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+    canvasWrapper = document.getElementById('canvas-wrapper');
+    canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
 }
 
 /******************* DOM EVENT HANDLING *********************/
@@ -263,8 +266,12 @@ $("#btn_extract_top_crystal").click(function (e) {
 
 /*********************** CANVAS **************************/
 var image = document.getElementById('image');
+var canvasWrapper = document.getElementById('canvas-wrapper');
+var canvasToolbar = document.getElementById('canvas-toolbar');
 var naturalWidth = image.naturalWidth;
 var naturalHeight = image.naturalHeight;
+var canvasHidden = Object.create(null);
+
 
 image.addEventListener("change", updateImageChange);
 
@@ -287,18 +294,30 @@ function elt(name, attributes) {
 
 var controls = Object.create(null);
 
-function createPaint(parent) {
-    var canvas = elt("canvas", {width: 500, height: 400});
+function initPaint(parent) {
+    setCanvasWrapperSize();
+    canvasWrapperSize = getElementSize('canvas-wrapper');
+    var canvasMain = elt("canvas", {
+        width: canvasWrapperSize.width,
+        height: canvasWrapperSize.height,
+        id: 'canvas-main'
+    });
+    // canvasHidden = elt("canvas", {width: naturalWidth, height: naturalHeight, id: 'canvas-hidden'});
+    canvasHidden = elt("canvas", {
+        width: naturalWidth,
+        height: naturalHeight,
+        id: 'canvas-hidden'
+    });
     // {#    var canvas = document.getElementById("myCanvas");#}
     // {#    var canvas = elt("myCanvas", {width: 500, height: 300});#}
-    var cx = canvas.getContext("2d");
-    var image = document.getElementById("image");
+    var cx = canvasMain.getContext("2d");
+
     var color = cx.fillStyle, size = cx.lineWidth;
     color = 'rgb(0, 255, 0)';
     // cx.canvas.width = image.width;
     // cx.canvas.height = image.height;
-    cx.canvas.width = naturalWidth;
-    cx.canvas.height = naturalHeight;
+    // cx.canvas.width = naturalWidth;
+    // cx.canvas.height = naturalHeight;
     // {#            cx.drawImage(image, 0, 0);#}
     cx.fillStyle = color;
     cx.strokeStyle = color;
@@ -308,10 +327,10 @@ function createPaint(parent) {
         toolbar.appendChild(controls[name](cx));
 
     // var panel = elt("div", {class: "picturepanel"}, canvas);
-    var canvasWrapper = document.getElementById('image');
+
     // parent.appendChild(elt("div", null, panel, toolbar));
-    canvasWrapper.appendChild(canvas);
-    var canvasToolbar = document.getElementById('canvas-toolbar');
+    canvasWrapper.appendChild(canvasMain);
+    canvasWrapper.appendChild(canvasHidden);
     canvasToolbar.appendChild(toolbar);
 }
 
@@ -386,7 +405,7 @@ controls.option = function (cx) {
         input.appendChild(elt("option", {value: options[option]}, option));
 
     }
-    ;
+
     input.addEventListener("change", function () {
         cx.fillStyle = input.value;
         cx.strokeStyle = input.value;
@@ -417,39 +436,45 @@ function updateImageChange() {
     // {#            cx.fillStyle = color;#}
     // {#            cx.strokeStyle = color;#}
     // {#            cx.lineWidth = size;#}
-    var canvasWrapper = document.getElementById('canvas-wrapper');
+
     canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
 }
 
 controls.updateImage = function (cx) {
 
     var form = elt("form", null,
-        elt("button", {type: "submit"}, "Load image changes"));
+        elt("button", {type: "submit"}, "Load brush"));
     form.addEventListener("submit", function (event) {
         event.preventDefault();
+        cx.canvas.style.display = "block";
         updateImageChange();
     });
     return form;
 };
 
 function saveCanvas(cx) {
-    var data = cx.getImageData(0, 0, cx.canvas.width, cx.canvas.height).data;
-    console.log(data);
+    // var data = cx.getImageData(0, 0, cx.canvas.width, cx.canvas.height).data;
+    // console.log(data);
     // console.log(JSON.stringify(data));
-    var jpegUrl = cx.canvas.toDataURL("image/jpeg");
-    console.log(jpegUrl);
+
+    // var jpegUrl = cx.canvas.toDataURL("image/jpeg");
+
+    var jpegUrl = convertCanvasData(cx);
+    // console.log(jpegUrl);
 
     // return data;
-    var image = document.getElementById('image');
+    // var image = document.getElementById('image');
     // image.src = jpegUrl;
 
     do_ajax_post_val_only(jpegUrl, 'mask', '/update-mask/');
+    // setCanvasWrapperSize();
+    cx.canvas.style.display = "none";
 
 }
 
 controls.saveDrawing = function (cx) {
     var form = elt("form", null,
-        elt("button", {type: "submit"}, "Save the drawing"
+        elt("button", {type: "submit"}, "Do brush"
         ));
     form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -467,6 +492,32 @@ function randomPointInRadius(radius) {
         }
     }
 };
-        
 
+function getElementSize(elementId) {
+    var element = document.getElementById(elementId);
+    var boundingBox = element.getBoundingClientRect();
+    var elementWidth = boundingBox.right - boundingBox.left;
+    var elementHeight = boundingBox.bottom - boundingBox.top;
+    return {width: elementWidth, height: elementHeight};
+}
+
+function convertCanvasData(cx) {
+    var hiddenContext = canvasHidden.getContext("2d");
+    hiddenContext.drawImage(cx.canvas, 0, 0, hiddenContext.canvas.width, hiddenContext.canvas.height);
+    var hiddenCanvasData = hiddenContext.canvas.toDataURL("image/jpeg");
+    return hiddenCanvasData;
+}
+
+
+function setCanvasWrapperSize() {
+
+    // var boundingBox = canvasWrapper.getBoundingClientRect();
+    // var canvasWrapperColWidth = boundingBox.right -boundingBox.left;
+    canvasWrapperSize = getElementSize('canvas-wrapper');
+    var imageWidth = image.width;
+    var imageHeight = image.height;
+    var canvasWrapperHeight = Math.floor(imageHeight * canvasWrapperSize.width / imageWidth) + 1;
+    canvasWrapper.style.height = canvasWrapperHeight.toString() + 'px';
+
+}
 
