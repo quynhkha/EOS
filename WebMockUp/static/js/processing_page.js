@@ -22,7 +22,7 @@ function plot_truncated_histogram(data, min_thresh, max_thresh) {
     var x_arr = [];
     var y_arr = [];
     if (range >= 100) {
-        step = parseInt(range / 100) + 1 //floor()
+        step = parseInt(range / 100) + 1; //floor()
         var j = 0;
         for (i = 0; i < 100; i++) {
             var x = 0;
@@ -64,8 +64,6 @@ function disp_hist_thumbnail(data) {
 function on_click_thumbnail(thumbnail_id) {
     console.log("thumbnail id: ", thumbnail_id);
     do_ajax_post_val_only(thumbnail_id, 'input', '/img-from-thumbnail/');
-
-
 }
 
 /**************** UTIL FUNCTIONS ******************/
@@ -202,18 +200,29 @@ $("#btn_reset").click(function (e) {
     do_ajax_get(e, '/reset/');
 });
 
-
 $("#btn_histogram").click(function (e) {
-    do_ajax_get(e, '/histogram/');
+    e.preventDefault();
+    $.ajax({
+        type: "GET",
+        url: "/histogram/"+get_temp_index()+"/",
+
+        success: function (data) {
+            plot_histogram(data);
+        },
+        error: function (data) {
+            console.log(data);
+            alert('error');
+        }
+    });
 });
 
-$("#btn_truncated_hist").click(function (e) {
+$("#btn_truncated_hist").click(function(e){
     e.preventDefault();
     hist_min_thresh = $("#hist_min_thresh").val();
     hist_max_thresh = $("#hist_max_thresh").val();
     console.log(hist_min_thresh, hist_max_thresh);
     plot_truncated_histogram(original_hist, hist_min_thresh, hist_max_thresh);
-})
+});
 
 
 $("#slider-opening-kernel").change(function (e) {
