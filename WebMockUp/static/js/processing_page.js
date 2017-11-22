@@ -76,12 +76,19 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
         domName = domNameArr[i];
         json_data[inputName] = $("#" + domName + "").val();
     }
-    var URL = targetUrl+get_temp_index()+"/";
+    var URL = targetUrl + get_temp_index() + "/";
     $.ajax({
         url: URL,
         type: "POST",
         // data: {inputName: $("#"+domName+"").val()},
         data: json_data,
+
+        beforeSend: function () {
+            document.body.style.cursor = "wait";
+        },
+        complete: function () {
+            document.body.style.cursor = "default";
+        },
 
         success: function (data) {
             update_image(data);
@@ -99,11 +106,18 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
 
     var json_data = {};
     json_data[inputName] = val;
-    var URL = targetUrl+get_temp_index()+"/";
+    var URL = targetUrl + get_temp_index() + "/";
     $.ajax({
         url: URL,
         type: "POST",
         data: json_data,
+
+        beforeSend: function () {
+            document.body.style.cursor = "wait";
+        },
+        complete: function () {
+            document.body.style.cursor = "default";
+        },
 
         success: function (data) {
             update_image(data);
@@ -118,11 +132,17 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
 
 function do_ajax_get(e, targetUrl) {
     e.preventDefault();
-    var URL = targetUrl+get_temp_index()+"/";
+    var URL = targetUrl + get_temp_index() + "/";
     $.ajax({
         url: URL,
         type: "GET",
 
+        beforeSend: function () {
+            document.body.style.cursor = "wait";
+        },
+        complete: function () {
+            document.body.style.cursor = "default";
+        },
         success: function (data) {
             update_image(data);
             disp_hist_thumbnail(data);
@@ -144,7 +164,8 @@ function update_image(data) {
     canvasWrapper = document.getElementById('canvas-wrapper');
     canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
 }
-function get_temp_index(){
+
+function get_temp_index() {
     tempIndexText = document.getElementById('temp-index').innerText.toString();
     return parseInt(tempIndexText);
 }
@@ -204,7 +225,7 @@ $("#btn_histogram").click(function (e) {
     e.preventDefault();
     $.ajax({
         type: "GET",
-        url: "/histogram/"+get_temp_index()+"/",
+        url: "/histogram/" + get_temp_index() + "/",
 
         success: function (data) {
             plot_histogram(data);
@@ -216,7 +237,7 @@ $("#btn_histogram").click(function (e) {
     });
 });
 
-$("#btn_truncated_hist").click(function(e){
+$("#btn_truncated_hist").click(function (e) {
     e.preventDefault();
     hist_min_thresh = $("#hist_min_thresh").val();
     hist_max_thresh = $("#hist_max_thresh").val();
@@ -321,7 +342,7 @@ function initPaint(parent) {
         width: naturalWidth,
         height: naturalHeight,
         id: 'canvas-hidden',
-        hidden: true,
+        hidden: true
     });
     // {#    var canvas = document.getElementById("myCanvas");#}
     // {#    var canvas = elt("myCanvas", {width: 500, height: 300});#}
@@ -347,6 +368,7 @@ function initPaint(parent) {
     canvasWrapper.appendChild(canvasMain);
     canvasWrapper.appendChild(canvasHidden);
     canvasToolbar.appendChild(toolbar);
+    updateImageChange()
 }
 
 var tools = Object.create(null);

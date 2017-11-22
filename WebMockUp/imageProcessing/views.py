@@ -1,35 +1,15 @@
-import base64
-import json
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-
-from imageProcessing.FindSegment import FindSegment
 from .forms import *
-from .models import Image
+from .imageProcessingFunc.crystal_extractor import ProcessingFunction
 from .utils import *
 
-import copy
-import cv2
-from django.http import JsonResponse
-from .forms import UploadFileForm
-from django.views.decorators.csrf import csrf_exempt
-from .imageProcessingFunc.crystal_extractor import ProcessingFunction
+ps_func = ProcessingFunction()
+temp_data_arr = []
+temp_idx = 0
 
-
-processingFunction = ProcessingFunction()
-# tempData = TempData()
-tempDataArr = []
-tempIndex = 0
-
-def newTempData():
-    tempData = TempData()
-    tempDataArr.append(tempData)
-    return len(tempDataArr)-1
-
-def getTempData(index):
-    i = int(index)
-    return tempDataArr[i]
 
 # for testing purpose only
 def show_base64(request):
@@ -37,12 +17,6 @@ def show_base64(request):
     json_data, _= cv_to_json(opencv_img)
     return JsonResponse(json_data, safe=False)
 
-def compress_image(image):
-    if len(image.shape) == 3:
-        (height, width, _) =image.shape
-    else:
-        (height, width) = image.shape
-    return cv2.resize(image, (int(width/4), int(height/4)), interpolation=cv2.INTER_CUBIC)
 
 @csrf_exempt
 def model_form_upload(request):
@@ -55,320 +29,329 @@ def model_form_upload(request):
             image_file_dir = absolute_uploaded_file_dir(file.name)
             print ("image file dir", image_file_dir)
 
-            global tempIndex
-            tempIndex = newTempData()
-            temp = getTempData(tempIndex)
+            global temp_idx
+            global temp_data_arr
+            temp_idx = new_temp_data(temp_data_arr)
+            temp = get_temp_data(temp_idx, temp_data_arr)
 
-            temp.original_image = cv2.imread(image_file_dir)
-            temp.current_image=temp.original_image
-            save_state_image(tempIndex)
-            _, image_data = cv_to_json(temp.original_image)
-            return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':tempIndex})
+            temp.s_img_ori.img_data = cv2.imread(image_file_dir)
+            temp.s_img_ori.func_name = 'upload'
+            temp.s_img_cur = copy.copy(temp.s_img_ori)
+
+            save_state(temp_idx, temp_data_arr)
+            _, image_data = cv_to_json(temp.s_img_ori)
+            return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
     else:
         form = DocumentForm()
     return render(request, 'imageProcessing/model_form_upload.html', {'form': form})
 
-def save_state_image(tempIndex):
-    # global current_image
-    # global last_state_image
-    # last_state_image = current_image
-    # save_second_last_state_image()
-
-    temp = getTempData(tempIndex)
-    if len(temp.last_state_image_arr)>=temp.max_undo_steps:
-        temp.last_state_image_arr.pop(0)
-        temp.history_thumbnail_arr.pop(0)
-
-    temp.last_state_image_arr.append(temp.current_image)
-    compressed_image = compress_image(copy.copy(temp.current_image))
-    temp.history_thumbnail_arr.append(compressed_image)
-
-    temp.undo_depth = len(temp.last_state_image_arr)-1
-    print('undo depth', temp.undo_depth)
-
-def reset_current_image(function_name, tempIndex):
-
-    temp = getTempData(tempIndex)
-    if temp.last_called_function == function_name:
-        temp.current_image = temp.last_state_image_arr[temp.undo_depth]
-
-    temp.last_called_function = function_name
-    temp.undo_depth = len(temp.last_state_image_arr) - 1
-    print('undo depth', temp.undo_depth)
-
-
-# def save_second_last_state_image():
-#     global last_state_image
-#     global second_last_state_image
-#     second_last_state_image = last_state_image
 
 @csrf_exempt
-def laplacian(request, tempIndex=0):
-    temp = getTempData(tempIndex)
-    #save_state_image()
-    temp.current_image = processingFunction.laplacian_func(temp.current_image)
-    #json_data, _ = cv_to_json(current_image)
-    save_state_image(tempIndex)
-    json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+def laplacian(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+
+    img_data = ps_func.laplacian_func(temp.s_img_cur.img_data)
+    temp.update_s_img_cur('laplacian', img_data)
+    #json_data, _ = cv_to_json(s_img_cur)
+    save_state(temp_idx, temp_data_arr)
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
-
 @csrf_exempt
-def kmeans(request, tempIndex=0):
-    temp = getTempData(tempIndex)
-    reset_current_image('kmeans', tempIndex)
+def kmeans(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+    reset_current_image('kmeans', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
         print('input', input)
         input = int(input)
 
-        temp.current_image, temp.labels = processingFunction.kmeans(current_image=temp.current_image, segments=input)
-        #json_data, _ = cv_to_json(current_image)
-        save_state_image(tempIndex)
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        img_data, temp.s_labels = ps_func.kmeans(temp.s_img_cur.img_data, segments=input)
+        temp.update_s_img_cur('kmeans', img_data)
+        #json_data, _ = cv_to_json(s_img_cur)
+        save_state(temp_idx, temp_data_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
+        _, image_data = cv_to_json(temp.s_img_cur)
     return render(request, 'imageProcessing/processing_page.html',
-                      {'image_data': image_data, 'temp_index': tempIndex})
+                      {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def lower_thresholding(request, tempIndex=0):
+def lower_thresholding(request, temp_idx=0):
 
-    temp = getTempData(tempIndex)
-    reset_current_image('lower_thesholding',tempIndex)
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+    reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
+
     if request.method == 'POST':
         input = request.POST.get('input')
         input = int(input)
 
-        temp.current_image = processingFunction.lower_thesholding(original_image=temp.original_image, current_image=temp.current_image, thresh_val=input)
-        save_state_image(tempIndex)
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
-        # json_data, _ = cv_to_json(current_image)
+        img_data = ps_func.lower_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('lower thresholding', img_data)
+
+        save_state(temp_idx, temp_data_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
+        _, image_data = cv_to_json(temp.s_img_cur)
     return render(request, 'imageProcessing/processing_page.html',
-                      {'image_data': image_data, 'temp_index': tempIndex})
+                      {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def upper_thresholding(request, tempIndex=0):
-    reset_current_image('upper_theshoding', tempIndex)
-    temp = getTempData(tempIndex)
+def upper_thresholding(request, temp_idx=0):
+
+    global temp_data_arr
+    reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_idx, temp_data_arr)
     if request.method == 'POST':
         input = request.POST.get('input')
         input = int(input)
 
-        temp.current_image = processingFunction.upper_thesholding(original_image=temp.original_image, current_image=temp.current_image, thresh_val=input)
-        #json_data, _ = cv_to_json(current_image)
-        save_state_image(tempIndex)
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        img_data= ps_func.upper_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('upper thresholding', img_data)
+        #json_data, _ = cv_to_json(s_img_cur)
+        save_state(temp_idx, temp_data_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
-    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': tempIndex})
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def undo_last_step(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def undo_last_step(request, temp_idx=0):
 
-    if temp.undo_depth>1:
-        temp.undo_depth -=1
-    temp.current_image = temp.last_state_image_arr[temp.undo_depth]
-    print('undo depth', temp.undo_depth)
-    # json_data, _ = cv_to_json(current_image)
-    # save_state_image()
-    json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+
+    if temp.s_undo_depth>=1:
+        temp.s_undo_depth -=1
+    temp.s_img_cur = copy.copy(temp.s_img_last_arr[temp.s_undo_depth])
+    print('undo depth', temp.s_undo_depth)
+    # json_data, _ = cv_to_json(s_img_cur)
+    #save_state()
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
 @csrf_exempt
-def extract_crystal_mask(request, tempIndex=0):
-    reset_current_image('extract_crystal_mask', tempIndex)
-    temp = getTempData(tempIndex)
+def extract_crystal_mask(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+    reset_current_image('extract_crystal_mask', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
         input = int(input)
 
-        temp.current_image = processingFunction.extract_crystal_mask(current_image=temp.current_image,
-                                                        labels=temp.labels, user_chosen_label=input)
-        #json_data, _ = cv_to_json(current_image)
-        save_state_image(tempIndex)
+        img_data= ps_func.extract_crystal_mask(temp.s_img_cur.img_data, labels=temp.s_labels, user_chosen_label=input)
+        temp.update_s_img_cur('extract crystal mask', img_data)
+        #json_data, _ = cv_to_json(s_img_cur)
+        save_state(temp_idx, temp_data_arr)
 
-        temp.current_mask = temp.current_image
+        temp.s_mask_cur = temp.s_img_cur
 
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
+        _, image_data = cv_to_json(temp.s_img_cur)
     return render(request, 'imageProcessing/processing_page.html',
-                      {'image_data': image_data, 'temp_index': tempIndex})
+                      {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def show_all_crystal(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def show_all_crystal(request, temp_idx=0):
 
-    temp.current_image = processingFunction.show_all_crystal(original_image=temp.original_image,
-                                                        image_mask=temp.current_image)
-    #json_data, _ = cv_to_json(current_image)
-    save_state_image(tempIndex)
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
 
-    json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+    img_data= ps_func.show_all_crystal(temp.s_img_ori.img_data, temp.s_img_cur.img_data)
+    temp.update_s_img_cur('show all crystals', img_data)
+    #json_data, _ = cv_to_json(s_img_cur)
+    save_state(temp_idx, temp_data_arr)
+
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
 
 @csrf_exempt
-def show_top_area_crystal(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def show_top_area_crystal(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
 
     num_of_crystals = int(request.POST.get('input'))
 
-    temp.current_image = processingFunction.show_top_area_crystals(original_image=temp.original_image,
-                                                              image_mask=temp.current_image, num_of_crystals=num_of_crystals)
-
-    save_state_image(tempIndex)
-    json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
-    # json_data, _ = cv_to_json(current_image)
+    img_data = ps_func.show_top_area_crystals(temp.s_img_ori.img_data,
+                                                              image_mask=temp.s_img_cur.img_data, num_of_crystals=num_of_crystals)
+    temp.update_s_img_cur('top area crystals', img_data)
+    save_state(temp_idx, temp_data_arr)
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+    # json_data, _ = cv_to_json(s_img_cur)
     return JsonResponse(json_data)
 
 @csrf_exempt
-def reset(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def reset(request, temp_idx=0):
 
-    temp.history_thumbnail_arr = []
-    temp.last_state_image_arr = []
-    temp.undo_depth = 0
-    temp.current_image = temp.original_image
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
 
-    save_state_image(tempIndex)
+    temp.s_thumb_hist_arr = []
+    temp.s_img_last_arr = []
+    temp.s_undo_depth = 0
+    temp.s_img_cur = copy.copy(temp.s_img_ori)
 
-    json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+    save_state(temp_idx, temp_data_arr)
+
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data)
 
 @csrf_exempt
-def set_image_from_thumbnail(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def set_image_from_thumbnail(request, temp_idx=0):
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
         thumbnail_id = str(input)
         id = int(thumbnail_id.split("_")[1])
 
-        temp.current_image = temp.last_state_image_arr[id]
-        temp.undo_depth = input
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        temp.s_img_cur = temp.s_img_last_arr[id]
+        temp.s_undo_depth = input
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
+        _, image_data = cv_to_json(temp.s_img_cur)
     return render(request, 'imageProcessing/processing_page.html',
-                      {'image_data': image_data, 'temp_index': tempIndex})
+                      {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def plot_histogram(request, tempIndex=0):
-    temp = getTempData(tempIndex)
+def plot_histogram(request, temp_idx=0):
 
-    hist_y_axis, hist_x_axis = processingFunction.plot_histogram(temp.current_image, temp.current_mask)
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+
+    hist_y_axis, hist_x_axis = ps_func.plot_histogram(temp.s_img_cur.img_data, temp.s_mask_cur.img_data)
     json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
     return JsonResponse(json_data)
 
 @csrf_exempt
-def do_opening(request, tempIndex=0):
-    reset_current_image('do_opening', tempIndex)
-    temp = getTempData(tempIndex)
+def do_opening(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+
+    reset_current_image('do_opening', temp_idx, temp_data_arr)
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
         num_of_iter = int(request.POST.get('num_of_iter'))
 
-        temp.current_image = processingFunction.opening(temp.current_image, kernel_size, num_of_iter)
-        # save_state_image()
-        temp.current_mask = temp.current_image
+        img_data= ps_func.opening(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('opening', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
-    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': tempIndex})
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
 
 
 @csrf_exempt
-def do_closing(request, tempIndex=0):
-    reset_current_image('do_closing', tempIndex)
-    temp = getTempData(tempIndex)
-
-    if request.method == 'POST':
-        kernel_size = int(request.POST.get('kernel_size'))
-        num_of_iter = int(request.POST.get('num_of_iter'))
-
-        temp.current_image = processingFunction.closing(temp.current_image, kernel_size, num_of_iter)
-        # save_state_image()
-        temp.current_mask = temp.current_image
-
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
-        return JsonResponse(json_data, safe=False)
-    else:
-        _, image_data = cv_to_json(temp.current_image)
-    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': tempIndex})
+def do_closing(request, temp_idx=0):
 
 
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
 
-@csrf_exempt
-def do_erosion(request, tempIndex=0):
-    reset_current_image('do_erosion', tempIndex)
-    temp = getTempData(tempIndex)
+    reset_current_image('do_closing', temp_idx,temp_data_arr)
 
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
         num_of_iter = int(request.POST.get('num_of_iter'))
 
-        temp.current_image = processingFunction.erosion(temp.current_image, kernel_size, num_of_iter)
-        # save_state_image()
-        temp.current_mask = temp.current_image
+        img_data = ps_func.closing(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('closing', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
-    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': tempIndex})
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
 
 
 @csrf_exempt
-def do_dilation(request, tempIndex=0):
-    reset_current_image('do_dilation', tempIndex)
-    temp = getTempData(tempIndex)
+def do_erosion(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+    reset_current_image('do_erosion', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
         num_of_iter = int(request.POST.get('num_of_iter'))
 
-        temp.current_image = processingFunction.dilation(temp.current_image, kernel_size, num_of_iter)
-        # save_state_image()
-        temp.current_mask = temp.current_image
+        img_data = ps_func.erosion(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('erosion', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
-        _, image_data = cv_to_json(temp.current_image)
-    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': tempIndex})
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
 
 @csrf_exempt
-def update_mask(request, tempIndex=0):
+def do_dilation(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_idx, temp_data_arr)
+    reset_current_image('do_dilation', temp_idx, temp_data_arr)
+
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+
+        img_data = ps_func.dilation(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('dilation', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
+
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
+@csrf_exempt
+def update_mask(request, temp_idx=0):
     if request.method == 'POST':
         rgb_mask_data = request.POST.get('mask')
         rgb_mask = json_to_cv(rgb_mask_data)
 
-        temp = getTempData(tempIndex)
 
-        temp.current_image, temp.current_mask = processingFunction.handle_mask(rgb_mask, temp.current_mask, temp.original_image)
+        global temp_data_arr
+        temp = get_temp_data(temp_idx, temp_data_arr)
 
+        img_data, mask_data = ps_func.handle_mask(rgb_mask, temp.s_mask_cur.img_data, temp.s_img_ori.img_data)
 
-        # current_image = processingFunction.show_all_crystal(original_image=original_image,
-        #                                                     image_mask=current_mask)
-        # json_data, _ = cv_to_json(current_image)
-        save_state_image(tempIndex)
+        temp.update_s_img_cur('update mask', img_data)
+        temp.s_mask_cur.img_data = mask_data
+        temp.s_mask_cur.func_name = 'update mask'
+        # s_img_cur = ps_func.show_all_crystal(s_img_ori=s_img_ori,
+        #                                                     image_mask=s_mask_cur)
+        # json_data, _ = cv_to_json(s_img_cur)
+        save_state(temp_idx, temp_data_arr)
 
-        json_data = thumbnail_plus_img_json(temp.current_image, temp.history_thumbnail_arr)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
-        # json_data = thumbnail_plus_img_json(mask, history_thumbnail_arr)
+        # json_data = thumbnail_plus_img_json(mask, s_thumb_hist_arr)
         # return JsonResponse(json_data, safe=False)
 
