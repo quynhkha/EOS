@@ -18,16 +18,17 @@ function plot_histogram(data) {
 }
 
 function plot_truncated_histogram(data, min_thresh, max_thresh) {
-    range = max_thresh - min_thresh;
+    var range = parseInt(max_thresh) - parseInt(min_thresh);
     var x_arr = [];
     var y_arr = [];
-    if (range >= 100) {
-        step = parseInt(range / 100) + 1; //floor()
-        var j = 0;
+    var j = parseInt(min_thresh);
+    if (range > 100) {
+        var step = parseInt(range / 100) + 1; //floor()
+
         for (i = 0; i < 100; i++) {
             var x = 0;
             var y = 0;
-            while (j < i * step && j < 256) {
+            while (j < i * step && j <= parseInt(max_thresh)) {
                 x = i;
                 y = y + data["y"][j];
                 j++;
@@ -36,6 +37,26 @@ function plot_truncated_histogram(data, min_thresh, max_thresh) {
             y_arr.push(y);
         }
     }
+
+    else {
+        var step = parseInt(100/range);
+        var i = 0;
+        for (i = 0; i<100; i++){
+            var x = i;
+            var y = 0;
+
+                if (i % step == 0) {
+                    if (j < parseInt(max_thresh)) {
+                        y = data["y"][j];
+                        j++;
+                    }
+                }
+            x_arr.push(x);
+            y_arr.push(y);
+            }
+
+        }
+
     console.log(x_arr, y_arr);
 
     var truncated_hist_data = [{

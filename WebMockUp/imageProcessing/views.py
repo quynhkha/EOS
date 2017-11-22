@@ -155,7 +155,7 @@ def extract_crystal_mask(request, temp_idx=0):
         #json_data, _ = cv_to_json(s_img_cur)
         save_state(temp_idx, temp_data_arr)
 
-        temp.s_mask_cur = temp.s_img_cur
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
