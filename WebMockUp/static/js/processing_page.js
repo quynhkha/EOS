@@ -1,5 +1,7 @@
 /************** HISTOGRAM ***************/
 var original_hist = {};
+var truncated_hist = {};
+var composition_hist = {};
 
 // var truncated_hist = {};
 function plot_histogram(data) {
@@ -59,13 +61,80 @@ function plot_truncated_histogram(data, min_thresh, max_thresh) {
 
     console.log(x_arr, y_arr);
 
-    var truncated_hist_data = [{
-        x: x_arr,
-        y: y_arr,
+    truncated_hist = {x: x_arr, y: y_arr};
+    var hist_data = [{
+        x: truncated_hist["x"],
+        y: truncated_hist["y"],
         type: 'bar'
     }];
-    Plotly.newPlot('truncated-histogram', truncated_hist_data);
+    Plotly.newPlot('truncated-histogram', hist_data);
 }
+
+function plot_composition(data, a, b){
+    var step;
+    var x_arr = [];
+    var y_arr = [];
+    var a = parseFloat(a);
+    var b = parseInt(b);
+    var data_length = parseInt(data["x"].length*a) + 1;
+
+    if (a<1){
+        var j =0;
+        step = parseInt(1/a)+1;
+        for (var i = 0; i<data_length; i++){
+            var x = i;
+            var y = 0;
+            while (j<i*step && j<data["x"].length){
+                y = y + data["y"][j];
+                j++;
+            }
+
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+    }
+
+    else {
+        step = parseInt(a);
+        var j = 0;
+        for (var i = 0; i< data_length; i++){
+            var x = i;
+            var y = 0;
+                if (i % step == 0) {
+                    if (j < data["x"].length) {
+                        y = data["y"][j];
+                        j++;
+                    }
+                }
+            x_arr.push(x);
+            y_arr.push(y);
+            }
+        }
+
+    // move the hist based on b value
+    var new_x_arr = [];
+    var new_y_arr = [];
+    for (var i =0; i<b; i++){
+        new_x_arr.push(0);
+        new_y_arr.push(0);
+    }
+    for (var i = 0; i<x_arr.length; i++){
+        new_x_arr.push(x_arr[i]+b);
+        new_y_arr.push(y_arr[i]);
+    }
+
+     console.log(new_x_arr, new_y_arr);
+
+    composition_hist = {x: new_x_arr, y: new_y_arr};
+  var hist_data = [{
+        x: composition_hist["x"],
+        y: composition_hist["y"],
+        type: 'bar'
+    }];
+    Plotly.newPlot('composition-histogram', hist_data);
+
+}
+
 
 /****************** THUMBNAIL ******************/
 function disp_hist_thumbnail(data) {
@@ -263,9 +332,53 @@ $("#btn_truncated_hist").click(function (e) {
     hist_min_thresh = $("#hist_min_thresh").val();
     hist_max_thresh = $("#hist_max_thresh").val();
     console.log(hist_min_thresh, hist_max_thresh);
-    plot_truncated_histogram(original_hist, hist_min_thresh, hist_max_thresh);
+
+    var is_valid = true;
+    if (parseInt(hist_min_thresh) <0 || parseInt(hist_min_thresh) >255){
+       alert("min threshold value range should be in range [0-255]");
+        is_valid = false;
+    }
+
+    if (parseInt(hist_max_thresh) <0 || parseInt(hist_max_thresh) >255){
+        alert("max threshold value range should be in range [0-255]");
+        is_valid = false;
+    }
+
+    if (parseInt(hist_min_thresh) >= parseInt(hist_max_thresh)){
+        alert("min threshold should smaller than max threshold");
+        is_valid = false;
+    }
+    if (is_valid){
+        plot_truncated_histogram(original_hist, hist_min_thresh, hist_max_thresh);
+    }
+    else {
+        alert("invalid range. please input range again");
+    }
+
 });
 
+$("#btn_comp").click(function(e){
+   e.preventDefault();
+   a = $("#comp_a").val();
+   b = $("#comp_b").val();
+   console.log(a, b);
+
+
+   var is_valid = true;
+    if (parseFloat(a) <= 0 || parseFloat(b) < 0){
+       alert("a should be positive and b should be non-negative");
+        is_valid = false;
+    }
+
+
+    if (is_valid){
+         plot_composition(truncated_hist, a, b);
+    }
+
+    else{
+        alert("invalid composition value. Please input again.")
+    }
+});
 
 $("#slider-opening-kernel").change(function (e) {
     disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');

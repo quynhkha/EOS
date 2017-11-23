@@ -68,6 +68,7 @@
 
                     <div id="histogram"></div>
                     <div id = "truncated-histogram"></div>
+                    <div id ="composition-histogram"></div>
 
                 </div>
 
@@ -388,14 +389,30 @@
                             <label class="control-label"> Custom histogram </label>
                         </div>
                         <div class="col-lg-2">
-                            <input id="hist_min_thresh" type="number" placeholder="10">
+                           <input id="hist_min_thresh" type="number" placeholder="min" >
                         </div>
                         <div class="col-lg-2">
-                            <input id="hist_max_thresh" type ="number" placeholder="110">
+                            <input id="hist_max_thresh" type ="number" placeholder="max">
                         </div>
 
-                        <div class="col-lg-3 centered">
-                            <button id="btn_truncated_hist">Plot histogram</button>
+                        <div class="col-lg-3">
+                            <button id="btn_truncated_hist">Plot</button>
+                        </div>
+                    </div>
+
+                     <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Composition </label>
+                        </div>
+                        <div class="col-lg-2">
+                            <input id="comp_a" type="float" placeholder="a value">
+                        </div>
+                        <div class="col-lg-2">
+                           <input id="comp_b" type ="float" placeholder="b value">
+                        </div>
+
+                        <div class="col-lg-3">
+                            <button id="btn_comp">Plot</button>
                         </div>
                     </div>
 
