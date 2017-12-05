@@ -182,6 +182,7 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
 
         success: function (data) {
             update_image(data);
+            update_clickable(data);
             disp_hist_thumbnail(data);
         },
 
@@ -211,6 +212,7 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
 
         success: function (data) {
             update_image(data);
+            update_clickable(data);
             disp_hist_thumbnail(data);
         },
 
@@ -235,6 +237,7 @@ function do_ajax_get(e, targetUrl) {
         },
         success: function (data) {
             update_image(data);
+            update_clickable(data);
             disp_hist_thumbnail(data);
         },
 
@@ -255,45 +258,205 @@ function update_image(data) {
     canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
 }
 
+function update_clickable(data){
+    update_clickable_stt(data["func_name"]);
+}
+
 function get_temp_index() {
     tempIndexText = document.getElementById('temp-index').innerText.toString();
     return parseInt(tempIndexText);
 }
 
-/******************* DOM EVENT HANDLING *********************/
-$("#slider-lower-thresh").change(function (e) {
-    disp_slider_val('slider-val-lower-thresh', 'slider-lower-thresh');
-    do_ajax_post(e, ['slider-lower-thresh'], ['input'], '/lower-thresholding/');
-});
+function set_click_ability(ctrlList, clickable){
+    var style ="";
+    var opacity = "";
+    if (clickable){
+        style = "active";
+        opacity = 1.0;
+    }
+    else {
+        style = "none";
+        opacity= 0.4;
+    }
+    for (var i =0; i<ctrlList.length; i++){
+        var ctrlElement = ctrlList[i];
+        var element = document.getElementById(ctrlElement.ctrlDom);
+        if (element != null){
+            element.style.pointerEvents  = style;
+            element.style.opacity = opacity;
+        }
 
+    }
+}
+
+var clickableCtrlList = [];
+var unclickableCtrlList = [];
+var currentCtrlName = '';
+
+function ctrlObject(ctrlDom, ctrlName){
+    this.ctrlName = ctrlName;
+    this.ctrlDom = ctrlDom;
+}
+
+var ctrlUpload = new ctrlObject('btn_upload', 'upload');
+
+var ctrlLaplacian = new ctrlObject('btn_laplacian', 'laplacian');
+
+var ctrlLowThresh = new ctrlObject('slider-lower-thresh', 'lower thresholding');
+var ctrlUpThresh = new ctrlObject('slider-upper-thresh', 'upper thresholding');
+
+var ctrlKmeans = new ctrlObject('slider-kmeans', 'kmeans');
+var ctrlExtrMask = new ctrlObject('btn_extract_crystal_mask','extract crystal mask' );
+
+var ctrlAllCrys = new ctrlObject('btn_all_crystal', 'show all crystals');
+var ctrlTopCrys = new ctrlObject('btn_extract_top_crystal', 'top area crystals');
+
+var ctrlOpeningKer = new ctrlObject('slider-opening-kernel', 'opening');
+var ctrlOpeningIter = new ctrlObject('slider-opening-iter', 'opening');
+
+var ctrlClosingKer = new ctrlObject('slider-closing-kernel', 'closing');
+var ctrlClosingIter = new ctrlObject('slider-closing-iter', 'closing');
+
+var ctrlErosionKer = new ctrlObject('slider-erosion-kernel', 'erosion');
+var ctrlErosionIter = new ctrlObject('slider-erosion-iter', 'erosion');
+
+var ctrlDilationKer = new ctrlObject('slider-dilation-kernel', 'dilation');
+var ctrLDilationIter = new ctrlObject('slider-dilation-iter', 'dilation');
+
+var ctrlUndo = new ctrlObject('', '');
+var ctrlReset = new ctrlObject('btn_reset', 'reset');
+
+var ctrlBrush = new ctrlObject('','');
+
+var ctrlHist = new ctrlObject('btn_histogram', 'plot histogram');
+var ctrlTruncHist = new ctrlObject('btn_truncated_hist', 'plot truncated histogram');
+var ctrlComp = new ctrlObject('btn_comp', 'plot composition');
+
+
+function update_clickable_stt(currentCtrlName){
+    currentCtrlName = currentCtrlName;
+    var morphCtrlGrp = [ctrlErosionIter, ctrlErosionKer, ctrLDilationIter, ctrlDilationKer,
+                    ctrlClosingIter, ctrlClosingKer, ctrlOpeningIter, ctrlOpeningKer];
+    var histCtrlGrp = [ctrlHist, ctrlTruncHist, ctrlComp];
+    var crysCtrlGrp = [ctrlAllCrys, ctrlTopCrys];
+    var threshCtrlGrp = [ctrlLowThresh, ctrlUpThresh];
+    var kmeansCtrlGrp =[ctrlKmeans, ctrlExtrMask];
+
+    switch (currentCtrlName){
+        case 'upload':
+            clickableCtrlList = [ctrlLaplacian];
+            clickableCtrlList = clickableCtrlList.concat(threshCtrlGrp);
+
+            unclickableCtrlList = [ctrlKmeans, ctrlBrush];
+            unclickableCtrlList = unclickableCtrlList.concat(crysCtrlGrp);
+            break;
+        // case 'laplacian':
+        //     clickableCtrlList = [ctrlLaplacian];
+        //     unclickableCtrlList = unclickableCtrlList.concat(morphCtrlGrp, histCtrlGrp, crysCtrlGrp, threshCtrlGrp, kmeansCtrlGrp);
+        //     break;
+
+        case 'kmeans':
+            clickableCtrlList = kmeansCtrlGrp;
+
+            unclickableCtrlList = [ctrlLaplacian, ctrlBrush];
+            unclickableCtrlList = unclickableCtrlList.concat(morphCtrlGrp, histCtrlGrp, crysCtrlGrp, threshCtrlGrp);
+            break;
+
+        case 'extract crystal mask':
+            clickableCtrlList = [ctrlBrush];
+           clickableCtrlList =  clickableCtrlList.concat(morphCtrlGrp, crysCtrlGrp);
+
+            unclickableCtrlList = [ctrlLaplacian, ctrlBrush];
+            unclickableCtrlList = unclickableCtrlList.concat(threshCtrlGrp, histCtrlGrp);
+            break;
+
+        default:
+            clickableCtrlList = [ctrlBrush, ctrlLaplacian, ctrlUndo, ctrlReset];
+            clickableCtrlList = clickableCtrlList.concat(morphCtrlGrp, histCtrlGrp, crysCtrlGrp, threshCtrlGrp, kmeansCtrlGrp);
+
+            unclickableCtrlList = [];
+    }
+      console.log('unclickable control', unclickableCtrlList);
+
+    set_click_ability(clickableCtrlList, true);
+    set_click_ability(unclickableCtrlList, false);
+
+
+}
+
+
+/******************* DOM EVENT HANDLING *********************/
 $("#btn_laplacian").click(function (e) {
     do_ajax_get(e, '/laplacian/');
 });
 
+
+$("#slider-lower-thresh").change(function (e) {
+    disp_slider_val('slider-val-lower-thresh', 'slider-lower-thresh');
+    do_ajax_post(e, ['slider-lower-thresh'], ['input'], '/lower-thresholding/');
+});
 
 $("#slider-upper-thresh").change(function (e) {
     disp_slider_val('slider-val-upper-thresh', 'slider-upper-thresh');
     do_ajax_post(e, ['slider-upper-thresh'], ['input'], '/upper-thresholding/');
 });
 
+
 $("#slider-kmeans").click(function (e) {
     disp_slider_val('slider-val-kmeans', 'slider-kmeans');
     do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/');
 });
 
-
-$("#btn_base64").click(function (e) {
-    do_ajax_get(e, '/base64/');
-})
-
-
-$("#btn_undo").click(function (e) {
-    do_ajax_get(e, '/undo/');
-})
-
-
 $("#btn_extract_crystal_mask").click(function (e) {
     do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/');
+});
+
+
+$("#slider-opening-kernel").change(function (e) {
+    disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');
+    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
+});
+
+
+$("#slider-opening-iter").change(function (e) {
+    disp_slider_val('slider-opening-val-iter', 'slider-opening-iter');
+    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
+});
+
+
+$("#slider-closing-kernel").change(function (e) {
+    disp_slider_val('slider-closing-val-kernel', 'slider-closing-kernel');
+    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
+});
+
+
+$("#slider-closing-iter").change(function (e) {
+    disp_slider_val('slider-closing-val-iter', 'slider-closing-iter');
+    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
+});
+
+
+$("#slider-erosion-kernel").change(function (e) {
+    disp_slider_val('slider-erosion-val-kernel', 'slider-erosion-kernel');
+    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
+});
+
+
+$("#slider-erosion-iter").change(function (e) {
+    disp_slider_val('slider-erosion-val-iter', 'slider-erosion-iter');
+    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
+});
+
+
+$("#slider-dilation-kernel").change(function (e) {
+    disp_slider_val('slider-dilation-val-kernel', 'slider-dilation-kernel');
+    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
+});
+
+
+$("#slider-dilation-iter").change(function (e) {
+    disp_slider_val('slider-dilation-val-iter', 'slider-dilation-iter');
+    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 });
 
 
@@ -301,15 +464,29 @@ $("#btn_all_crystal").click(function (e) {
     do_ajax_get(e, '/all-crystal/');
 });
 
-
-$("#btn_max_crystal").click(function (e) {
-    do_ajax_get(e, '/max-crystal/');
+$("#btn_extract_top_crystal").click(function (e) {
+    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/');
 });
+
+
+// $("#btn_max_crystal").click(function (e) {
+//     do_ajax_get(e, '/max-crystal/');
+// });
 
 
 $("#btn_reset").click(function (e) {
     do_ajax_get(e, '/reset/');
 });
+
+$("#btn_base64").click(function (e) {
+    do_ajax_get(e, '/base64/');
+});
+
+$("#btn_undo").click(function (e) {
+    do_ajax_get(e, '/undo/');
+});
+
+
 
 $("#btn_histogram").click(function (e) {
     e.preventDefault();
@@ -378,58 +555,6 @@ $("#btn_comp").click(function(e){
     else{
         alert("invalid composition value. Please input again.")
     }
-});
-
-$("#slider-opening-kernel").change(function (e) {
-    disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');
-    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
-});
-
-
-$("#slider-opening-iter").change(function (e) {
-    disp_slider_val('slider-opening-val-iter', 'slider-opening-iter');
-    do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
-});
-
-
-$("#slider-closing-kernel").change(function (e) {
-    disp_slider_val('slider-closing-val-kernel', 'slider-closing-kernel');
-    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
-});
-
-
-$("#slider-closing-iter").change(function (e) {
-    disp_slider_val('slider-closing-val-iter', 'slider-closing-iter');
-    do_ajax_post(e, ['slider-closing-kernel', 'slider-closing-iter'], ['kernel_size', 'num_of_iter'], '/closing/');
-});
-
-
-$("#slider-erosion-kernel").change(function (e) {
-    disp_slider_val('slider-erosion-val-kernel', 'slider-erosion-kernel');
-    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
-});
-
-
-$("#slider-erosion-iter").change(function (e) {
-    disp_slider_val('slider-erosion-val-iter', 'slider-erosion-iter');
-    do_ajax_post(e, ['slider-erosion-kernel', 'slider-erosion-iter'], ['kernel_size', 'num_of_iter'], '/erosion/');
-});
-
-
-$("#slider-dilation-kernel").change(function (e) {
-    disp_slider_val('slider-dilation-val-kernel', 'slider-dilation-kernel');
-    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
-});
-
-
-$("#slider-dilation-iter").change(function (e) {
-    disp_slider_val('slider-dilation-val-iter', 'slider-dilation-iter');
-    do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
-});
-
-
-$("#btn_extract_top_crystal").click(function (e) {
-    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/');
 });
 
 
