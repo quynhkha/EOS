@@ -41,23 +41,23 @@ function plot_truncated_histogram(data, min_thresh, max_thresh) {
     }
 
     else {
-        var step = parseInt(100/range);
+        var step = parseInt(100 / range);
         var i = 0;
-        for (i = 0; i<100; i++){
+        for (i = 0; i < 100; i++) {
             var x = i;
             var y = 0;
 
-                if (i % step == 0) {
-                    if (j < parseInt(max_thresh)) {
-                        y = data["y"][j];
-                        j++;
-                    }
+            if (i % step == 0) {
+                if (j < parseInt(max_thresh)) {
+                    y = data["y"][j];
+                    j++;
                 }
+            }
             x_arr.push(x);
             y_arr.push(y);
-            }
-
         }
+
+    }
 
     console.log(x_arr, y_arr);
 
@@ -70,21 +70,21 @@ function plot_truncated_histogram(data, min_thresh, max_thresh) {
     Plotly.newPlot('truncated-histogram', hist_data);
 }
 
-function plot_composition(data, a, b){
+function plot_composition(data, a, b) {
     var step;
     var x_arr = [];
     var y_arr = [];
     var a = parseFloat(a);
     var b = parseInt(b);
-    var data_length = parseInt(data["x"].length*a) + 1;
+    var data_length = parseInt(data["x"].length * a) + 1;
 
-    if (a<1){
-        var j =0;
-        step = parseInt(1/a)+1;
-        for (var i = 0; i<data_length; i++){
+    if (a < 1) {
+        var j = 0;
+        step = parseInt(1 / a) + 1;
+        for (var i = 0; i < data_length; i++) {
             var x = i;
             var y = 0;
-            while (j<i*step && j<data["x"].length){
+            while (j < i * step && j < data["x"].length) {
                 y = y + data["y"][j];
                 j++;
             }
@@ -97,36 +97,36 @@ function plot_composition(data, a, b){
     else {
         step = parseInt(a);
         var j = 0;
-        for (var i = 0; i< data_length; i++){
+        for (var i = 0; i < data_length; i++) {
             var x = i;
             var y = 0;
-                if (i % step == 0) {
-                    if (j < data["x"].length) {
-                        y = data["y"][j];
-                        j++;
-                    }
+            if (i % step == 0) {
+                if (j < data["x"].length) {
+                    y = data["y"][j];
+                    j++;
                 }
+            }
             x_arr.push(x);
             y_arr.push(y);
-            }
         }
+    }
 
     // move the hist based on b value
     var new_x_arr = [];
     var new_y_arr = [];
-    for (var i =0; i<b; i++){
+    for (var i = 0; i < b; i++) {
         new_x_arr.push(0);
         new_y_arr.push(0);
     }
-    for (var i = 0; i<x_arr.length; i++){
-        new_x_arr.push(x_arr[i]+b);
+    for (var i = 0; i < x_arr.length; i++) {
+        new_x_arr.push(x_arr[i] + b);
         new_y_arr.push(y_arr[i]);
     }
 
-     console.log(new_x_arr, new_y_arr);
+    console.log(new_x_arr, new_y_arr);
 
     composition_hist = {x: new_x_arr, y: new_y_arr};
-  var hist_data = [{
+    var hist_data = [{
         x: composition_hist["x"],
         y: composition_hist["y"],
         type: 'bar'
@@ -184,6 +184,7 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
             update_image(data);
             update_clickable(data);
             disp_hist_thumbnail(data);
+            update_gray_levels(data);
         },
 
         error: function (data) {
@@ -214,6 +215,7 @@ function do_ajax_post_val_only(val, inputName, targetUrl) {
             update_image(data);
             update_clickable(data);
             disp_hist_thumbnail(data);
+            update_gray_levels(data);
         },
 
         error: function (data) {
@@ -239,6 +241,7 @@ function do_ajax_get(e, targetUrl) {
             update_image(data);
             update_clickable(data);
             disp_hist_thumbnail(data);
+            update_gray_levels(data);
         },
 
         error: function (data) {
@@ -258,31 +261,74 @@ function update_image(data) {
     canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
 }
 
-function update_clickable(data){
+function update_clickable(data) {
     update_clickable_stt(data["func_name"]);
 }
+
+function update_gray_levels(data) {
+    var grayLevelDom = document.getElementById('label-extraction');
+    if (!document.getElementById('gray-level-list')) {
+        var grayLevelList = elt("div", {id: "gray-level-list"});
+        grayLevelList.className += "dropdown-menu";
+
+        grayLevelDom.appendChild(grayLevelList);
+    }
+    else {
+        var grayLevelList = document.getElementById('gray-level-list');
+    }
+    if (data.hasOwnProperty('gray_levels')) {
+        grayLevelList.innerHTML = '';
+        var grayLevels = data["gray_levels"];
+        for (var i = 0; i < grayLevels.length; i++) {
+            // var style = "background-color: rgb("+grayLevels[i].toString()+");";
+            var style = "background-color: rgb(" + grayLevels[i] + "," + grayLevels[i] + "," + grayLevels[i] + ");";
+            var listElement = elt("li", {value: i, style: style}, "region: "+ i);
+            listElement.className += "dropdown-item";
+            var label_index = i;
+            listElement.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    do_ajax_post_val_only(label_index, 'input', '/extract-crystal-mask/')
+                }
+            );
+            console.log(style);
+            grayLevelList.appendChild(listElement);
+        }
+    }
+
+    else {
+        // while (grayLevelDom.firstChild){
+        //     grayLevelDom.remove(firstChild);
+        // }
+        grayLevelList.innerHTML = '';
+        var listElement = elt("li",null , "No region to choose");
+        listElement.className += "dropdown-item";
+        grayLevelList.appendChild(listElement);
+
+    }
+}
+
 
 function get_temp_index() {
     tempIndexText = document.getElementById('temp-index').innerText.toString();
     return parseInt(tempIndexText);
 }
 
-function set_click_ability(ctrlList, clickable){
-    var style ="";
+function set_click_ability(ctrlList, clickable) {
+    var style = "";
     var opacity = "";
-    if (clickable){
-        style = "active";
+    if (clickable) {
+        style = "auto";
         opacity = 1.0;
     }
     else {
         style = "none";
-        opacity= 0.4;
+        opacity = 0.4;
     }
-    for (var i =0; i<ctrlList.length; i++){
+    for (var i = 0; i < ctrlList.length; i++) {
         var ctrlElement = ctrlList[i];
         var element = document.getElementById(ctrlElement.ctrlDom);
-        if (element != null){
-            element.style.pointerEvents  = style;
+        if (element != null) {
+            element.style.pointerEvents = style;
             element.style.opacity = opacity;
         }
 
@@ -293,7 +339,7 @@ var clickableCtrlList = [];
 var unclickableCtrlList = [];
 var currentCtrlName = '';
 
-function ctrlObject(ctrlDom, ctrlName){
+function ctrlObject(ctrlDom, ctrlName) {
     this.ctrlName = ctrlName;
     this.ctrlDom = ctrlDom;
 }
@@ -306,7 +352,7 @@ var ctrlLowThresh = new ctrlObject('slider-lower-thresh', 'lower thresholding');
 var ctrlUpThresh = new ctrlObject('slider-upper-thresh', 'upper thresholding');
 
 var ctrlKmeans = new ctrlObject('slider-kmeans', 'kmeans');
-var ctrlExtrMask = new ctrlObject('btn_extract_crystal_mask','extract crystal mask' );
+var ctrlExtrMask = new ctrlObject('btn_extract_crystal_mask', 'extract crystal mask');
 
 var ctrlAllCrys = new ctrlObject('btn_all_crystal', 'show all crystals');
 var ctrlTopCrys = new ctrlObject('btn_extract_top_crystal', 'top area crystals');
@@ -326,29 +372,32 @@ var ctrLDilationIter = new ctrlObject('slider-dilation-iter', 'dilation');
 var ctrlUndo = new ctrlObject('', '');
 var ctrlReset = new ctrlObject('btn_reset', 'reset');
 
-var ctrlBrush = new ctrlObject('','');
+var ctrlBrush = new ctrlObject('', '');
 
 var ctrlHist = new ctrlObject('btn_histogram', 'plot histogram');
 var ctrlTruncHist = new ctrlObject('btn_truncated_hist', 'plot truncated histogram');
 var ctrlComp = new ctrlObject('btn_comp', 'plot composition');
 
 
-function update_clickable_stt(currentCtrlName){
+function update_clickable_stt(currentCtrlName) {
     currentCtrlName = currentCtrlName;
     var morphCtrlGrp = [ctrlErosionIter, ctrlErosionKer, ctrLDilationIter, ctrlDilationKer,
-                    ctrlClosingIter, ctrlClosingKer, ctrlOpeningIter, ctrlOpeningKer];
+        ctrlClosingIter, ctrlClosingKer, ctrlOpeningIter, ctrlOpeningKer];
     var histCtrlGrp = [ctrlHist, ctrlTruncHist, ctrlComp];
     var crysCtrlGrp = [ctrlAllCrys, ctrlTopCrys];
     var threshCtrlGrp = [ctrlLowThresh, ctrlUpThresh];
-    var kmeansCtrlGrp =[ctrlKmeans, ctrlExtrMask];
+    var kmeansCtrlGrp = [ctrlKmeans, ctrlExtrMask];
 
-    switch (currentCtrlName){
+    console.log('case', currentCtrlName);
+    switch (currentCtrlName) {
+
         case 'upload':
             clickableCtrlList = [ctrlLaplacian];
             clickableCtrlList = clickableCtrlList.concat(threshCtrlGrp);
 
             unclickableCtrlList = [ctrlKmeans, ctrlBrush];
             unclickableCtrlList = unclickableCtrlList.concat(crysCtrlGrp);
+
             break;
         // case 'laplacian':
         //     clickableCtrlList = [ctrlLaplacian];
@@ -364,7 +413,7 @@ function update_clickable_stt(currentCtrlName){
 
         case 'extract crystal mask':
             clickableCtrlList = [ctrlBrush];
-           clickableCtrlList =  clickableCtrlList.concat(morphCtrlGrp, crysCtrlGrp);
+            clickableCtrlList = clickableCtrlList.concat(morphCtrlGrp, crysCtrlGrp);
 
             unclickableCtrlList = [ctrlLaplacian, ctrlBrush];
             unclickableCtrlList = unclickableCtrlList.concat(threshCtrlGrp, histCtrlGrp);
@@ -376,12 +425,10 @@ function update_clickable_stt(currentCtrlName){
 
             unclickableCtrlList = [];
     }
-      console.log('unclickable control', unclickableCtrlList);
+    console.log('unclickable control', unclickableCtrlList);
 
     set_click_ability(clickableCtrlList, true);
     set_click_ability(unclickableCtrlList, false);
-
-
 }
 
 
@@ -487,7 +534,6 @@ $("#btn_undo").click(function (e) {
 });
 
 
-
 $("#btn_histogram").click(function (e) {
     e.preventDefault();
     $.ajax({
@@ -511,21 +557,21 @@ $("#btn_truncated_hist").click(function (e) {
     console.log(hist_min_thresh, hist_max_thresh);
 
     var is_valid = true;
-    if (parseInt(hist_min_thresh) <0 || parseInt(hist_min_thresh) >255){
-       alert("min threshold value range should be in range [0-255]");
+    if (parseInt(hist_min_thresh) < 0 || parseInt(hist_min_thresh) > 255) {
+        alert("min threshold value range should be in range [0-255]");
         is_valid = false;
     }
 
-    if (parseInt(hist_max_thresh) <0 || parseInt(hist_max_thresh) >255){
+    if (parseInt(hist_max_thresh) < 0 || parseInt(hist_max_thresh) > 255) {
         alert("max threshold value range should be in range [0-255]");
         is_valid = false;
     }
 
-    if (parseInt(hist_min_thresh) >= parseInt(hist_max_thresh)){
+    if (parseInt(hist_min_thresh) >= parseInt(hist_max_thresh)) {
         alert("min threshold should smaller than max threshold");
         is_valid = false;
     }
-    if (is_valid){
+    if (is_valid) {
         plot_truncated_histogram(original_hist, hist_min_thresh, hist_max_thresh);
     }
     else {
@@ -534,25 +580,25 @@ $("#btn_truncated_hist").click(function (e) {
 
 });
 
-$("#btn_comp").click(function(e){
-   e.preventDefault();
-   a = $("#comp_a").val();
-   b = $("#comp_b").val();
-   console.log(a, b);
+$("#btn_comp").click(function (e) {
+    e.preventDefault();
+    a = $("#comp_a").val();
+    b = $("#comp_b").val();
+    console.log(a, b);
 
 
-   var is_valid = true;
-    if (parseFloat(a) <= 0 || parseFloat(b) < 0){
-       alert("a should be positive and b should be non-negative");
+    var is_valid = true;
+    if (parseFloat(a) <= 0 || parseFloat(b) < 0) {
+        alert("a should be positive and b should be non-negative");
         is_valid = false;
     }
 
 
-    if (is_valid){
-         plot_composition(truncated_hist, a, b);
+    if (is_valid) {
+        plot_composition(truncated_hist, a, b);
     }
 
-    else{
+    else {
         alert("invalid composition value. Please input again.")
     }
 });

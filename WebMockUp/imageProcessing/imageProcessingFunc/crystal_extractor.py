@@ -82,10 +82,12 @@ class Segment:
         '''
         image_segmented = np.zeros(image.shape, dtype= np.uint8)
         num_segment = segments
+        gray_levels = []
         for i in range(num_segment):
             gray_level_increment = np.floor(255/num_segment)
             image_segmented[label_image == i] = i*gray_level_increment
-        return image_segmented
+            gray_levels.append(i*gray_level_increment)
+        return image_segmented, gray_levels
 
     def extract_kmeans_binary(self, image, label_image, label):
         '''
@@ -278,8 +280,8 @@ class ProcessingFunction:
 
     def kmeans(self, current_image, segments):
         labels, result = self.seg.kmeans(current_image, segments)
-        kmean_image = self.seg.kmeans_image(current_image, labels, segments)
-        return kmean_image, labels
+        kmean_image, gray_levels = self.seg.kmeans_image(current_image, labels, segments)
+        return kmean_image, labels, gray_levels
 
     def extract_crystal_mask(self, current_image, labels , user_chosen_label):
         return self.seg.extract_kmeans_binary(current_image, labels, user_chosen_label)

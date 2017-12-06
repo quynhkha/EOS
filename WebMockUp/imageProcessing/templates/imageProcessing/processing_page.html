@@ -79,7 +79,7 @@
                             <label class="control-label"> Laplacian</label>
                         </div>
                         <div class="col-lg-5">
-                            <button id="btn_laplacian" type="button">Do laplacian</button>
+                                <button id="btn_laplacian" type="button">Do laplacian</button>
                         </div>
                         <div class="col-lg-2"></div>
                     </div>
@@ -128,18 +128,31 @@
                     </div>
 
 
-                    <div class="form-group row">
-                        <div class="col-lg-5">
-                            <label class="control-label"> Label of region to extract: </label>
-                        </div>
-                        <div class="col-lg-3">
-                            <input id="crystal_label" type="number" placeholder="2">
-                        </div>
-                        <div class="col-lg-1"></div>
+                    <div class="form-group row" >
+{#                        <div class="col-lg-5">#}
+{#                            <label class="control-label"> Label of region to extract: </label>#}
+{#                        </div>#}
+{#                        <div class="col-lg-3">#}
+{#                            <input id="crystal_label" type="number" placeholder="2">#}
+{#                        </div>#}
+{#                        <div class="col-lg-1"></div>#}
+{##}
+{#                        <div class="col-lg-3 centered">#}
+{#                            <button id="btn_extract_crystal_mask">Extract</button>#}
+{#                        </div>#}
+                         <div class="col-lg-6">
+                              <span>Choose region to extract: </span>
+                            </div>
+                        <div class ="col-lg-6">
+                             <div class="dropdown"  id ="label-extraction">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                              Show regions
+                            </button>
+                          </div>
 
-                        <div class="col-lg-3 centered">
-                            <button id="btn_extract_crystal_mask">Extract</button>
+
                         </div>
+
                     </div>
                     {#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
                     <div id="opening" class="panel-group">

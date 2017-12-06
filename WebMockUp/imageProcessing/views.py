@@ -71,11 +71,13 @@ def kmeans(request, temp_idx=0):
         print('input', input)
         input = int(input)
 
-        img_data, temp.s_labels = ps_func.kmeans(temp.s_img_cur.img_data, segments=input)
+        img_data, temp.s_labels, gray_levels = ps_func.kmeans(temp.s_img_cur.img_data, segments=input)
         temp.update_s_img_cur('kmeans', img_data)
         #json_data, _ = cv_to_json(s_img_cur)
         save_state(temp_idx, temp_data_arr)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        #add gray levels of all extracted labels
+        json_data['gray_levels']= gray_levels
         return JsonResponse(json_data, safe=False)
     else:
         _, image_data = cv_to_json(temp.s_img_cur)
@@ -149,6 +151,7 @@ def extract_crystal_mask(request, temp_idx=0):
     if request.method == 'POST':
         input = request.POST.get('input')
         input = int(input)
+        print ("crystal mask: ", input)
 
         img_data= ps_func.extract_crystal_mask(temp.s_img_cur.img_data, labels=temp.s_labels, user_chosen_label=input)
         temp.update_s_img_cur('extract crystal mask', img_data)
