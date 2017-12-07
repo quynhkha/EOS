@@ -94,11 +94,11 @@ def save_state(temp_idx, temp_data_arr):
         temp.s_img_last_arr.pop(0)
         temp.s_thumb_hist_arr.pop(0)
 
-    current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data)
+    current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data, '')
     temp.s_img_last_arr.append(current_state_img)
 
     compressed_image = compress_image(copy.copy(temp.s_img_cur.img_data))
-    s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image)
+    s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image, '')
     temp.s_thumb_hist_arr.append(s_thumbnail_img)
 
     temp.s_undo_depth = len(temp.s_img_last_arr)-1
@@ -121,10 +121,10 @@ def reset_current_image(func_name, temp_idx, temp_data_arr):
 
 class TempData:
     def __init__(self):
-        self.s_img_ori= StateImage('original image', np.zeros((400, 400), np.uint8))
-        self.s_img_cur = StateImage('current image', np.zeros((400, 400), np.uint8))
-        self.s_mask_cur = StateImage('current mask', np.zeros((400, 400), np.uint8))
-        self.s_img_last = StateImage('last image', np.zeros((400, 400), np.uint8))
+        self.s_img_ori= StateImage('original image', np.zeros((400, 400), np.uint8), '')
+        self.s_img_cur = StateImage('current image', np.zeros((400, 400), np.uint8), '')
+        self.s_mask_cur = StateImage('current mask', np.zeros((400, 400), np.uint8), '')
+        self.s_img_last = StateImage('last image', np.zeros((400, 400), np.uint8), '')
         self.s_img_last_arr = []
         self.s_thumb_hist_arr = []
         self.s_max_undo_step = 6
@@ -132,14 +132,19 @@ class TempData:
         self.s_last_cal_func = ""
         self.s_labels = 0
 
-    def update_s_img_cur(self, func_name, img_data):
+    def update_s_img_cur(self, func_name, img_data, *gray_levels):
         self.s_img_cur.func_name = func_name
         self.s_img_cur.img_data = img_data
+        self.s_img_cur.gray_levels = gray_levels
 
 class StateImage:
-    def __init__(self, func_name, img_data):
+    def __init__(self, func_name, img_data, gray_levels):
         self.func_name = func_name
         self.img_data = img_data
+        self.gray_levels = gray_levels
+
+    def __repr__(self):
+        return "<Object func_name:%s gray_levels:%s>" % (self.func_name, self.gray_levels)
 
 class findImageDir:
     def __init__(self):

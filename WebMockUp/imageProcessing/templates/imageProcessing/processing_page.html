@@ -155,7 +155,64 @@
 
                     </div>
                     {#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
-                    <div id="opening" class="panel-group">
+
+                    <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Opening</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <input id="slider-opening" type="range" min="1" max="10" value="1" step="1">
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="slider-val-opening" type="text" readonly
+                                   style="border:0; color:#f6931f; font-weight:bold;">
+                        </div>
+                    </div>
+
+                      <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Closing</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <input id="slider-closing" type="range" min="1" max="10" value="1" step="1">
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="slider-val-closing" type="text" readonly
+                                   style="border:0; color:#f6931f; font-weight:bold;">
+                        </div>
+                    </div>
+
+                      <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Erosion</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <input id="slider-erosion" type="range" min="1" max="10" value="1" step="1">
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="slider-val-erosion" type="text" readonly
+                                   style="border:0; color:#f6931f; font-weight:bold;">
+                        </div>
+                    </div>
+
+                      <div class="form-group row">
+                        <div class="col-lg-5">
+                            <label class="control-label"> Dilation</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <input id="slider-dilation" type="range" min="1" max="10" value="1" step="1">
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="slider-val-dilation" type="text" readonly
+                                   style="border:0; color:#f6931f; font-weight:bold;">
+                        </div>
+                    </div>
+
+                    <div id="opening" class="panel-group" hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -200,7 +257,7 @@
                         </div>
                     </div>
 
-                    <div id="closing" class="panel-group">
+                    <div id="closing" class="panel-group" hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -247,7 +304,7 @@
                         </div>
                     </div>
 
-                    <div id="erosion" class="panel-group">
+                    <div id="erosion" class="panel-group" hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -293,7 +350,7 @@
                         </div>
                     </div>
 
-                    <div id="dilation" class="panel-group">
+                    <div id="dilation" class="panel-group" hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">

@@ -72,7 +72,7 @@ def kmeans(request, temp_idx=0):
         input = int(input)
 
         img_data, temp.s_labels, gray_levels = ps_func.kmeans(temp.s_img_cur.img_data, segments=input)
-        temp.update_s_img_cur('kmeans', img_data)
+        temp.update_s_img_cur('kmeans', img_data, gray_levels)
         #json_data, _ = cv_to_json(s_img_cur)
         save_state(temp_idx, temp_data_arr)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
@@ -227,6 +227,12 @@ def set_image_from_thumbnail(request, temp_idx=0):
         temp.s_img_cur = temp.s_img_last_arr[id]
         temp.s_undo_depth = input
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        try:
+            gray_levels = temp.s_img_cur.gray_levels
+            json_data['gray_levels'] = gray_levels
+            print (temp.s_img_cur)
+        except:
+            print ("cannot find gray levels")
         return JsonResponse(json_data, safe=False)
     else:
         _, image_data = cv_to_json(temp.s_img_cur)
