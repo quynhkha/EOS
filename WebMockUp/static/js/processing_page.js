@@ -259,87 +259,6 @@ function disp_slider_val(dispDom, sliderDom) {
     $("#" + dispDom + "").val($("#" + sliderDom + "").val());
     return $("#" + sliderDom + "").val();
 }
-
-function update_image(data) {
-    document.getElementById('image').src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
-    canvasWrapper = document.getElementById('canvas-wrapper');
-    canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
-}
-
-function update_clickable(data) {
-    update_clickable_stt(data["func_name"]);
-}
-
-function update_gray_levels(data) {
-    var grayLevelDom = document.getElementById('label-extraction');
-    if (!document.getElementById('gray-level-list')) {
-        var grayLevelList = elt("div", {id: "gray-level-list"});
-        grayLevelList.className += "dropdown-menu";
-
-        grayLevelDom.appendChild(grayLevelList);
-    }
-    else {
-        var grayLevelList = document.getElementById('gray-level-list');
-    }
-    if (data.hasOwnProperty('gray_levels')) {
-        grayLevelList.innerHTML = '';
-        var grayLevels = data["gray_levels"];
-        for (var i = 0; i < grayLevels.length; i++) {
-            // var style = "background-color: rgb("+grayLevels[i].toString()+");";
-            var style = "background-color: rgb(" + grayLevels[i] + "," + grayLevels[i] + "," + grayLevels[i] + ");";
-            var listElement = elt("li", {value: i, style: style}, "region: "+ i);
-            listElement.className += "dropdown-item";
-            var label_index = i;
-            listElement.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    do_ajax_post_val_only([label_index], ['input'], '/extract-crystal-mask/')
-                }
-            );
-            console.log(style);
-            grayLevelList.appendChild(listElement);
-        }
-    }
-
-    else {
-        // while (grayLevelDom.firstChild){
-        //     grayLevelDom.remove(firstChild);
-        // }
-        grayLevelList.innerHTML = '';
-        var listElement = elt("li",null , "No region to choose");
-        listElement.className += "dropdown-item";
-        grayLevelList.appendChild(listElement);
-
-    }
-}
-
-
-function get_temp_index() {
-    tempIndexText = document.getElementById('temp-index').innerText.toString();
-    return parseInt(tempIndexText);
-}
-
-function set_click_ability(ctrlList, clickable) {
-    var style = "";
-    var opacity = "";
-    if (clickable) {
-        style = "auto";
-        opacity = 1.0;
-    }
-    else {
-        style = "none";
-        opacity = 0.4;
-    }
-    for (var i = 0; i < ctrlList.length; i++) {
-        var ctrlElement = ctrlList[i];
-        var element = document.getElementById(ctrlElement.ctrlDom);
-        if (element != null) {
-            element.style.pointerEvents = style;
-            element.style.opacity = opacity;
-        }
-
-    }
-}
-
 var clickableCtrlList = [];
 var unclickableCtrlList = [];
 var currentCtrlName = '';
@@ -441,6 +360,98 @@ function update_clickable_stt(currentCtrlName) {
     set_click_ability(clickableCtrlList, true);
     set_click_ability(unclickableCtrlList, false);
 }
+
+function update_image(data) {
+    document.getElementById('image').src = "data:image/jpeg;charset=utf-8;base64," + data["image_data"];
+    canvasWrapper = document.getElementById('canvas-wrapper');
+    canvasWrapper.style.backgroundImage = "url('" + image.src + "')";
+}
+
+function update_clickable(data) {
+    update_clickable_stt(data["func_name"]);
+}
+
+function update_gray_levels(data) {
+    console.log("data", data);
+    //init the element
+    var grayLevelDom = document.getElementById('label-extraction');
+    if (!document.getElementById('gray-level-list')) {
+        var grayLevelList = elt("div", {id: "gray-level-list"});
+        grayLevelList.className += "dropdown-menu";
+
+        grayLevelDom.appendChild(grayLevelList);
+    }
+    else {
+        var grayLevelList = document.getElementById('gray-level-list');
+    }
+
+    //update the list content
+    //update with new list content if kmeans is done
+    if (data.hasOwnProperty('gray_levels')) {
+        grayLevelList.innerHTML = '';
+        var grayLevels = data["gray_levels"];
+        for (var i = 0; i < grayLevels.length; i++) {
+            // var style = "background-color: rgb("+grayLevels[i].toString()+");";
+            var style = "background-color: rgb(" + grayLevels[i] + "," + grayLevels[i] + "," + grayLevels[i] + ");";
+            var listElement = elt("li", {value: i, style: style}, "region: " + i);
+            listElement.className += "dropdown-item";
+
+
+            listElement.addEventListener("click", extract_mask, false);
+            console.log(listElement);
+            grayLevelList.appendChild(listElement);
+        }
+    }
+
+    else {
+        //clear the list if not extract mask clicked
+        if (currentCtrlName != 'extract crystal mask') {
+
+            // while (grayLevelDom.firstChild){
+            //     grayLevelDom.remove(firstChild);
+            // }
+            grayLevelList.innerHTML = '';
+            var listElement = elt("li", null, "No region to choose");
+            listElement.className += "dropdown-item";
+            grayLevelList.appendChild(listElement);
+
+        }
+    }
+}
+
+function extract_mask(){
+     var label_index = this.value;
+    do_ajax_post_val_only([label_index], ['input'], '/extract-crystal-mask/');
+    console.log("label: ", label_index);
+}
+
+function get_temp_index() {
+    tempIndexText = document.getElementById('temp-index').innerText.toString();
+    return parseInt(tempIndexText);
+}
+
+function set_click_ability(ctrlList, clickable) {
+    var style = "";
+    var opacity = "";
+    if (clickable) {
+        style = "auto";
+        opacity = 1.0;
+    }
+    else {
+        style = "none";
+        opacity = 0.4;
+    }
+    for (var i = 0; i < ctrlList.length; i++) {
+        var ctrlElement = ctrlList[i];
+        var element = document.getElementById(ctrlElement.ctrlDom);
+        if (element != null) {
+            element.style.pointerEvents = style;
+            element.style.opacity = opacity;
+        }
+
+    }
+}
+
 
 function morphCtrlMapping(input){
     var kernel = 1;
@@ -855,6 +866,7 @@ controls.brushSize = function (cx) {
     });
     select.addEventListener("change", function () {
         cx.lineWidth = select.value;
+         document.body.style.cursor = "cursor: url(cursor.png)";
     });
     return elt("span", null, "Brush size: ", select);
 };

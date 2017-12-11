@@ -78,6 +78,7 @@ def kmeans(request, temp_idx=0):
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         #add gray levels of all extracted labels
         json_data['gray_levels']= gray_levels
+        print(json_data)
         return JsonResponse(json_data, safe=False)
     else:
         _, image_data = cv_to_json(temp.s_img_cur)

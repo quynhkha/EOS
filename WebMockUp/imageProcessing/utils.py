@@ -121,10 +121,10 @@ def reset_current_image(func_name, temp_idx, temp_data_arr):
 
 class TempData:
     def __init__(self):
-        self.s_img_ori= StateImage('original image', np.zeros((400, 400), np.uint8), '')
-        self.s_img_cur = StateImage('current image', np.zeros((400, 400), np.uint8), '')
-        self.s_mask_cur = StateImage('current mask', np.zeros((400, 400), np.uint8), '')
-        self.s_img_last = StateImage('last image', np.zeros((400, 400), np.uint8), '')
+        self.s_img_ori= StateImage('original image', np.zeros((400, 400), np.uint8))
+        self.s_img_cur = StateImage('current image', np.zeros((400, 400), np.uint8))
+        self.s_mask_cur = StateImage('current mask', np.zeros((400, 400), np.uint8))
+        self.s_img_last = StateImage('last image', np.zeros((400, 400), np.uint8))
         self.s_img_last_arr = []
         self.s_thumb_hist_arr = []
         self.s_max_undo_step = 6
@@ -138,7 +138,7 @@ class TempData:
         self.s_img_cur.gray_levels = gray_levels
 
 class StateImage:
-    def __init__(self, func_name, img_data, gray_levels):
+    def __init__(self, func_name, img_data, gray_levels=''):
         self.func_name = func_name
         self.img_data = img_data
         self.gray_levels = gray_levels
