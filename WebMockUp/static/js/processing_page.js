@@ -929,6 +929,20 @@ controls.saveDrawing = function (cx) {
     return form;
 };
 
+controls.clearDrawing = function (cx){
+    var form = elt("form", null,
+        elt("button", {type: "submit"}, "Clear drawing"
+        ));
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+        //if canvas is shown
+        if (cx.canvas.style.display == "block"){
+            cx.clearRect(0, 0, cx.canvas.width, cx.canvas.height);
+        }
+    });
+    return form;
+};
+
 function randomPointInRadius(radius) {
     for (; ;) {
         var x = Math.random() * 2 - 1;
