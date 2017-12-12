@@ -64,7 +64,7 @@ def kmeans(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
-    reset_current_image('kmeans', temp_idx, temp_data_arr)
+    #reset_current_image('kmeans', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
@@ -90,7 +90,7 @@ def lower_thresholding(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
-    reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
+    #reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
@@ -111,7 +111,7 @@ def lower_thresholding(request, temp_idx=0):
 def upper_thresholding(request, temp_idx=0):
 
     global temp_data_arr
-    reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
+    #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
     temp = get_temp_data(temp_idx, temp_data_arr)
     if request.method == 'POST':
         input = request.POST.get('input')
@@ -257,7 +257,7 @@ def do_opening(request, temp_idx=0):
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
 
-    reset_current_image('do_opening', temp_idx, temp_data_arr)
+    #reset_current_image('do_opening', temp_idx, temp_data_arr)
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
         num_of_iter = int(request.POST.get('num_of_iter'))
@@ -280,7 +280,7 @@ def do_closing(request, temp_idx=0):
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
 
-    reset_current_image('do_closing', temp_idx,temp_data_arr)
+    #reset_current_image('do_closing', temp_idx,temp_data_arr)
 
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
@@ -303,7 +303,7 @@ def do_erosion(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
-    reset_current_image('do_erosion', temp_idx, temp_data_arr)
+    #reset_current_image('do_erosion', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
@@ -325,7 +325,7 @@ def do_dilation(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
-    reset_current_image('do_dilation', temp_idx, temp_data_arr)
+    #reset_current_image('do_dilation', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         kernel_size = int(request.POST.get('kernel_size'))
