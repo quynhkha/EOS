@@ -10,13 +10,15 @@ import time
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PERFORMANCE_TEST = False
 
 def timing(f):
     def wrap(*args):
         time1 = time.time()
         ret = f(*args)
         time2 = time.time()
-        print ('%s function took %0.3f ms' % (f.__name__, (time2-time1)*1000.0))
+        if PERFORMANCE_TEST:
+            print ('%s function took %0.3f ms' % (f.__name__, (time2-time1)*1000.0))
         return ret
     return wrap
 
@@ -54,7 +56,7 @@ def thumbnail_plus_img_json(state_image, state_thumbnail_arr):
         thumbnail_arr_base64.append(base64_thumbnail)
         thumbnail_arr_func_name.append(state_thumbnail.func_name)
 
-    json_data = {'image_data': base64_image, 'func_name': state_image.func_name,
+    json_data = {'image_data': base64_image, 'func_name': state_image.func_name, 'gray_levels': state_image.gray_levels,
                  'thumbnail_arr': thumbnail_arr_base64, 'thumb_func_name': thumbnail_arr_func_name}
     return json_data
 
@@ -86,7 +88,7 @@ def get_temp_data(index, temp_data_arr):
     i = int(index)
     return temp_data_arr[i]
 
-
+# append the current image to saved image arr and thumbnail arr
 def save_state(temp_idx, temp_data_arr):
 
     temp = get_temp_data(temp_idx, temp_data_arr)
@@ -94,11 +96,11 @@ def save_state(temp_idx, temp_data_arr):
         temp.s_img_last_arr.pop(0)
         temp.s_thumb_hist_arr.pop(0)
 
-    current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data, '')
+    current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data, temp.s_img_cur.gray_levels)
     temp.s_img_last_arr.append(current_state_img)
 
     compressed_image = compress_image(copy.copy(temp.s_img_cur.img_data))
-    s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image, '')
+    s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image, temp.s_img_cur.gray_levels)
     temp.s_thumb_hist_arr.append(s_thumbnail_img)
 
     temp.s_undo_depth = len(temp.s_img_last_arr)-1
@@ -108,8 +110,10 @@ def save_state(temp_idx, temp_data_arr):
 def reset_current_image(func_name, temp_idx, temp_data_arr):
 
     temp = get_temp_data(temp_idx, temp_data_arr)
-    if temp.s_last_cal_func == func_name:
-        temp.s_img_cur = copy.copy(temp.s_img_last_arr[temp.s_undo_depth])
+    if temp.s_just_recovered == True:
+        if temp.s_last_cal_func == func_name:
+            temp.s_img_cur = copy.copy(temp.s_img_last_arr[temp.s_undo_depth])
+        temp.s_just_recovered = False
 
     temp.s_last_cal_func = func_name
     temp.s_undo_depth = len(temp.s_img_last_arr) - 1
@@ -127,12 +131,13 @@ class TempData:
         self.s_img_last = StateImage('last image', np.zeros((400, 400), np.uint8))
         self.s_img_last_arr = []
         self.s_thumb_hist_arr = []
-        self.s_max_undo_step = 6
+        self.s_max_undo_step = 10
         self.s_undo_depth = 1
         self.s_last_cal_func = ""
         self.s_labels = 0
+        self.s_just_recovered = False
 
-    def update_s_img_cur(self, func_name, img_data, *gray_levels):
+    def update_s_img_cur(self, func_name, img_data, gray_levels=''):
         self.s_img_cur.func_name = func_name
         self.s_img_cur.img_data = img_data
         self.s_img_cur.gray_levels = gray_levels

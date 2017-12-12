@@ -77,8 +77,8 @@ def kmeans(request, temp_idx=0):
         save_state(temp_idx, temp_data_arr)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         #add gray levels of all extracted labels
-        json_data['gray_levels']= gray_levels
-        print(json_data)
+        # json_data['gray_levels']= gray_levels
+
         return JsonResponse(json_data, safe=False)
     else:
         _, image_data = cv_to_json(temp.s_img_cur)
@@ -147,7 +147,7 @@ def extract_crystal_mask(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
-    reset_current_image('extract_crystal_mask', temp_idx, temp_data_arr)
+        # reset_current_image('extract_crystal_mask', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
         input = request.POST.get('input')
@@ -156,11 +156,12 @@ def extract_crystal_mask(request, temp_idx=0):
 
         img_data= ps_func.extract_crystal_mask(temp.s_img_cur.img_data, labels=temp.s_labels, user_chosen_label=input)
         temp.update_s_img_cur('extract crystal mask', img_data)
+
         #json_data, _ = cv_to_json(s_img_cur)
         save_state(temp_idx, temp_data_arr)
 
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
-
+        temp.s_mask_cur.func_name = 'extract crystal mask'
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -174,8 +175,9 @@ def show_all_crystal(request, temp_idx=0):
     global temp_data_arr
     temp = get_temp_data(temp_idx, temp_data_arr)
 
-    img_data= ps_func.show_all_crystal(temp.s_img_ori.img_data, temp.s_img_cur.img_data)
+    img_data= ps_func.show_all_crystal(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
     temp.update_s_img_cur('show all crystals', img_data)
+
     #json_data, _ = cv_to_json(s_img_cur)
     save_state(temp_idx, temp_data_arr)
 
@@ -191,9 +193,11 @@ def show_top_area_crystal(request, temp_idx=0):
 
     num_of_crystals = int(request.POST.get('input'))
 
-    img_data = ps_func.show_top_area_crystals(temp.s_img_ori.img_data,
-                                                              image_mask=temp.s_img_cur.img_data, num_of_crystals=num_of_crystals)
+    img_data, mask = ps_func.show_top_area_crystals(temp.s_img_ori.img_data,
+                                                              image_mask=temp.s_mask_cur.img_data, num_of_crystals=num_of_crystals)
     temp.update_s_img_cur('top area crystals', img_data)
+    temp.s_mask_cur.img_data = mask
+    temp.s_mask_cur.func_name = 'top area crystals'
     save_state(temp_idx, temp_data_arr)
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     # json_data, _ = cv_to_json(s_img_cur)
@@ -226,14 +230,11 @@ def set_image_from_thumbnail(request, temp_idx=0):
         id = int(thumbnail_id.split("_")[1])
 
         temp.s_img_cur = temp.s_img_last_arr[id]
-        temp.s_undo_depth = input
+        temp.s_undo_depth = id
+        temp.s_just_recovered = True
+        print("Extract img number", input)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-        try:
-            gray_levels = temp.s_img_cur.gray_levels
-            json_data['gray_levels'] = gray_levels
-            print (temp.s_img_cur)
-        except:
-            print ("cannot find gray levels")
+
         return JsonResponse(json_data, safe=False)
     else:
         _, image_data = cv_to_json(temp.s_img_cur)
@@ -365,3 +366,21 @@ def update_mask(request, temp_idx=0):
         # json_data = thumbnail_plus_img_json(mask, s_thumb_hist_arr)
         # return JsonResponse(json_data, safe=False)
 
+@csrf_exempt
+def noise_removal(request, temp_idx=0):
+    if request.method == 'POST':
+        area_thresh = request.POST.get('input')
+        area_thresh = int(area_thresh)
+
+        global temp_data_arr
+        temp = get_temp_data(temp_idx, temp_data_arr)
+
+        img_data = ps_func.noise_removal(temp.s_mask_cur.img_data, area_thresh)
+        temp.update_s_img_cur('noise removal', img_data)
+        temp.s_mask_cur.img_data = img_data
+        temp.s_mask_cur.func_name = 'noise removal'
+
+        save_state(temp_idx, temp_data_arr)
+
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)

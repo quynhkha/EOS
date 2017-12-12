@@ -387,7 +387,7 @@ function update_gray_levels(data) {
 
     //update the list content
     //update with new list content if kmeans is done
-    if (data.hasOwnProperty('gray_levels')) {
+    if (data['gray_levels'] !='') {
         grayLevelList.innerHTML = '';
         var grayLevels = data["gray_levels"];
         for (var i = 0; i < grayLevels.length; i++) {
@@ -607,8 +607,9 @@ $("#slider-dilation").click(function (e) {
 //     disp_slider_val('slider-dilation-val-iter', 'slider-dilation-iter');
 //     do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 // });
-
-
+$("#btn_noise_removal").click(function(e){
+    do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/')
+})
 $("#btn_all_crystal").click(function (e) {
     do_ajax_get(e, '/all-crystal/');
 });

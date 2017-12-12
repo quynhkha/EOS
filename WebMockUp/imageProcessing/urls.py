@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^erosion/(?P<temp_idx>[0-9]+)/$', views.do_erosion, name='erosion'),
     url(r'^dilation/(?P<temp_idx>[0-9]+)/$', views.do_opening, name='dilation'),
     url(r'^update-mask/(?P<temp_idx>[0-9]+)/$', views.update_mask, name='update-mask'),
+    url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
 ]

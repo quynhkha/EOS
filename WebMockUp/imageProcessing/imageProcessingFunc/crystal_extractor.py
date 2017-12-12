@@ -73,6 +73,33 @@ class Segment:
         # return np.uint8(max_area_img), num_labels, stats, max_fg_area_index
         return np.uint8(max_area_img)
 
+    def remove_small_components(self, binary_image, connectivity, area_thresh, label=None):
+        uint8_img = np.uint8(binary_image)
+        output = cv2.connectedComponentsWithStats(binary_image, labels=label, connectivity=connectivity,
+                                                  ltype=cv2.CV_32S)
+        # Get the results
+        num_labels = output[0]
+
+        labels = output[1]
+        # stat matrix
+        stats = output[2]
+        # centroid matrix
+        centroids = output[3]
+
+        fg_area = stats[1:, 4]  # index 0 = background
+        ascending_fg_index_arr = np.argsort(fg_area)  # return the index arr of ascending crystal area
+        sorted_fg_index_arr = np.flipud(ascending_fg_index_arr)  # reverse the arr
+
+        # Since here we skip the index 0 of background image, we need plus 1 to match the index here with the index of
+        # the original labels array
+        crystal_index_to_extract = [i+1 for i in range(0, len(fg_area)) if fg_area[i]>area_thresh]
+        mask_img = np.zeros(uint8_img.shape)
+        for crystal_index in crystal_index_to_extract:
+            mask_img[labels == crystal_index] = 255
+
+        return np.uint8(mask_img)
+
+
     def kmeans_image(self, image, label_image, segments):
         '''
 
@@ -304,9 +331,14 @@ class ProcessingFunction:
         max_area_crystal_kmean = self.seg.extract_top_area_components(mask, 8, num_of_crystals)
         biggest_crystal = copy.copy(original_image)
         biggest_crystal[max_area_crystal_kmean != 255] = 255
-        return biggest_crystal
+        return biggest_crystal, max_area_crystal_kmean
 
     # def show_all_crystal_larger_than(self, original_image, image_mask, ):
+    def noise_removal(self, image_mask, area_thresh):
+        mask = copy.copy(image_mask)
+        mask = self.seg.two_channel_grayscale(mask)
+        removed_noise_mask = self.seg.remove_small_components(mask, 8, area_thresh)
+        return removed_noise_mask
 
     def plot_histogram(self, image, image_mask):
         hist_with_mask = cv2.calcHist([image], [0], image_mask, [256], [0,256])
@@ -352,3 +384,5 @@ class ProcessingFunction:
         image_copy[current_mask!=255] = 255
 
         return image_copy, current_mask
+
+

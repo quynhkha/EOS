@@ -155,7 +155,20 @@
 
                     </div>
                     {#                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#opening">Opening</button>#}
+                     <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Noise removal - set min area threshold: </label>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="area_thresh" type="number" placeholder="5">
+                                    </div>
+                                    <div class="col-lg-1"></div>
 
+                                    <div class="col-lg-3 centered">
+                                        <button id="btn_noise_removal">Remove</button>
+                                    </div>
+
+                                </div>
                     <div class="form-group row">
                         <div class="col-lg-5">
                             <label class="control-label"> Opening</label>
@@ -396,6 +409,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                     <div class="form-group row">
