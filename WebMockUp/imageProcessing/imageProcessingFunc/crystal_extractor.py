@@ -1,7 +1,6 @@
 import copy
 import cv2
 import numpy as np
-from skimage import img_as_ubyte
 from matplotlib import pyplot as plt
 from skimage import measure
 from scipy import ndimage
@@ -152,7 +151,8 @@ class Segment:
         self.disp_img_with_title(img_copy, "upper mask")
 
         # change to single channel
-        unit8_img = img_as_ubyte(img_copy)
+        # unit8_img = img_as_ubyte(img_copy)
+        unit8_img = np.uint8(img_copy)
         ret, thresh = cv2.threshold(unit8_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         self.disp_side_by_side(img_copy, thresh, 'after mask','theshold + ostu')
 

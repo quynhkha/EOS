@@ -1,140 +1,3 @@
-/************** HISTOGRAM ***************/
-var original_hist = {};
-var truncated_hist = {};
-var composition_hist = {};
-
-// var truncated_hist = {};
-function plot_histogram(data) {
-
-    original_hist = {x: data["x"], y: data["y"]};
-    console.log(original_hist);
-
-    var hist_data = [{
-        x: data["x"],
-        y: data["y"],
-        // {#                x: [1,2,3],#}
-        // {#                y: [10,11,12],#}
-        type: 'bar'
-    }];
-    Plotly.newPlot('histogram', hist_data);
-}
-
-function plot_truncated_histogram(data, min_thresh, max_thresh) {
-    var range = parseInt(max_thresh) - parseInt(min_thresh);
-    var x_arr = [];
-    var y_arr = [];
-    var j = parseInt(min_thresh);
-    if (range > 100) {
-        var step = parseInt(range / 100) + 1; //floor()
-
-        for (i = 0; i < 100; i++) {
-            var x = 0;
-            var y = 0;
-            while (j < i * step && j <= parseInt(max_thresh)) {
-                x = i;
-                y = y + data["y"][j];
-                j++;
-            }
-            x_arr.push(x);
-            y_arr.push(y);
-        }
-    }
-
-    else {
-        var step = parseInt(100 / range);
-        var i = 0;
-        for (i = 0; i < 100; i++) {
-            var x = i;
-            var y = 0;
-
-            if (i % step == 0) {
-                if (j < parseInt(max_thresh)) {
-                    y = data["y"][j];
-                    j++;
-                }
-            }
-            x_arr.push(x);
-            y_arr.push(y);
-        }
-
-    }
-
-    console.log(x_arr, y_arr);
-
-    truncated_hist = {x: x_arr, y: y_arr};
-    var hist_data = [{
-        x: truncated_hist["x"],
-        y: truncated_hist["y"],
-        type: 'bar'
-    }];
-    Plotly.newPlot('truncated-histogram', hist_data);
-}
-
-function plot_composition(data, a, b) {
-    var step;
-    var x_arr = [];
-    var y_arr = [];
-    var a = parseFloat(a);
-    var b = parseInt(b);
-    var data_length = parseInt(data["x"].length * a) + 1;
-
-    if (a < 1) {
-        var j = 0;
-        step = parseInt(1 / a) + 1;
-        for (var i = 0; i < data_length; i++) {
-            var x = i;
-            var y = 0;
-            while (j < i * step && j < data["x"].length) {
-                y = y + data["y"][j];
-                j++;
-            }
-
-            x_arr.push(x);
-            y_arr.push(y);
-        }
-    }
-
-    else {
-        step = parseInt(a);
-        var j = 0;
-        for (var i = 0; i < data_length; i++) {
-            var x = i;
-            var y = 0;
-            if (i % step == 0) {
-                if (j < data["x"].length) {
-                    y = data["y"][j];
-                    j++;
-                }
-            }
-            x_arr.push(x);
-            y_arr.push(y);
-        }
-    }
-
-    // move the hist based on b value
-    var new_x_arr = [];
-    var new_y_arr = [];
-    for (var i = 0; i < b; i++) {
-        new_x_arr.push(0);
-        new_y_arr.push(0);
-    }
-    for (var i = 0; i < x_arr.length; i++) {
-        new_x_arr.push(x_arr[i] + b);
-        new_y_arr.push(y_arr[i]);
-    }
-
-    console.log(new_x_arr, new_y_arr);
-
-    composition_hist = {x: new_x_arr, y: new_y_arr};
-    var hist_data = [{
-        x: composition_hist["x"],
-        y: composition_hist["y"],
-        type: 'bar'
-    }];
-    Plotly.newPlot('composition-histogram', hist_data);
-
-}
-
 
 /****************** THUMBNAIL ******************/
 function disp_hist_thumbnail(data) {
@@ -456,6 +319,10 @@ function set_click_ability(ctrlList, clickable) {
 function morphCtrlMapping(input){
     var kernel = 1;
     var iter = 1;
+    image = document.getElementById('image');
+    var naturalWidth = image.naturalWidth;
+    var coeff = Math.floor(naturalWidth/2000)+1; //base case: width = 500 -> coeff =1
+
     input = parseInt(input);
     switch(input){
         case 1:
@@ -504,7 +371,7 @@ function morphCtrlMapping(input){
             iter = 1;
             break;
     }
-    return {'kernel_size': kernel, 'num_of_iter': iter};
+    return {'kernel_size': kernel*coeff, 'num_of_iter': iter};
 }
 
 /******************* DOM EVENT HANDLING *********************/
@@ -978,6 +845,143 @@ function setCanvasWrapperSize() {
     var imageHeight = image.height;
     var canvasWrapperHeight = Math.floor(imageHeight * canvasWrapperSize.width / imageWidth) + 1;
     canvasWrapper.style.height = canvasWrapperHeight.toString() + 'px';
+
+}
+
+/************** HISTOGRAM ***************/
+var original_hist = {};
+var truncated_hist = {};
+var composition_hist = {};
+
+// var truncated_hist = {};
+function plot_histogram(data) {
+
+    original_hist = {x: data["x"], y: data["y"]};
+    console.log(original_hist);
+
+    var hist_data = [{
+        x: data["x"],
+        y: data["y"],
+        // {#                x: [1,2,3],#}
+        // {#                y: [10,11,12],#}
+        type: 'bar'
+    }];
+    Plotly.newPlot('histogram', hist_data);
+}
+
+function plot_truncated_histogram(data, min_thresh, max_thresh) {
+    var range = parseInt(max_thresh) - parseInt(min_thresh);
+    var x_arr = [];
+    var y_arr = [];
+    var j = parseInt(min_thresh);
+    if (range > 100) {
+        var step = parseInt(range / 100) + 1; //floor()
+
+        for (i = 0; i < 100; i++) {
+            var x = 0;
+            var y = 0;
+            while (j < i * step && j <= parseInt(max_thresh)) {
+                x = i;
+                y = y + data["y"][j];
+                j++;
+            }
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+    }
+
+    else {
+        var step = parseInt(100 / range);
+        var i = 0;
+        for (i = 0; i < 100; i++) {
+            var x = i;
+            var y = 0;
+
+            if (i % step == 0) {
+                if (j < parseInt(max_thresh)) {
+                    y = data["y"][j];
+                    j++;
+                }
+            }
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+
+    }
+
+    console.log(x_arr, y_arr);
+
+    truncated_hist = {x: x_arr, y: y_arr};
+    var hist_data = [{
+        x: truncated_hist["x"],
+        y: truncated_hist["y"],
+        type: 'bar'
+    }];
+    Plotly.newPlot('truncated-histogram', hist_data);
+}
+
+function plot_composition(data, a, b) {
+    var step;
+    var x_arr = [];
+    var y_arr = [];
+    var a = parseFloat(a);
+    var b = parseInt(b);
+    var data_length = parseInt(data["x"].length * a) + 1;
+
+    if (a < 1) {
+        var j = 0;
+        step = parseInt(1 / a) + 1;
+        for (var i = 0; i < data_length; i++) {
+            var x = i;
+            var y = 0;
+            while (j < i * step && j < data["x"].length) {
+                y = y + data["y"][j];
+                j++;
+            }
+
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+    }
+
+    else {
+        step = parseInt(a);
+        var j = 0;
+        for (var i = 0; i < data_length; i++) {
+            var x = i;
+            var y = 0;
+            if (i % step == 0) {
+                if (j < data["x"].length) {
+                    y = data["y"][j];
+                    j++;
+                }
+            }
+            x_arr.push(x);
+            y_arr.push(y);
+        }
+    }
+
+    // move the hist based on b value
+    var new_x_arr = [];
+    var new_y_arr = [];
+    for (var i = 0; i < b; i++) {
+        new_x_arr.push(0);
+        new_y_arr.push(0);
+    }
+    for (var i = 0; i < x_arr.length; i++) {
+        new_x_arr.push(x_arr[i] + b);
+        new_y_arr.push(y_arr[i]);
+    }
+
+    console.log(new_x_arr, new_y_arr);
+
+    composition_hist = {x: new_x_arr, y: new_y_arr};
+    var hist_data = [{
+        x: composition_hist["x"],
+        y: composition_hist["y"],
+        type: 'bar'
+    }];
+    Plotly.newPlot('composition-histogram', hist_data);
 
 }
 
