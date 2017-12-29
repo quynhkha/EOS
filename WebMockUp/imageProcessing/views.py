@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -17,9 +18,14 @@ def show_base64(request):
     json_data, _= cv_to_json(opencv_img)
     return JsonResponse(json_data, safe=False)
 
+def index(request):
+    if not request.user.is_authenticated():
+        return render(request, 'imageProcessing/login.html')
+    else:
+        return render(request, 'imageProcessing/index.html', {'user': request.user})
 
 @csrf_exempt
-def model_form_upload(request):
+def upload_image(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -43,7 +49,58 @@ def model_form_upload(request):
             return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
     else:
         form = DocumentForm()
-    return render(request, 'imageProcessing/model_form_upload.html', {'form': form})
+    return render(request, 'imageProcessing/upload_image.html', {'form': form})
+
+@csrf_exempt
+def register(request):
+    form = UserForm(request.POST or None)
+    if form.is_valid():
+        user = form.save(commit=False) # create a user object but does not save it to DB yet
+        # clean (normalized) the data
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user.set_password(password) # need to set password in this way because password is stored as encrypted text
+        user.save()
+
+        # return User object it credentials are correct
+        user = authenticate(username=username, password = password)
+
+        # if user is not None:
+        #     if user.is_active:
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'imageProcessing/register.html', context)
+
+@csrf_exempt
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return render(request, 'imageProcessing/index.html', {'user': user})
+
+            else:
+                return render(request, 'imageProcessing/error.html', {'error_message': "Your account has been deactivated"})
+        else:
+            return render(request, 'imageProcessing/login.html', {'error_message:': "Invalid login"})
+    return render(request, 'imageProcessing/login.html')
+
+
+def logout_user(request):
+    logout(request)
+    form = UserForm(request.POST or None)
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'imageProcessing/login.html', context)
 
 
 @csrf_exempt
