@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -22,18 +23,34 @@ def index(request):
     if not request.user.is_authenticated():
         return render(request, 'imageProcessing/login.html')
     else:
-        return render(request, 'imageProcessing/index.html', {'user': request.user})
+        images = UploadedImage.objects.filter(user=request.user)
+        print(images)
+        return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
 
 @csrf_exempt
 def upload_image(request):
     if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        imageForm = ImageForm(request.POST, request.FILES)
+        if imageForm.is_valid():
+            imageDB = imageForm.save()
+
             file= request.FILES['document']
             print("filename", file.name, "file content type", file.content_type, "file size", file.size)
+            imageDB.filename = file.name
+            imageDB.user = request.user
+            imageDB.save()
+
+
             image_file_dir = absolute_uploaded_file_dir(file.name)
             print ("image file dir", image_file_dir)
+            thumbnail_data = compress_image(cv2.imread(image_file_dir))
+            # thumbnail_data = cv2.imread(image_file_dir)
+            thumbnail_name = image_file_dir + "_thumbnail.png"
+            cv2.imwrite(thumbnail_name, thumbnail_data)
+            imageDB.thumbnail_url = '/media/documents/'+file.name+"_thumbnail.png"
+            imageDB.save()
+            # imageDB.thumbnail.save(thumbnail_name, ContentFile(thumbnail_data))
+
 
             global temp_idx
             global temp_data_arr
@@ -48,8 +65,8 @@ def upload_image(request):
             _, image_data = cv_to_json(temp.s_img_ori)
             return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
     else:
-        form = DocumentForm()
-    return render(request, 'imageProcessing/upload_image.html', {'form': form})
+        imageForm =ImageForm()
+    return render(request, 'imageProcessing/upload_image.html', {'form': imageForm})
 
 @csrf_exempt
 def register(request):

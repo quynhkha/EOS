@@ -15,11 +15,11 @@ class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=100)
     file = forms.FileField()
 
-class DocumentForm(forms.ModelForm):
+class ImageForm(forms.ModelForm):
     class Meta:
-        model = Document
-        # field = ('desciption', 'document', )
-        fields = '__all__'
+        model = UploadedImage
+        fields = ['description', 'document']
+        # fields = '__all__'
 
 class NumberInputForm(forms.ModelForm):
     class Meta:

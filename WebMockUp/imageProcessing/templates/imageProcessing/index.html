@@ -1,12 +1,30 @@
 {% extends "imageProcessing/base.html" %}
 {% block title %}Homepage{% endblock %}
 {% block body %}
-    <div class = "container-fluid">
-        <div class = "row">
-            <div class ="col-sm-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
                 <h3>Welcome, {{ user.username }}!</h3>
-                    {%  include "imageProcessing/upload_image.html" %}
+                {#                    {%  include "imageProcessing/upload_image.html" %}#}
+                <h3><a href="{% url 'imageProcessing:upload' %}">Upload an image</a></h3>
             </div>
+            {% if images %}
+                {% for image in images %}
+                    <div class="col-sm-4 col-lg-2">
+                        <div class="thumbnail">
+                            <a href="#">
+                                <img src='{{ image.thumbnail_url }}' class='img-responsive'>
+                            </a>
+
+                            <div class="caption">
+                                <h4>{{ image.filename }}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
         </div>
+    </div>
     </div>
 {% endblock %}

@@ -63,6 +63,9 @@ def thumbnail_plus_img_json(state_image, state_thumbnail_arr):
 def absolute_uploaded_file_dir(filename):
     return str(BASE_DIR)+'/media/documents/'+filename
 
+# def absolute_uploaded_file_dir(url):
+#      return str(BASE_DIR)+url
+
 def compress_image(image):
     if len(image.shape) == 3:
         (height, width, _) =image.shape
