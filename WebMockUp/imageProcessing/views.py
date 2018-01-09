@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import *
@@ -19,54 +20,6 @@ def show_base64(request):
     json_data, _= cv_to_json(opencv_img)
     return JsonResponse(json_data, safe=False)
 
-def index(request):
-    if not request.user.is_authenticated():
-        return render(request, 'imageProcessing/login.html')
-    else:
-        images = UploadedImage.objects.filter(user=request.user)
-        print(images)
-        return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
-
-@csrf_exempt
-def upload_image(request):
-    if request.method == 'POST':
-        imageForm = ImageForm(request.POST, request.FILES)
-        if imageForm.is_valid():
-            imageDB = imageForm.save()
-
-            file= request.FILES['document']
-            print("filename", file.name, "file content type", file.content_type, "file size", file.size)
-            imageDB.filename = file.name
-            imageDB.user = request.user
-            imageDB.save()
-
-
-            image_file_dir = absolute_uploaded_file_dir(file.name)
-            print ("image file dir", image_file_dir)
-            thumbnail_data = compress_image(cv2.imread(image_file_dir))
-            # thumbnail_data = cv2.imread(image_file_dir)
-            thumbnail_name = image_file_dir + "_thumbnail.png"
-            cv2.imwrite(thumbnail_name, thumbnail_data)
-            imageDB.thumbnail_url = '/media/documents/'+file.name+"_thumbnail.png"
-            imageDB.save()
-            # imageDB.thumbnail.save(thumbnail_name, ContentFile(thumbnail_data))
-
-
-            global temp_idx
-            global temp_data_arr
-            temp_idx = new_temp_data(temp_data_arr)
-            temp = get_temp_data(temp_idx, temp_data_arr)
-
-            temp.s_img_ori.img_data = cv2.imread(image_file_dir)
-            temp.s_img_ori.func_name = 'upload'
-            temp.s_img_cur = copy.copy(temp.s_img_ori)
-
-            save_state(temp_idx, temp_data_arr)
-            _, image_data = cv_to_json(temp.s_img_ori)
-            return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
-    else:
-        imageForm =ImageForm()
-    return render(request, 'imageProcessing/upload_image.html', {'form': imageForm})
 
 @csrf_exempt
 def register(request):
@@ -101,6 +54,8 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                # update session info
+                request.session['user_id'] = user.id
                 return render(request, 'imageProcessing/index.html', {'user': user})
 
             else:
@@ -111,6 +66,24 @@ def login_user(request):
 
 
 def logout_user(request):
+
+    # TODO: clear user's temp data
+    global temp_data_arr
+    if request.session['image_id'] is not None:
+        for temp in temp_data_arr:
+            if temp.user_id == request.session['user_id'] and temp.image_id == request.session['image_id']:
+                temp_data_arr.remove(temp)
+
+    print(temp_data_arr)
+
+    # Flush session info
+    try:
+        del request.session['user_id']
+        if request.session['image_id'] is not None:
+            del request.session['image_id']
+    except KeyError:
+        pass
+
     logout(request)
     form = UserForm(request.POST or None)
     context = {
@@ -119,17 +92,82 @@ def logout_user(request):
 
     return render(request, 'imageProcessing/login.html', context)
 
+def index(request):
+    if not request.user.is_authenticated():
+        return render(request, 'imageProcessing/login.html')
+    else:
+        images = UploadedImage.objects.filter(user=request.user)
+        # print(images)
+        return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
+
+
+@csrf_exempt
+def upload_image(request):
+    if request.method == 'POST':
+        imageForm = ImageForm(request.POST, request.FILES)
+        if imageForm.is_valid():
+            imageDB = imageForm.save()
+
+            file= request.FILES['document']
+            print("filename", file.name, "file content type", file.content_type, "file size", file.size)
+            imageDB.filename = file.name
+            imageDB.user = request.user
+            imageDB.save()
+
+
+            image_file_dir = absolute_uploaded_file_dir(file.name)
+            print ("image file dir", image_file_dir)
+            thumbnail_data = compress_image(cv2.imread(image_file_dir))
+            # thumbnail_data = cv2.imread(image_file_dir)
+            thumbnail_name = image_file_dir + "_thumbnail.png"
+            cv2.imwrite(thumbnail_name, thumbnail_data)
+            imageDB.thumbnail_url = '/media/documents/'+file.name+"_thumbnail.png"
+            imageDB.save()
+            # imageDB.thumbnail.save(thumbnail_name, ContentFile(thumbnail_data))
+
+            # update session info
+            # request.session['image_id'] = imageDB.id
+
+            # global temp_idx
+
+            return redirect('imageProcessing:processing_page', image_id=imageDB.id)
+            #return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
+    else:
+        imageForm =ImageForm()
+    return render(request, 'imageProcessing/upload_image.html', {'form': imageForm})
+
+@csrf_exempt
+def processing_page(request, image_id):
+    # update the session info
+    request.session['image_id'] = image_id
+    print(request.session['image_id']) #debug
+
+    global temp_data_arr
+    temp = new_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+
+    image = UploadedImage.objects.get(pk=request.session['image_id'])
+    image_file_dir = absolute_uploaded_file_dir(image.filename)
+    temp.s_img_ori.img_data = cv2.imread(image_file_dir)
+    temp.s_img_ori.func_name = 'upload'
+    temp.s_img_cur = copy.copy(temp.s_img_ori)
+
+    save_state(temp)
+
+    # temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    _, image_data = cv_to_json(temp.s_img_ori)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index':0})
+
 
 @csrf_exempt
 def laplacian(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     img_data = ps_func.laplacian_func(temp.s_img_cur.img_data)
     temp.update_s_img_cur('laplacian', img_data)
     #json_data, _ = cv_to_json(s_img_cur)
-    save_state(temp_idx, temp_data_arr)
+    save_state(temp)
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
@@ -137,7 +175,7 @@ def laplacian(request, temp_idx=0):
 def kmeans(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     #reset_current_image('kmeans', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
@@ -148,7 +186,7 @@ def kmeans(request, temp_idx=0):
         img_data, temp.s_labels, gray_levels = ps_func.kmeans(temp.s_img_cur.img_data, segments=input)
         temp.update_s_img_cur('kmeans', img_data, gray_levels)
         #json_data, _ = cv_to_json(s_img_cur)
-        save_state(temp_idx, temp_data_arr)
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         #add gray levels of all extracted labels
         # json_data['gray_levels']= gray_levels
@@ -163,7 +201,7 @@ def kmeans(request, temp_idx=0):
 def lower_thresholding(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     #reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
@@ -173,7 +211,7 @@ def lower_thresholding(request, temp_idx=0):
         img_data = ps_func.lower_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
         temp.update_s_img_cur('lower thresholding', img_data)
 
-        save_state(temp_idx, temp_data_arr)
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -186,7 +224,7 @@ def upper_thresholding(request, temp_idx=0):
 
     global temp_data_arr
     #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     if request.method == 'POST':
         input = request.POST.get('input')
         input = int(input)
@@ -194,7 +232,7 @@ def upper_thresholding(request, temp_idx=0):
         img_data= ps_func.upper_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
         temp.update_s_img_cur('upper thresholding', img_data)
         #json_data, _ = cv_to_json(s_img_cur)
-        save_state(temp_idx, temp_data_arr)
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -205,14 +243,14 @@ def upper_thresholding(request, temp_idx=0):
 def undo_last_step(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     if temp.s_undo_depth>=1:
         temp.s_undo_depth -=1
     temp.s_img_cur = copy.copy(temp.s_img_last_arr[temp.s_undo_depth])
     print('undo depth', temp.s_undo_depth)
     # json_data, _ = cv_to_json(s_img_cur)
-    #save_state()
+    save_state(temp)
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
@@ -220,7 +258,7 @@ def undo_last_step(request, temp_idx=0):
 def extract_crystal_mask(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
         # reset_current_image('extract_crystal_mask', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
@@ -232,7 +270,7 @@ def extract_crystal_mask(request, temp_idx=0):
         temp.update_s_img_cur('extract crystal mask', img_data)
 
         #json_data, _ = cv_to_json(s_img_cur)
-        save_state(temp_idx, temp_data_arr)
+        save_state(temp)
 
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
         temp.s_mask_cur.func_name = 'extract crystal mask'
@@ -247,13 +285,13 @@ def extract_crystal_mask(request, temp_idx=0):
 def show_all_crystal(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     img_data= ps_func.show_all_crystal(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
     temp.update_s_img_cur('show all crystals', img_data)
 
     #json_data, _ = cv_to_json(s_img_cur)
-    save_state(temp_idx, temp_data_arr)
+    save_state(temp)
 
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
@@ -263,7 +301,7 @@ def show_all_crystal(request, temp_idx=0):
 def show_top_area_crystal(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     num_of_crystals = int(request.POST.get('input'))
 
@@ -272,7 +310,7 @@ def show_top_area_crystal(request, temp_idx=0):
     temp.update_s_img_cur('top area crystals', img_data)
     temp.s_mask_cur.img_data = mask
     temp.s_mask_cur.func_name = 'top area crystals'
-    save_state(temp_idx, temp_data_arr)
+    save_state(temp)
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     # json_data, _ = cv_to_json(s_img_cur)
     return JsonResponse(json_data)
@@ -281,14 +319,14 @@ def show_top_area_crystal(request, temp_idx=0):
 def reset(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     temp.s_thumb_hist_arr = []
     temp.s_img_last_arr = []
     temp.s_undo_depth = 0
     temp.s_img_cur = copy.copy(temp.s_img_ori)
 
-    save_state(temp_idx, temp_data_arr)
+    save_state(temp)
 
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data)
@@ -296,7 +334,7 @@ def reset(request, temp_idx=0):
 @csrf_exempt
 def set_image_from_thumbnail(request, temp_idx=0):
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     if request.method == 'POST':
         input = request.POST.get('input')
@@ -319,7 +357,7 @@ def set_image_from_thumbnail(request, temp_idx=0):
 def plot_histogram(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     hist_y_axis, hist_x_axis = ps_func.plot_histogram(temp.s_img_cur.img_data, temp.s_mask_cur.img_data)
     json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
@@ -329,7 +367,7 @@ def plot_histogram(request, temp_idx=0):
 def do_opening(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     #reset_current_image('do_opening', temp_idx, temp_data_arr)
     if request.method == 'POST':
@@ -352,7 +390,7 @@ def do_closing(request, temp_idx=0):
 
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     #reset_current_image('do_closing', temp_idx,temp_data_arr)
 
@@ -376,7 +414,7 @@ def do_closing(request, temp_idx=0):
 def do_erosion(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     #reset_current_image('do_erosion', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
@@ -398,7 +436,7 @@ def do_erosion(request, temp_idx=0):
 def do_dilation(request, temp_idx=0):
 
     global temp_data_arr
-    temp = get_temp_data(temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     #reset_current_image('do_dilation', temp_idx, temp_data_arr)
 
     if request.method == 'POST':
@@ -423,7 +461,7 @@ def update_mask(request, temp_idx=0):
 
 
         global temp_data_arr
-        temp = get_temp_data(temp_idx, temp_data_arr)
+        temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
         img_data, mask_data = ps_func.handle_mask(rgb_mask, temp.s_mask_cur.img_data, temp.s_img_ori.img_data)
 
@@ -433,7 +471,8 @@ def update_mask(request, temp_idx=0):
         # s_img_cur = ps_func.show_all_crystal(s_img_ori=s_img_ori,
         #                                                     image_mask=s_mask_cur)
         # json_data, _ = cv_to_json(s_img_cur)
-        save_state(temp_idx, temp_data_arr)
+
+        save_state(temp)
 
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
@@ -447,14 +486,14 @@ def noise_removal(request, temp_idx=0):
         area_thresh = int(area_thresh)
 
         global temp_data_arr
-        temp = get_temp_data(temp_idx, temp_data_arr)
+        temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
         img_data = ps_func.noise_removal(temp.s_mask_cur.img_data, area_thresh)
         temp.update_s_img_cur('noise removal', img_data)
         temp.s_mask_cur.img_data = img_data
         temp.s_mask_cur.func_name = 'noise removal'
 
-        save_state(temp_idx, temp_data_arr)
+        save_state(temp)
 
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)

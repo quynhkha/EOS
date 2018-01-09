@@ -80,21 +80,47 @@ def compress_image(image):
     return cv2.resize(image, (int(width/resize_factor), int(height/resize_factor)), interpolation=cv2.INTER_CUBIC)
 
 
-def new_temp_data(temp_data_arr):
+def new_temp_data(temp_data_arr, user_id, image_id):
+    # try to get the temp object of same user_id and image_id
+    tempData = get_temp_data(temp_data_arr, user_id, image_id)
+    if tempData is not None:
+        temp_data_arr.remove(tempData)
     tempData = TempData()
+    tempData.user_id = user_id
+    tempData.image_id = image_id
     temp_data_arr.append(tempData)
     print("temp_data_arr", temp_data_arr)
-    return len(temp_data_arr)-1
+    return tempData
+    # return len(temp_data_arr)-1
 
 
-def get_temp_data(index, temp_data_arr):
-    i = int(index)
-    return temp_data_arr[i]
+# def get_temp_data(index, temp_data_arr):
+#     i = int(index)
+#     return temp_data_arr[i]
 
+def get_temp_data(temp_data_arr, user_id, image_id):
+    return next((temp for temp in temp_data_arr if temp.user_id == user_id and temp.image_id == image_id), None)
 # append the current image to saved image arr and thumbnail arr
-def save_state(temp_idx, temp_data_arr):
 
-    temp = get_temp_data(temp_idx, temp_data_arr)
+# def save_state(temp_idx, temp_data_arr):
+#
+#     temp = get_temp_data(temp_idx, temp_data_arr)
+#     if len(temp.s_img_last_arr)>=temp.s_max_undo_step:
+#         temp.s_img_last_arr.pop(0)
+#         temp.s_thumb_hist_arr.pop(0)
+#
+#     current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data, temp.s_img_cur.gray_levels)
+#     temp.s_img_last_arr.append(current_state_img)
+#
+#     compressed_image = compress_image(copy.copy(temp.s_img_cur.img_data))
+#     s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image, temp.s_img_cur.gray_levels)
+#     temp.s_thumb_hist_arr.append(s_thumbnail_img)
+#
+#     temp.s_undo_depth = len(temp.s_img_last_arr)-1
+#     print('undo depth', temp.s_undo_depth)
+
+def save_state(temp):
+
     if len(temp.s_img_last_arr)>=temp.s_max_undo_step:
         temp.s_img_last_arr.pop(0)
         temp.s_thumb_hist_arr.pop(0)
@@ -139,6 +165,8 @@ class TempData:
         self.s_last_cal_func = ""
         self.s_labels = 0
         self.s_just_recovered = False
+        self.user_id = ''
+        self.image_id = ''
 
     def update_s_img_cur(self, func_name, img_data, gray_levels=''):
         self.s_img_cur.func_name = func_name

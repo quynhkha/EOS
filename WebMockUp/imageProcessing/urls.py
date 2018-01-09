@@ -13,8 +13,13 @@ urlpatterns = [
     # url(r'^your_name/$', views.get_name, name ='get_name'),
     # url(r'^post/new/$', views.post_new, name ='post_new'),
     # url(r'^success/$', views.success_message, name='success_message'),
-    url(r'^base64/$', views.show_base64, name='show_base64'),
+    url(r'^register/$', views.register, name='register'),
+    url(r'^login_user/$', views.login_user, name='login_user'),
+    url(r'^logout_user/$', views.logout_user, name='logout_user'),
+    url(r'^$', views.index, name='index'),
     url(r'^upload/$', views.upload_image, name='upload'),
+    url(r'^base64/$', views.show_base64, name='show_base64'),
+    url(r'^processing_page/(?P<image_id>[0-9]+)/$', views.processing_page, name='processing_page'),
     # url(r'^upload/$', ImageProcessingView.as_view()),
     url(r'^lower-thresholding/(?P<temp_idx>[0-9]+)/$', views.lower_thresholding, name='lower-thesholding'),
     url(r'^upper-thresholding/(?P<temp_idx>[0-9]+)/$', views.upper_thresholding, name='upper-thesholding'),
@@ -33,9 +38,6 @@ urlpatterns = [
     url(r'^dilation/(?P<temp_idx>[0-9]+)/$', views.do_opening, name='dilation'),
     url(r'^update-mask/(?P<temp_idx>[0-9]+)/$', views.update_mask, name='update-mask'),
     url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
-    url(r'^register/$', views.register, name='register'),
-    url(r'^login_user/$', views.login_user, name='login_user'),
-    url(r'^logout_user/$', views.logout_user, name='logout_user'),
-    url(r'^$', views.index, name='index'),
+
 
 ]
