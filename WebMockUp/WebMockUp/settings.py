@@ -26,7 +26,7 @@ SECRET_KEY = '!(fia^9g*f97$b^cmvzuli1!h57==(-b@$&6j1k^fdn04&(o-6'
 DEBUG = True
 
 ALLOWED_HOSTS = ['155.69.160.73', 'localhost', '10.27.66.6', '127.0.0.1', '10.27.87.176']
-
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 

@@ -51,13 +51,14 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
 
+
         if user is not None:
             if user.is_active:
                 login(request, user)
-                # update session info
-                request.session['user_id'] = user.id
-                return render(request, 'imageProcessing/index.html', {'user': user})
 
+
+                # return render(request, 'imageProcessing/index.html', {'user': user})
+                return redirect('imageProcessing:index')
             else:
                 return render(request, 'imageProcessing/error.html', {'error_message': "Your account has been deactivated"})
         else:
@@ -74,7 +75,7 @@ def logout_user(request):
             if temp.user_id == request.session['user_id'] and temp.image_id == request.session['image_id']:
                 temp_data_arr.remove(temp)
 
-    print(temp_data_arr)
+    print('temp_data_arr', temp_data_arr)
 
     # Flush session info
     try:
@@ -97,6 +98,8 @@ def index(request):
         return render(request, 'imageProcessing/login.html')
     else:
         images = UploadedImage.objects.filter(user=request.user)
+        # update session info
+        request.session['user_id'] = request.user.id
         # print(images)
         return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
 
