@@ -1,7 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-WebMockUp/__pycache__/
-ImageProcessing/__pycache__/
+WebMockUp/__pycache__/*
+WebMockUp/imageProcessing/__pycache__/*
+ImageProcessing/__pycache__/*
 *.py[cod]
 *$py.class
 *.pyc
@@ -18,5 +19,5 @@ WebMockUp/.idea/*
 ImageProcessing/.idea/*
 
 # Image 
-WebMockUp/media/documents/*
+WebMockUp/media/*
 ImageProcessing/data/*

@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^dilation/(?P<temp_idx>[0-9]+)/$', views.do_opening, name='dilation'),
     url(r'^update-mask/(?P<temp_idx>[0-9]+)/$', views.update_mask, name='update-mask'),
     url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
+    url(r'^save-processed/(?P<temp_idx>[0-9]+)/$', views.save_processed, name='save-processed'),
 
 
 ]

@@ -503,6 +503,11 @@ $("#btn_undo").click(function (e) {
     do_ajax_get(e, '/undo/');
 });
 
+$("#btn_save").click(function(e){
+    do_ajax_get(e, '/save-processed/');
+    console.log('processed');
+});
+
 
 $("#btn_histogram").click(function (e) {
     e.preventDefault();

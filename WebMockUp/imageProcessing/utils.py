@@ -60,8 +60,8 @@ def thumbnail_plus_img_json(state_image, state_thumbnail_arr):
                  'thumbnail_arr': thumbnail_arr_base64, 'thumb_func_name': thumbnail_arr_func_name}
     return json_data
 
-def absolute_uploaded_file_dir(filename):
-    return str(BASE_DIR)+'/media/documents/'+filename
+def absolute_file_dir(filename, target_url):
+    return str(BASE_DIR) + target_url + filename
 
 # def absolute_uploaded_file_dir(url):
 #      return str(BASE_DIR)+url
@@ -81,7 +81,7 @@ def compress_image(image):
 
 
 def new_temp_data(temp_data_arr, user_id, image_id):
-    # try to get the temp object of same user_id and image_id
+    # create a fresh temp object with userid and imageid
     tempData = get_temp_data(temp_data_arr, user_id, image_id)
     if tempData is not None:
         temp_data_arr.remove(tempData)

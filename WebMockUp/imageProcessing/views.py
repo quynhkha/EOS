@@ -13,7 +13,11 @@ ps_func = ProcessingFunction()
 temp_data_arr = []
 temp_idx = 0
 
+IMAGE_URL = '/media/images/'
+THUMBNAIL_URL = '/media/thumbnails/'
+CRYSTAL_MASK_URL = '/media/masks/'
 
+# FIXME: deprecated
 # for testing purpose only
 def show_base64(request):
     opencv_img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png')
@@ -118,20 +122,14 @@ def upload_image(request):
             imageDB.save()
 
 
-            image_file_dir = absolute_uploaded_file_dir(file.name)
+            image_file_dir = absolute_file_dir(file.name, IMAGE_URL)
             print ("image file dir", image_file_dir)
             thumbnail_data = compress_image(cv2.imread(image_file_dir))
-            # thumbnail_data = cv2.imread(image_file_dir)
-            thumbnail_name = image_file_dir + "_thumbnail.png"
-            cv2.imwrite(thumbnail_name, thumbnail_data)
-            imageDB.thumbnail_url = '/media/documents/'+file.name+"_thumbnail.png"
+
+            thumbnail_name = file.name + "_thumbnail.png"
+            cv2.imwrite(absolute_file_dir(thumbnail_name, THUMBNAIL_URL), thumbnail_data)
+            imageDB.thumbnail_url = THUMBNAIL_URL + thumbnail_name
             imageDB.save()
-            # imageDB.thumbnail.save(thumbnail_name, ContentFile(thumbnail_data))
-
-            # update session info
-            # request.session['image_id'] = imageDB.id
-
-            # global temp_idx
 
             return redirect('imageProcessing:processing_page', image_id=imageDB.id)
             #return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
@@ -149,7 +147,7 @@ def processing_page(request, image_id):
     temp = new_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
 
     image = UploadedImage.objects.get(pk=request.session['image_id'])
-    image_file_dir = absolute_uploaded_file_dir(image.filename)
+    image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
     temp.s_img_ori.img_data = cv2.imread(image_file_dir)
     temp.s_img_ori.func_name = 'upload'
     temp.s_img_cur = copy.copy(temp.s_img_ori)
@@ -500,3 +498,24 @@ def noise_removal(request, temp_idx=0):
 
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
+
+
+@csrf_exempt
+def save_processed(request, temp_idx=0):
+    # TODO: check whether is a mask
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+
+    image = UploadedImage.objects.get(pk=request.session['image_id'])
+    # original image name (extract name from path, ex: document/imageName)+ current time
+    _, image_name = image.document.name.split('/', 1)
+    mask_dir= absolute_file_dir(image_name, CRYSTAL_MASK_URL) + str(int(time.time())) + "_mask.png"
+    print(mask_dir)
+    cv2.imwrite(mask_dir, temp.s_mask_cur.img_data)
+    crystalMask = CrystalMask.objects.create(image = image, mask_dir = mask_dir)
+    crystalMask.save()
+
+    return JsonResponse({'mask_dir': mask_dir}, safe=False)
+
+
+# TODO: delete images, thumbnails, masks

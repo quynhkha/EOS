@@ -22,7 +22,7 @@ class NumberInput(models.Model):
 class UploadedImage(models.Model):
     user = models.ForeignKey(User, default=1)
     description = models.CharField(max_length=255, blank=True)
-    document = models.ImageField(upload_to="documents/")
+    document = models.ImageField(upload_to="images/")
     filename = models.CharField(max_length=255, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     thumbnail_url = models.CharField(max_length=255, blank=True)
@@ -31,3 +31,11 @@ class UploadedImage(models.Model):
     # def __str__(self):
     #    return self.document
 
+class CrystalMask(models.Model):
+    image = models.ForeignKey(UploadedImage, default=1)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    mask_dir = models.CharField(max_length=255, blank=True)
+
+    @classmethod
+    def create(cls, image, mask_dir):
+        return cls(image=image, mask_dir=mask_dir)
