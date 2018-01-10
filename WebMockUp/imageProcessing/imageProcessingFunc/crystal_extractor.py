@@ -386,3 +386,32 @@ class ProcessingFunction:
         return image_copy, current_mask
 
 
+    def save_crystals_to_file(self, name_prefix, dir, original_image, image_mask):
+        mask = copy.copy(image_mask)
+        mask = self.seg.two_channel_grayscale(mask)
+        # Perform operation on binary image
+        output = cv2.connectedComponentsWithStats(mask, labels=None, connectivity=8,
+                                                  ltype=cv2.CV_32S)
+        # Get the results
+        num_labels = output[0]
+
+        labels = output[1]
+        # stat matrix
+        stats = output[2]
+        # centroid matrix
+        centroids = output[3]
+
+        fg_stats = stats[1:]  # index 0 = background
+        file_infos = []
+        for i in range(0, len(fg_stats)):
+            stat = fg_stats[i]
+            x = stat[0]
+            y = stat[1]
+            width = stat[2]
+            height = stat[3]
+            crystal = original_image[y:y+height, x:x+width]
+            file_name = name_prefix+"_"+str(i)+'.png'
+            file_dir = dir+file_name
+            file_infos.append((file_dir, file_name))
+            cv2.imwrite(file_dir, crystal)
+        return file_infos

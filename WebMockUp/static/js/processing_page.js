@@ -20,7 +20,7 @@ function on_click_thumbnail(thumbnail_id) {
 }
 
 /**************** UTIL FUNCTIONS ******************/
-function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
+function do_ajax_post(e, domNameArr, inputNameArr, targetUrl, option){
     e.preventDefault();
     // var json_data ="{"+inputName+":"+ $("#"+domName+"").val()+"}";
     var json_data = {};
@@ -56,7 +56,7 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl) {
     });
 }
 
-function do_ajax_post_val_only(valArr, inputNameArr, targetUrl) {
+function do_ajax_post_val_only(valArr, inputNameArr, targetUrl, option) {
     // e.preventDefault();
 
     var json_data = {};
@@ -66,6 +66,7 @@ function do_ajax_post_val_only(valArr, inputNameArr, targetUrl) {
         json_data[inputName] = val;
     }
     var URL = targetUrl + get_temp_index() + "/";
+
     $.ajax({
         url: URL,
         type: "POST",
@@ -91,8 +92,9 @@ function do_ajax_post_val_only(valArr, inputNameArr, targetUrl) {
     });
 }
 
-function do_ajax_get(e, targetUrl) {
+function do_ajax_get(e, targetUrl, option) {
     e.preventDefault();
+
     var URL = targetUrl + get_temp_index() + "/";
     $.ajax({
         url: URL,
@@ -109,6 +111,7 @@ function do_ajax_get(e, targetUrl) {
             update_clickable(data);
             disp_hist_thumbnail(data);
             update_gray_levels(data);
+
         },
 
         error: function (data) {
@@ -376,56 +379,56 @@ function morphCtrlMapping(input){
 
 /******************* DOM EVENT HANDLING *********************/
 $("#btn_laplacian").click(function (e) {
-    do_ajax_get(e, '/laplacian/');
+    do_ajax_get(e, '/laplacian/', {'update_image': true});
 });
 
 
 $("#slider-lower-thresh").change(function (e) {
     disp_slider_val('slider-val-lower-thresh', 'slider-lower-thresh');
-    do_ajax_post(e, ['slider-lower-thresh'], ['input'], '/lower-thresholding/');
+    do_ajax_post(e, ['slider-lower-thresh'], ['input'], '/lower-thresholding/', {'update_image': true});
 });
 
 $("#slider-upper-thresh").change(function (e) {
     disp_slider_val('slider-val-upper-thresh', 'slider-upper-thresh');
-    do_ajax_post(e, ['slider-upper-thresh'], ['input'], '/upper-thresholding/');
+    do_ajax_post(e, ['slider-upper-thresh'], ['input'], '/upper-thresholding/', {'update_image': true});
 });
 
 
 $("#slider-kmeans").click(function (e) {
     disp_slider_val('slider-val-kmeans', 'slider-kmeans');
-    do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/');
+    do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/', {'update_image': true});
 });
 
 $("#btn_extract_crystal_mask").click(function (e) {
-    do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/');
+    do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/', {'update_image': true});
 });
 
 $("#slider-opening").click(function (e) {
     input_val = disp_slider_val('slider-val-opening', 'slider-opening');
     kernel_iter_val = morphCtrlMapping(input_val);
     console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/opening/');
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/opening/', {'update_image': true});
 });
 
 $("#slider-closing").click(function (e) {
     input_val = disp_slider_val('slider-val-closing', 'slider-closing');
     kernel_iter_val = morphCtrlMapping(input_val);
     console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/closing/');
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/closing/', {'update_image': true});
 });
 
 $("#slider-erosion").click(function (e) {
     input_val = disp_slider_val('slider-val-erosion', 'slider-erosion');
     kernel_iter_val = morphCtrlMapping(input_val);
     console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/erosion/');
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/erosion/', {'update_image': true});
 });
 
 $("#slider-dilation").click(function (e) {
     input_val = disp_slider_val('slider-val-dilation', 'slider-dilation');
     kernel_iter_val = morphCtrlMapping(input_val);
     console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/dilation/');
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/dilation/', {'update_image': true});
 });
 
 // $("#slider-opening-kernel").change(function (e) {
@@ -475,14 +478,14 @@ $("#slider-dilation").click(function (e) {
 //     do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 // });
 $("#btn_noise_removal").click(function(e){
-    do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/')
+    do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/', {'update_image': true})
 })
 $("#btn_all_crystal").click(function (e) {
-    do_ajax_get(e, '/all-crystal/');
+    do_ajax_get(e, '/all-crystal/', {'update_image': true});
 });
 
 $("#btn_extract_top_crystal").click(function (e) {
-    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/');
+    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/', {'update_image': true});
 });
 
 
@@ -492,20 +495,33 @@ $("#btn_extract_top_crystal").click(function (e) {
 
 
 $("#btn_reset").click(function (e) {
-    do_ajax_get(e, '/reset/');
+    do_ajax_get(e, '/reset/', {'update_image': true});
 });
 
 $("#btn_base64").click(function (e) {
-    do_ajax_get(e, '/base64/');
+    do_ajax_get(e, '/base64/', {'update_image': true});
 });
 
 $("#btn_undo").click(function (e) {
-    do_ajax_get(e, '/undo/');
+    do_ajax_get(e, '/undo/', {'update_image': true});
 });
 
-$("#btn_save").click(function(e){
-    do_ajax_get(e, '/save-processed/');
-    console.log('processed');
+$("#btn_save_crystal").click(function(e){
+   e.preventDefault();
+   json_data = {'name': $("#crystal_name").val()};
+    $.ajax({
+        type: "POST",
+        url: '/save-processed/'+get_temp_index() + "/",
+        data: json_data,
+        success: function (data) {
+            alert("Image saved sucessfully!");
+            console.log(data);
+        },
+        error: function (data) {
+            console.log(data);
+            alert('error');
+        }
+    });
 });
 
 

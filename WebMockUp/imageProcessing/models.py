@@ -33,6 +33,7 @@ class UploadedImage(models.Model):
 
 class CrystalMask(models.Model):
     image = models.ForeignKey(UploadedImage, default=1)
+    name = models.CharField(max_length=255, default="no name")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     mask_dir = models.CharField(max_length=255, blank=True)
 
