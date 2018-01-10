@@ -5,26 +5,30 @@
         <div class="row">
             <div class="col-sm-12">
                 <h3>Welcome, {{ user.username }}!</h3>
+                <h4>Choose an image from my images or <a href="{% url 'imageProcessing:upload' %}">Upload an image</a>
+                </h4>
                 {#                    {%  include "imageProcessing/upload_image.html" %}#}
-                <h3><a href="{% url 'imageProcessing:upload' %}">Upload an image</a></h3>
-            </div>
-            {% if images %}
-                {% for image in images %}
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="thumbnail">
-                            <a href="{% url 'imageProcessing:processing_page' image.id %}">
-                                <img src='{{ image.thumbnail_url }}' class='img-responsive'>
-                            </a>
 
-                            <div class="caption">
-                                <h4>{{ image.filename }}</h4>
+
+                {% if images %}
+                    <h3 class="text-center">My images</h3>
+                    {% for image in images %}
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="thumbnail">
+                                <a href="{% url 'imageProcessing:processing_page' image.id %}">
+                                    <img src='{{ image.thumbnail_url }}' class='img-responsive' width="100%">
+                                </a>
+
+                                <h5><strong>File name: </strong>{{ image.filename }}</h5>
+                                <h5><strong>Date uploaded: </strong> {{ image.uploaded_at }}</h5>
                             </div>
                         </div>
-                    </div>
 
-                {% endfor %}
-            {% endif %}
+                    {% endfor %}
+                    {% else %}
+                      <h3 class="text-center">No image found</h3>
+                {% endif %}
+            </div>
         </div>
-    </div>
     </div>
 {% endblock %}

@@ -390,7 +390,7 @@ class ProcessingFunction:
         mask = copy.copy(image_mask)
         mask = self.seg.two_channel_grayscale(mask)
         # Perform operation on binary image
-        output = cv2.connectedComponentsWithStats(mask, labels=None, connectivity=8,
+        output = cv2.connectedComponentsWithStats(mask,
                                                   ltype=cv2.CV_32S)
         # Get the results
         num_labels = output[0]
@@ -403,13 +403,25 @@ class ProcessingFunction:
 
         fg_stats = stats[1:]  # index 0 = background
         file_infos = []
+        #TODO: improve efficiency
         for i in range(0, len(fg_stats)):
             stat = fg_stats[i]
             x = stat[0]
             y = stat[1]
             width = stat[2]
             height = stat[3]
-            crystal = original_image[y:y+height, x:x+width]
+
+            # Since here we skip the index 0 of background image, we need plus 1 to match the index here with the index of
+            # the original labels array
+            crystal_index = i+1
+            crystal_mask = np.zeros(original_image.shape, np.uint8)
+
+            crystal_mask [labels==crystal_index] = 255
+            image_w_only_crystal = copy.copy(original_image)
+            image_w_only_crystal[crystal_mask!=255] = 255
+
+            crystal = image_w_only_crystal[y:y+height, x:x+width]
+
             file_name = name_prefix+"_"+str(i)+'.png'
             file_dir = dir+file_name
             file_infos.append((file_dir, file_name))

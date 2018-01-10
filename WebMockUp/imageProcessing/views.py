@@ -77,11 +77,12 @@ def logout_user(request):
 
     # TODO: clear user's temp data
     global temp_data_arr
-    if request.session['image_id'] is not None:
+    try:
         for temp in temp_data_arr:
             if temp.user_id == request.session['user_id'] and temp.image_id == request.session['image_id']:
                 temp_data_arr.remove(temp)
-
+    except KeyError:
+        pass
     print('temp_data_arr', temp_data_arr)
 
     # Flush session info
@@ -566,8 +567,9 @@ def download_crystal(request, mask_id=0):
     image = mask.image
     image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
     image_cv = cv2.imread(image_file_dir)
-
+    # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
     file_infos = ps_func.save_crystals_to_file(mask.name, '/home/long/EOSImages/', image_cv, mask_cv)
+
     zf = zipfile.ZipFile('/home/long/EOSImages.zip', "w")
     for (file_dir, file_name) in file_infos:
         zf.write(file_dir, file_name)
