@@ -1,6 +1,7 @@
 import zipfile
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
@@ -113,6 +114,7 @@ def index(request):
 
 
 @csrf_exempt
+@login_required
 def upload_image(request):
     if request.method == 'POST':
         imageForm = ImageForm(request.POST, request.FILES)
