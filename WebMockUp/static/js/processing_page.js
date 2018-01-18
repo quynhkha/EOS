@@ -479,7 +479,16 @@ $("#slider-dilation").click(function (e) {
 // });
 $("#btn_noise_removal").click(function(e){
     do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/', {'update_image': true})
-})
+});
+
+// $("#btn_fill_hole").click(function (e) {
+//     do_ajax_post(e, ['fill_lo', 'fill_hi', 'fill_conn', 'fill_fixed_range'],['lo','hi', 'conn', 'fixed_range'], '/fill-holes/', {'update_image': true});
+// });
+
+$("#btn_fill_hole").click(function (e) {
+     do_ajax_get(e, '/fill-holes/', {'update_image': true});
+ });
+
 $("#btn_all_crystal").click(function (e) {
     do_ajax_get(e, '/all-crystal/', {'update_image': true});
 });

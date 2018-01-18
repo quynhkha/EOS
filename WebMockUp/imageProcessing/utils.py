@@ -148,6 +148,10 @@ def reset_current_image(func_name, temp_idx, temp_data_arr):
     temp.s_undo_depth = len(temp.s_img_last_arr) - 1
     print('undo depth', temp.s_undo_depth)
 
+def delete_file(filedir):
+    if os.path.isfile(filedir):
+        os.remove(filedir)
+
 # from django.contrib.auth.models import User
 # users = User.objects.all()
 # print(users.values_list('password', flat=True))

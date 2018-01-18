@@ -303,6 +303,32 @@ def show_all_crystal(request, temp_idx=0):
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
+@csrf_exempt
+def fill_holes(request, temp_idx=0):
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    #
+    # lo = int(request.POST.get('lo'))
+    # hi = int(request.POST.get('lo'))
+    # conn = int(request.POST.get('conn'))
+    # fixed_range = int(request.POST.get('fixed_range'))
+    #
+    # print('lo, hi, conn, fixed range', lo, hi, conn, fixed_range)
+    # flags = conn
+    # if fixed_range:
+    #     flags |= cv2.FLOODFILL_FIXED_RANGE
+    #
+    # mask_data, _= ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data, lo, hi, flags)
+    mask_data, _ = ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
+    temp.update_s_img_cur('fill holes', mask_data)
+    temp.s_mask_cur.img_data = mask_data
+    temp.s_mask_cur.func_name = 'fill holes'
+
+    # json_data, _ = cv_to_json(s_img_cur)
+    save_state(temp)
+
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+    return JsonResponse(json_data, safe=False)
 
 @csrf_exempt
 def show_top_area_crystal(request, temp_idx=0):
@@ -582,4 +608,18 @@ def download_crystal(request, mask_id=0):
     response['Content-Disposition'] = 'attachment; filename="%s"' % 'EOSImages.zip'
     return response
 
+@csrf_exempt
+def delete_image(request, image_id):
+    image_id = int(image_id)
+    image = UploadedImage.objects.get(pk=image_id)
 
+    # delete image from disk
+    delete_file(image.document.path)
+    # delete thumb from disk
+    delete_file(str(BASE_DIR)+image.thumbnail_url)
+    # delete from db
+    image.delete()
+
+    images = UploadedImage.objects.filter(user=request.user)
+
+    return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})

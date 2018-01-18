@@ -427,3 +427,56 @@ class ProcessingFunction:
             file_infos.append((file_dir, file_name))
             cv2.imwrite(file_dir, crystal)
         return file_infos
+
+    # def fill_holes(self, original_image, image_mask, lo, hi, flags):
+    #     img_floodfill = copy.copy(image_mask)
+    #     h, w = image_mask.shape[:2]
+    #     mask = np.zeros((h+2, w+2), np.uint8)
+    #
+    #     #floodfill
+    #     #cv2.floodFill(img_floodfill, mask, (0, 0), 255, (lo,)*3, (hi,)*3, flags)
+    #     cv2.floodFill(img_floodfill, mask, (0, 0), 255, (0, 0, 0, 0), (0, 0, 0, 0), flags)
+    #
+    #     #invert the floodfill image
+    #     img_floodfill_inv = cv2.bitwise_not(img_floodfill)
+    #
+    #     #combine to get foreground
+    #     filled_mask = image_mask | img_floodfill_inv
+    #
+    #     print ('floodfill original and modified shape', image_mask.shape, filled_mask.shape)
+    #     #remove extra rol and col
+    #
+    #
+    #     #TODO: refactor this to a function
+    #     filled_image = copy.copy(original_image)
+    #     filled_image[filled_mask == 0] = 255
+    #
+    #     return filled_mask, filled_image
+
+
+    def fill_holes(self, original_image, image_mask):
+        img_floodfill = copy.copy(image_mask)
+        h, w = image_mask.shape[:2]
+        mask = np.zeros((h+2, w+2), np.uint8)
+
+        #floodfill
+        #cv2.floodFill(img_floodfill, mask, (0, 0), 255, (lo,)*3, (hi,)*3, flags)
+        cv2.floodFill(img_floodfill, mask, (0, 0), 255)
+
+        #invert the floodfill image
+        img_floodfill_inv = cv2.bitwise_not(img_floodfill)
+
+        #combine to get foreground
+        filled_mask = image_mask | img_floodfill_inv
+
+        print ('floodfill original and modified shape', image_mask.shape, filled_mask.shape)
+        #remove extra rol and col
+
+
+        #TODO: refactor this to a function
+        filled_image = copy.copy(original_image)
+        filled_image[filled_mask == 0] = 255
+
+        return filled_mask, filled_image
+
+

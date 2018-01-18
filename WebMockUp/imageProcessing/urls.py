@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^kmeans/(?P<temp_idx>[0-9]+)/$', views.kmeans, name='kmeans'),
     url(r'^laplacian/(?P<temp_idx>[0-9]+)/$', views.laplacian, name='laplacian'),
     url(r'^undo/(?P<temp_idx>[0-9]+)/$', views.undo_last_step, name="undo"),
+    url(r'^fill-holes/(?P<temp_idx>[0-9]+)/$', views.fill_holes, name="fill-holes"),
+
     url(r'^extract-crystal-mask/(?P<temp_idx>[0-9]+)/$', views.extract_crystal_mask, name="extract-crystal-mask"),
     url(r'^all-crystal/(?P<temp_idx>[0-9]+)/$', views.show_all_crystal, name='show-all-crystal'),
     url(r'^top-crystal/(?P<temp_idx>[0-9]+)/$', views.show_top_area_crystal, name='show-max-area-crystal'),
@@ -43,6 +45,8 @@ urlpatterns = [
     url(r'^update-mask/(?P<temp_idx>[0-9]+)/$', views.update_mask, name='update-mask'),
     url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
     url(r'^save-processed/(?P<temp_idx>[0-9]+)/$', views.save_processed, name='save-processed'),
+    url(r'^delete-image/(?P<image_id>[0-9]+)/$', views.delete_image, name='delete-image'),
+
 
 
 ]
