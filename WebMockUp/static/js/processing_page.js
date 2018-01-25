@@ -369,6 +369,26 @@ function morphCtrlMapping(input){
             kernel =5;
             iter = 3;
             break;
+        case 11:
+            kernel = 6;
+            iter = 3;
+            break;
+        case 12:
+            kernel = 7;
+            iter = 3;
+            break;
+        case 13:
+            kernel = 5;
+            iter =4;
+            break;
+        case 14:
+            kernel = 6;
+            iter = 4;
+            break;
+        case 15:
+            kernel = 7;
+            iter = 4;
+            break;
         default:
             kernel = 1;
             iter = 1;

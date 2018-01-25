@@ -319,7 +319,9 @@ def fill_holes(request, temp_idx=0):
     #     flags |= cv2.FLOODFILL_FIXED_RANGE
     #
     # mask_data, _= ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data, lo, hi, flags)
-    mask_data, _ = ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
+
+    # mask_data, _ = ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
+    mask_data = ps_func.imfill(temp.s_img_cur.img_data)
     temp.update_s_img_cur('fill holes', mask_data)
     temp.s_mask_cur.img_data = mask_data
     temp.s_mask_cur.func_name = 'fill holes'
@@ -378,6 +380,8 @@ def set_image_from_thumbnail(request, temp_idx=0):
         temp.s_undo_depth = id
         temp.s_just_recovered = True
         print("Extract img number", input)
+
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
 
         return JsonResponse(json_data, safe=False)
@@ -411,6 +415,7 @@ def do_opening(request, temp_idx=0):
         temp.update_s_img_cur('opening', img_data)
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -435,6 +440,7 @@ def do_closing(request, temp_idx=0):
         temp.update_s_img_cur('closing', img_data)
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -458,6 +464,7 @@ def do_erosion(request, temp_idx=0):
         temp.update_s_img_cur('erosion', img_data)
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
@@ -480,6 +487,7 @@ def do_dilation(request, temp_idx=0):
         temp.update_s_img_cur('dilation', img_data)
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
+        save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
     else:
