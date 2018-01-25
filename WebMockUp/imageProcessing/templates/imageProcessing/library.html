@@ -115,9 +115,9 @@
 
 
                                                 <td>
-                                                    <form action="#" method="post" style="display: inline;">
+                                                    <form action="{% url 'imageProcessing:delete-mask' mask.id %}" method="post" style="display: inline;">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="song_id" value="{{ song.id }}"/>
+                                                        <input type="hidden" name="mask_id" value="{{ mask.id }}"/>
                                                         <button type="submit" class="btn btn-danger btn-xs">
                                                             <span class="glyphicon glyphicon-remove"></span>&nbsp;
                                                             Delete

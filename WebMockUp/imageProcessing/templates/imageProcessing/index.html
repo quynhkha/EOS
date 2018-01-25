@@ -21,6 +21,14 @@
 
                                 <h5><strong>File name: </strong>{{ image.filename }}</h5>
                                 <h5><strong>Date uploaded: </strong> {{ image.uploaded_at }}</h5>
+
+                                <form action = "{% url 'imageProcessing:delete-image' image.id %}">
+                                    {% csrf_token %}
+                                <input type="hidden" name="image_id" value="{{ image.id }}" />
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-trash"></span> Delete image
+                                </button>
+                                </form>
                             </div>
                         </div>
 

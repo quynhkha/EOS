@@ -631,3 +631,14 @@ def delete_image(request, image_id):
     images = UploadedImage.objects.filter(user=request.user)
 
     return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
+
+@csrf_exempt
+def delete_mask(request, mask_id):
+    mask_id = int(mask_id)
+    mask = CrystalMask.objects.get(pk=mask_id)
+    mask.delete()
+
+    images = UploadedImage.objects.filter(user=request.user)
+
+    return render(request, 'imageProcessing/library.html', {'user': request.user, 'images': images})
+

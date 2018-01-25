@@ -596,6 +596,7 @@
 {#-->#}
 
 {% block javascript %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     {% load staticfiles %}
     <script src="{% static 'js/processing_page.js' %}"></script>
     <script>initPaint(document.getElementById('canvas-wrapper'));</script>
