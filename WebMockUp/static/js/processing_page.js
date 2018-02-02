@@ -9,11 +9,48 @@ function disp_hist_thumbnail(data) {
             id: thumbnail_id,
             class: "img-fluid centered thumbnail",
             src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
-            onclick: "on_click_thumbnail(id)"
+            onmouseover: "on_hover_thumbnail(id)",
+            onclick: "on_click_thumbnail(id)",
+
+
         }));
+
     }
 }
 
+function on_hover_thumbnail(thumbnail_id){
+    id = thumbnail_id.split("_")[1];
+    var URL = "/large-thumbnail/" + id + "/";
+    var large_thumbnail_src = '';
+    var image = new Image();
+    $.ajax({
+        url: URL,
+        type: "GET",
+
+        beforeSend: function () {
+            document.body.style.cursor = "wait";
+        },
+        complete: function () {
+            document.body.style.cursor = "default";
+        },
+        success: function (data) {
+                large_thumbnail_src = "data:image/jpeg;charset=utf-8;base64," + data['image_id'];
+                image.src = large_thumbnail_src;
+                image = imageToDataUri(image, 640, 480);
+        },
+
+        error: function (data) {
+            alert('error');
+        }
+
+    });
+
+
+        document.getElementById(thumbnail_id).setAttribute('data-zoom-image', image.src);
+        // document.getElementById(thumbnail_id).setAttribute('data-zoom-image','https://upload.wikimedia.org/wikipedia/commons/e/e0/Large_Scaled_Forest_Lizard.jpg');
+
+        $("#"+thumbnail_id).elevateZoom({constrainType:"height", constrainSize:2740});
+}
 function on_click_thumbnail(thumbnail_id) {
     console.log("thumbnail id: ", thumbnail_id);
     do_ajax_post_val_only([thumbnail_id], ['input'], '/img-from-thumbnail/');
@@ -120,6 +157,7 @@ function do_ajax_get(e, targetUrl, option) {
 
     });
 }
+
 
 function disp_slider_val(dispDom, sliderDom) {
     $("#" + dispDom + "").val($("#" + sliderDom + "").val());
@@ -451,6 +489,24 @@ $("#slider-dilation").click(function (e) {
     do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/dilation/', {'update_image': true});
 });
 
+$("#slider-morphgrad").click(function (e) {
+    input_val = disp_slider_val('slider-val-morphgrad', 'slider-morphgrad');
+    kernel_iter_val = morphCtrlMapping(input_val);
+    console.log (input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/morphgrad/', {'update_image': true});
+});
+$("#slider-tophat").click(function (e) {
+    input_val = disp_slider_val('slider-val-tophat', 'slider-tophat');
+    kernel_iter_val = morphCtrlMapping(input_val);
+    console.log (input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/tophat/', {'update_image': true});
+});
+$("#slider-blackhat").click(function (e) {
+    input_val = disp_slider_val('slider-val-blackhat', 'slider-blackhat');
+    kernel_iter_val = morphCtrlMapping(input_val);
+    console.log (input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/blackhat/', {'update_image': true});
+});
 // $("#slider-opening-kernel").change(function (e) {
 //     disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');
 //     do_ajax_post(e, ['slider-opening-kernel', 'slider-opening-iter'], ['kernel_size', 'num_of_iter'], '/opening/');
@@ -497,6 +553,14 @@ $("#slider-dilation").click(function (e) {
 //     disp_slider_val('slider-dilation-val-iter', 'slider-dilation-iter');
 //     do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 // });
+
+$("#btn_fourier").click(function(e){
+    do_ajax_get(e, '/fourier/', {'update_image': true})
+});
+
+$("#btn_backproj").click(function(e){
+    do_ajax_get(e, '/backproj/', {'update_image': true})
+});
 $("#btn_noise_removal").click(function(e){
     do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/', {'update_image': true})
 });

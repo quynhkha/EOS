@@ -42,10 +42,16 @@ urlpatterns = [
     url(r'^closing/(?P<temp_idx>[0-9]+)/$', views.do_closing, name='closing'),
     url(r'^erosion/(?P<temp_idx>[0-9]+)/$', views.do_erosion, name='erosion'),
     url(r'^dilation/(?P<temp_idx>[0-9]+)/$', views.do_opening, name='dilation'),
+    url(r'^morphgrad/(?P<temp_idx>[0-9]+)/$', views.do_morphgrad, name='morphgrad'),
+    url(r'^tophat/(?P<temp_idx>[0-9]+)/$', views.do_tophat, name='tophat'),
+    url(r'^blackhat/(?P<temp_idx>[0-9]+)/$', views.do_blackhat, name='blackhat'),
+
     url(r'^update-mask/(?P<temp_idx>[0-9]+)/$', views.update_mask, name='update-mask'),
     url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
     url(r'^save-processed/(?P<temp_idx>[0-9]+)/$', views.save_processed, name='save-processed'),
     url(r'^delete-image/(?P<image_id>[0-9]+)/$', views.delete_image, name='delete-image'),
     url(r'^delete-mask/(?P<mask_id>[0-9]+)/$', views.delete_mask, name='delete-mask'),
-
+    url(r'^fourier/(?P<temp_idx>[0-9]+)/$', views.do_fourier, name='fourier'),
+    url(r'^backproj/(?P<temp_idx>[0-9]+)/$', views.do_backproj, name='backproj'),
+    url(r'^large-thumbnail/(?P<thumbnail_id>[0-9]+)/$', views.large_thumbnail, name='large-thumbnail')
 ]

@@ -300,6 +300,7 @@ class ProcessingFunction:
         return image_copy
 
     def upper_thesholding(self, original_image, current_image, thresh_val):
+        thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
         image_copy = copy.copy(current_image)
         image_copy[image_2D > thresh_val] = 255
@@ -486,3 +487,70 @@ class ProcessingFunction:
         #what to improve here?
         cv2.drawContours(image_mask, contours, -1, (255, 255, 255), thickness=cv2.FILLED)
         return image_mask
+
+    def morph_gradient(self, image, kernel_size, num_of_iter):
+        return cv2.morphologyEx(image, cv2.MORPH_GRADIENT,
+                                kernel=np.ones((kernel_size, kernel_size), np.uint8), iterations=num_of_iter)
+
+    def top_hat(self, image, kernel_size, num_of_iter):
+        return cv2.morphologyEx(image, cv2.MORPH_TOPHAT,
+                                kernel=np.ones((kernel_size, kernel_size), np.uint8), iterations=num_of_iter)
+
+    def black_hat(self, image, kernel_size, num_of_iter):
+        return cv2.morphologyEx(image, cv2.MORPH_BLACKHAT,
+                                kernel=np.ones((kernel_size, kernel_size), np.uint8), iterations=num_of_iter)
+
+    def morph_ellipse(self, image, kernel_size, num_of_iter):
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+        return kernel
+
+    def fourier(self, image):
+        dft = cv2.dft(np.float32(image), flags = cv2.DFT_COMPLEX_OUTPUT)
+        dft_shift = np.fft.fftshift(dft)
+
+        magnitude_spectrum = 20*np.log(cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
+        rows, cols = image.shape
+        crow, ccol = rows / 2, cols / 2
+
+        # create a mask first, center square is 1, remaining all zeros
+        mask = np.zeros((rows, cols, 2), np.uint8)
+        mask[crow - 30:crow + 30, ccol - 30:ccol + 30] = 1
+
+        # apply mask and inverse DFT
+        fshift = dft_shift * mask
+        f_ishift = np.fft.ifftshift(fshift)
+        img_back = cv2.idft(f_ishift)
+        img_back = cv2.magnitude(img_back[:, :, 0], img_back[:, :, 1])
+        return img_back
+
+    def back_projection(self, image, roi_image):
+        roi = np.zeros(image.shape, np.uint8)
+        roi[100: 500, 100: 500, :] = roi_image[100:500, 100:500, :]
+        print(roi.shape)
+        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+        hsvt = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+
+        # calc roi hist
+        roihist = cv2.calcHist([hsv], [0, 1], None, [180, 256], [0,180, 0, 256])
+
+
+        # normalize histogram and backproj
+
+        cv2.normalize(roihist, roihist, 0,255, cv2.NORM_MINMAX)
+        dst = cv2.calcBackProject([hsvt],[0,1], roihist, [0,180, 0, 256],1 )
+
+        # Now convolute with circular disc
+        disc = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        cv2.filter2D(dst, -1, disc, dst)
+
+        # threshold and binary AND
+        ret, thresh = cv2.threshold(dst, 50, 255, 0)
+        thresh = cv2.merge((thresh, thresh, thresh))
+        res = cv2.bitwise_and(image, thresh)
+
+        res = np.vstack((image, thresh, res))
+
+        return res
+
+

@@ -43,6 +43,7 @@ def register(request):
         # return User object it credentials are correct
         user = authenticate(username=username, password = password)
 
+        return render(request, 'imageProcessing/login.html')
         # if user is not None:
         #     if user.is_active:
 
@@ -158,10 +159,12 @@ def processing_page(request, image_id):
     temp.s_img_ori.func_name = 'upload'
     temp.s_img_cur = copy.copy(temp.s_img_ori)
 
-    save_state(temp)
+    # save_state(temp)
 
     # temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     _, image_data = cv_to_json(temp.s_img_ori)
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+    # return JsonResponse(json_data, safe=False)
     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index':0})
 
 
@@ -257,7 +260,7 @@ def undo_last_step(request, temp_idx=0):
     temp.s_img_cur = copy.copy(temp.s_img_last_arr[temp.s_undo_depth])
     print('undo depth', temp.s_undo_depth)
     # json_data, _ = cv_to_json(s_img_cur)
-    save_state(temp)
+    # save_state(temp)
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
     return JsonResponse(json_data, safe=False)
 
@@ -327,6 +330,28 @@ def fill_holes(request, temp_idx=0):
     temp.s_mask_cur.func_name = 'fill holes'
 
     # json_data, _ = cv_to_json(s_img_cur)
+    save_state(temp)
+
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def do_fourier(request, temp_idx=0):
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    img_data = ps_func.fourier(temp.s_img_cur.img_data)
+    temp.update_s_img_cur('fourier', img_data)
+    save_state(temp)
+
+    json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def do_backproj(request, temp_idx=0):
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    img_data = ps_func.back_projection(temp.s_img_cur.img_data, temp.s_img_cur.img_data)
+    temp.update_s_img_cur('back-projection', img_data)
     save_state(temp)
 
     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
@@ -494,6 +519,79 @@ def do_dilation(request, temp_idx=0):
         _, image_data = cv_to_json(temp.s_img_cur)
     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
 
+
+
+@csrf_exempt
+def do_morphgrad(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    #reset_current_image('do_dilation', temp_idx, temp_data_arr)
+
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+
+        img_data = ps_func.morph_gradient(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('morph-gradient', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
+
+        save_state(temp)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
+
+
+@csrf_exempt
+def do_tophat(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    #reset_current_image('do_dilation', temp_idx, temp_data_arr)
+
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+
+        img_data = ps_func.top_hat(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('tophat', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
+
+        save_state(temp)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
+
+
+
+@csrf_exempt
+def do_blackhat(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    #reset_current_image('do_dilation', temp_idx, temp_data_arr)
+
+    if request.method == 'POST':
+        kernel_size = int(request.POST.get('kernel_size'))
+        num_of_iter = int(request.POST.get('num_of_iter'))
+
+        img_data = ps_func.black_hat(temp.s_img_cur.img_data, kernel_size, num_of_iter)
+        temp.update_s_img_cur('blackhat', img_data)
+        temp.s_mask_cur = copy.copy(temp.s_img_cur)
+
+        save_state(temp)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
 @csrf_exempt
 def update_mask(request, temp_idx=0):
     if request.method == 'POST':
@@ -641,4 +739,18 @@ def delete_mask(request, mask_id):
     images = UploadedImage.objects.filter(user=request.user)
 
     return render(request, 'imageProcessing/library.html', {'user': request.user, 'images': images})
+
+@csrf_exempt
+def large_thumbnail(request, thumbnail_id):
+    # thumbnail_id = str(thumbnail_id)
+    # id = thumbnail_id.split('_')[1]
+    id = int(thumbnail_id)
+    print(id)
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    state_img = temp.s_img_last_arr[id]
+    print(state_img)
+    _, image_data = cv_to_json(state_img)
+
+    return JsonResponse({'image_data': image_data})
 

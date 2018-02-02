@@ -124,13 +124,24 @@ def save_state(temp):
     if len(temp.s_img_last_arr)>=temp.s_max_undo_step:
         temp.s_img_last_arr.pop(0)
         temp.s_thumb_hist_arr.pop(0)
+    #TODO: fix performance
+    #remove the top - original image
+    if (len(temp.s_img_last_arr)>0):
+        temp.s_img_last_arr.pop()
+        temp.s_thumb_hist_arr.pop()
 
     current_state_img = StateImage(temp.s_img_cur.func_name, temp.s_img_cur.img_data, temp.s_img_cur.gray_levels)
     temp.s_img_last_arr.append(current_state_img)
+    original_state_img = StateImage(temp.s_img_ori.func_name, temp.s_img_ori.img_data, temp.s_img_ori.gray_levels)
+    temp.s_img_last_arr.append(original_state_img)
 
     compressed_image = compress_image(copy.copy(temp.s_img_cur.img_data))
     s_thumbnail_img = StateImage(temp.s_img_cur.func_name, compressed_image, temp.s_img_cur.gray_levels)
     temp.s_thumb_hist_arr.append(s_thumbnail_img)
+
+    compressed_ori_image = compress_image(copy.copy(temp.s_img_ori.img_data))
+    s_thumbnail_ori_img = StateImage(temp.s_img_ori.func_name, compressed_ori_image, temp.s_img_ori.gray_levels)
+    temp.s_thumb_hist_arr.append(s_thumbnail_ori_img)
 
     temp.s_undo_depth = len(temp.s_img_last_arr)-1
     print('undo depth', temp.s_undo_depth)

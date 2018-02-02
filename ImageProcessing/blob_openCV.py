@@ -7,6 +7,7 @@ import cv2
 data_dir = '/home/long/PycharmProjects/EOS/ImageProcessing/data/'
 code_dir = '/home/long/PycharmProjects/EOS/ImageProcessing/'
 filename = os.path.join(data_dir, '1947-1_plg6.png')
+print(filename)
 
 # Read in image and convert to grayscale
 im1 = cv2.imread(filename)
