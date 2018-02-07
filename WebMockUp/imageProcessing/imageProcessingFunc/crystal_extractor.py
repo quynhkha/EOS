@@ -494,13 +494,15 @@ class ProcessingFunction:
 
         return filled_mask, filled_image
 
-    def imfill(self, image_mask):
+    def imfill(self, original_image, image_mask):
         edges = cv2.Canny(image_mask, 0, 255)
         #have tried almost all cv2.RETE setting
         im2, contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #simple is better than chain all
         #what to improve here?
         cv2.drawContours(image_mask, contours, -1, (255, 255, 255), thickness=cv2.FILLED)
-        return image_mask
+        filled_image = copy.copy(original_image)
+        filled_image[image_mask == 0] = 255
+        return image_mask, filled_image
 
     def morph_gradient(self, image, kernel_size, num_of_iter):
         return cv2.morphologyEx(image, cv2.MORPH_GRADIENT,

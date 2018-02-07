@@ -366,8 +366,8 @@ def fill_holes(request, temp_idx=0):
     # mask_data, _= ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data, lo, hi, flags)
 
     # mask_data, _ = ps_func.fill_holes(temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
-    mask_data = ps_func.imfill(temp.s_img_cur.img_data)
-    temp.update_s_img_cur('fill holes', mask_data)
+    mask_data, filled_image = ps_func.imfill(temp.s_img_ori.img_data, temp.s_img_cur.img_data)
+    temp.update_s_img_cur('fill holes', filled_image)
     temp.s_mask_cur.img_data = mask_data
     temp.s_mask_cur.func_name = 'fill holes'
 
