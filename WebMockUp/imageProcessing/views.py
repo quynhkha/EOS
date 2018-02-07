@@ -208,7 +208,7 @@ def kmeans(request, temp_idx=0):
                       {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def lower_thresholding(request, temp_idx=0):
+def lower_thresholding_white(request, temp_idx=0):
 
     global temp_data_arr
     temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
@@ -218,8 +218,8 @@ def lower_thresholding(request, temp_idx=0):
         input = request.POST.get('input')
         input = int(input)
 
-        img_data = ps_func.lower_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-        temp.update_s_img_cur('lower thresholding', img_data)
+        img_data = ps_func.lower_thesholding_white(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('lower thresholding white', img_data)
 
         save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
@@ -230,7 +230,7 @@ def lower_thresholding(request, temp_idx=0):
                       {'image_data': image_data, 'temp_index': temp_idx})
 
 @csrf_exempt
-def upper_thresholding(request, temp_idx=0):
+def upper_thresholding_white(request, temp_idx=0):
 
     global temp_data_arr
     #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
@@ -239,8 +239,50 @@ def upper_thresholding(request, temp_idx=0):
         input = request.POST.get('input')
         input = int(input)
 
-        img_data= ps_func.upper_thesholding(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-        temp.update_s_img_cur('upper thresholding', img_data)
+        img_data= ps_func.upper_thesholding_white(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('upper thresholding white', img_data)
+        #json_data, _ = cv_to_json(s_img_cur)
+        save_state(temp)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
+
+@csrf_exempt
+def lower_thresholding_black(request, temp_idx=0):
+
+    global temp_data_arr
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    #reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
+
+    if request.method == 'POST':
+        input = request.POST.get('input')
+        input = int(input)
+
+        img_data = ps_func.lower_thesholding_black(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('lower thresholding black', img_data)
+
+        save_state(temp)
+        json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
+        return JsonResponse(json_data, safe=False)
+    else:
+        _, image_data = cv_to_json(temp.s_img_cur)
+    return render(request, 'imageProcessing/processing_page.html',
+                      {'image_data': image_data, 'temp_index': temp_idx})
+
+@csrf_exempt
+def upper_thresholding_black(request, temp_idx=0):
+
+    global temp_data_arr
+    #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
+    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
+    if request.method == 'POST':
+        input = request.POST.get('input')
+        input = int(input)
+
+        img_data= ps_func.upper_thesholding_black(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
+        temp.update_s_img_cur('upper thresholding black', img_data)
         #json_data, _ = cv_to_json(s_img_cur)
         save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)

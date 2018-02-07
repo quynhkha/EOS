@@ -292,14 +292,28 @@ class ProcessingFunction:
     def laplacian_func(self, current_image):
         return self.seg.laplacian(current_image, output_dim=2)
 
-    def lower_thesholding(self, original_image, current_image, thresh_val):
+    def lower_thesholding_white(self, original_image, current_image, thresh_val):
         thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
         image_copy = copy.copy(current_image)
-        image_copy[image_2D<thresh_val] = 0
+        image_copy[image_2D<thresh_val] = 255
         return image_copy
 
-    def upper_thesholding(self, original_image, current_image, thresh_val):
+    def upper_thesholding_white(self, original_image, current_image, thresh_val):
+        thresh_val = int(thresh_val)
+        image_2D = self.seg.two_channel_grayscale(original_image)
+        image_copy = copy.copy(current_image)
+        image_copy[image_2D > thresh_val] = 255
+        return image_copy
+
+    def lower_thesholding_black(self, original_image, current_image, thresh_val):
+        thresh_val = int(thresh_val)
+        image_2D = self.seg.two_channel_grayscale(original_image)
+        image_copy = copy.copy(current_image)
+        image_copy[image_2D < thresh_val] = 0
+        return image_copy
+
+    def upper_thesholding_black(self, original_image, current_image, thresh_val):
         thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
         image_copy = copy.copy(current_image)

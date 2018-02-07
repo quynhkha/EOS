@@ -47,16 +47,7 @@
                 </div>
 
                 <div class="col-lg-3">
-                    {##}
-                    {#                    <div class="form-group row">#}
-                    {#                        <div class="col-lg-5">#}
-                    {#                            <label class="control-label"> Laplacian</label>#}
-                    {#                        </div>#}
-                    {#                        <div class="col-lg-5">#}
-                    {#                            <button id="btn_laplacian" type="button">Do laplacian</button>#}
-                    {#                        </div>#}
-                    {#                        <div class="col-lg-2"></div>#}
-                    {#                    </div>#}
+
                     {#                    Processing group 1#}
                     <div class="panel-group">
                         <div class="panel panel-default">
@@ -67,6 +58,16 @@
                             </div>
                             <div id="pro-1" class="panel-collapse collapse">
                                 <div class="panel-body">
+                                    {##}
+                                    {#                    <div class="form-group row">#}
+                                    {#                        <div class="col-lg-5">#}
+                                    {#                            <label class="control-label"> Laplacian</label>#}
+                                    {#                        </div>#}
+                                    {#                        <div class="col-lg-5">#}
+                                    {#                            <button id="btn_laplacian" type="button">Do laplacian</button>#}
+                                    {#                        </div>#}
+                                    {#                        <div class="col-lg-2"></div>#}
+                                    {#                    </div>#}
                                     <div class="form-group row">
                                         <div class="col-lg-5">
                                             <label class="control-label"> Black hat</label>
@@ -87,12 +88,13 @@
                                             <label class="control-label"> Lower threshold</label>
                                         </div>
                                         <div class="col-lg-5">
-                                            <input id="slider-lower-thresh" type="range" min="1" max="255" value="30"
+                                            <input id="slider-lower-thresh-white" type="range" min="1" max="255"
+                                                   value="30"
                                                    step="1">
                                         </div>
 
                                         <div class="col-lg-2">
-                                            <input id="slider-val-lower-thresh" type="text" readonly
+                                            <input id="slider-val-lower-thresh-white" type="text" readonly
                                                    style="border:0; color:#f6931f; font-weight:bold;">
                                         </div>
                                     </div>
@@ -102,12 +104,13 @@
                                             <label class="control-label"> Upper threshold</label>
                                         </div>
                                         <div class="col-lg-5">
-                                            <input id="slider-upper-thresh" type="range" min="1" max="255" value="150"
+                                            <input id="slider-upper-thresh-white" type="range" min="1" max="255"
+                                                   value="150"
                                                    step="1">
                                         </div>
 
                                         <div class="col-lg-2">
-                                            <input id="slider-val-upper-thresh" type="text" readonly
+                                            <input id="slider-val-upper-thresh-white" type="text" readonly
                                                    style="border:0; color:#f6931f; font-weight:bold;">
                                         </div>
                                     </div>
@@ -131,20 +134,36 @@
                                 <div class="panel-body">
                                     <div class="form-group row">
                                         <div class="col-lg-5">
-                                            <label class="control-label"> Morph gradient</label>
+                                            <label class="control-label"> Lower threshold</label>
                                         </div>
                                         <div class="col-lg-5">
-                                            <input id="slider-morphgrad" type="range" min="1" max="15" value="1"
+                                            <input id="slider-lower-thresh-black" type="range" min="1" max="255" value="30"
                                                    step="1">
                                         </div>
 
                                         <div class="col-lg-2">
-                                            <input id="slider-val-morphgrad" type="text" readonly
+                                            <input id="slider-val-lower-thresh-black" type="text" readonly
                                                    style="border:0; color:#f6931f; font-weight:bold;">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="control-label"> Upper threshold</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <input id="slider-upper-thresh-black" type="range" min="1" max="255" value="150"
+                                                   step="1">
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <input id="slider-val-upper-thresh-black" type="text" readonly
+                                                   style="border:0; color:#f6931f; font-weight:bold;">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
                                         <div class="col-lg-5">
                                             <label class="control-label"> Top hat</label>
                                         </div>
@@ -158,36 +177,54 @@
                                         </div>
                                     </div>
 
-
                                     <div class="form-group row">
                                         <div class="col-lg-5">
-                                            <label class="control-label"> Fourier Transform</label>
+
+                                            <label class="control-label"> Morph gradient</label>
                                         </div>
                                         <div class="col-lg-5">
-                                            <button id="btn_fourier" type="button">
-                                                Do FFT
-                                            </button>
+                                            <input id="slider-morphgrad" type="range" min="1" max="15" value="1"
+                                                   step="1">
                                         </div>
 
-                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-2">
+                                            <input id="slider-val-morphgrad" type="text" readonly
+                                                   style="border:0; color:#f6931f; font-weight:bold;">
+                                        </div>
                                     </div>
-
-
-                                    <div class="form-group row">
-                                        <div class="col-lg-5">
-                                            <label class="control-label"> Back projection</label>
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <button id="btn_backproj" type="button">
-                                                Do backproj
-                                            </button>
-                                        </div>
-
-                                        <div class="col-lg-2"></div>
-                                    </div>
-
                                 </div>
+
+
+                                {#                                    <div class="form-group row">#}
+                                {#                                        <div class="col-lg-5">#}
+                                {#                                            <label class="control-label"> Fourier Transform</label>#}
+                                {#                                        </div>#}
+                                {#                                        <div class="col-lg-5">#}
+                                {#                                            <button id="btn_fourier" type="button">#}
+                                {#                                                Do FFT#}
+                                {#                                            </button>#}
+                                {#                                        </div>#}
+                                {##}
+                                {#                                        <div class="col-lg-2"></div>#}
+                                {#                                    </div>#}
+                                {##}
+                                {##}
+                                {#                                    <div class="form-group row">#}
+                                {#                                        <div class="col-lg-5">#}
+                                {#                                            <label class="control-label"> Back projection</label>#}
+                                {#                                        </div>#}
+                                {#                                        <div class="col-lg-5">#}
+                                {#                                            <button id="btn_backproj" type="button">#}
+                                {#                                                Do backproj#}
+                                {#                                            </button>#}
+                                {#                                        </div>#}
+                                {##}
+                                {#                                        <div class="col-lg-2"></div>#}
+                                {#                                    </div>#}
+                                {##}
+                                {#                                </div>#}
                                 <div class="panel-footer"></div>
+
                             </div>
                         </div>
                     </div>
@@ -423,6 +460,7 @@
                             </div>
                         </div>
                     </div>
+                    {#                    Brush tool#}
                     <div class="panel-group">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -441,6 +479,9 @@
                                             {#    </select></label></p>#}
                                             <div id="myCanvas-toolbar"></div>
                                             <div id="myCanvas-picturepanel"></div>
+                                            <div id="canvas-toolbar"></div>
+                                            {#                    <div id="canvas-hidden-wrapper"></div>#}
+
 
                                         </div>
                                     </div>
@@ -449,6 +490,7 @@
                             </div>
                         </div>
                     </div>
+                    {#                    Histogram#}
                     <div class="panel-group">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -509,192 +551,7 @@
                         </div>
                     </div>
 
-                    {#                    <div id="opening" class="panel-group" hidden>#}
-                    {#                        <div class="panel panel-default">#}
-                    {#                            <div class="panel-heading">#}
-                    {#                                <h4 class="panel-title">#}
-                    {#                                    <a data-toggle="collapse" href="#opening-collapse-sec">Opening operation</a>#}
-                    {#                                </h4>#}
-                    {#                            </div>#}
-                    {#                            <div id="opening-collapse-sec" class="panel-collapse collapse">#}
-                    {#                                <ul class="list-group">#}
-                    {#                                    <div class="form-group row ">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Opening kernel size</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-opening-kernel" type="range" min="1" max="10" value="3"#}
-                    {#                                                   step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-opening-val-kernel" type="text" placeholder="3" readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {#                                    </div>#}
-                    {##}
-                    {##}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Opening iterations</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-opening-iter" type="range" min="1" max="5" value="1"#}
-                    {#                                                   step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-opening-val-iter" type="text" placeholder="1" readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                    </div>#}
-                    {#                                </ul>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    {##}
-                    {#                    <div id="closing" class="panel-group" hidden>#}
-                    {#                        <div class="panel panel-default">#}
-                    {#                            <div class="panel-heading">#}
-                    {#                                <h4 class="panel-title">#}
-                    {#                                    <a data-toggle="collapse" href="#closing-collapse-sec">Closing operation</a>#}
-                    {#                                </h4>#}
-                    {#                            </div>#}
-                    {#                            <div id="closing-collapse-sec" class="panel-collapse collapse">#}
-                    {#                                <ul class="list-group">#}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Closing kernel size</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-closing-kernel" type="range" min="1" max="10"#}
-                    {#                                                   value="3" step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-closing-val-kernel" type="text" placeholder="3"#}
-                    {#                                                   readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {#                                    </div>#}
-                    {##}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Closing iterations</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-closing-iter" type="range" min="1" max="5" value="1"#}
-                    {#                                                   step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-closing-val-iter" type="text" placeholder="1" readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                    </div>#}
-                    {##}
-                    {##}
-                    {#                                </ul>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    {##}
-                    {#                    <div id="erosion" class="panel-group" hidden>#}
-                    {#                        <div class="panel panel-default">#}
-                    {#                            <div class="panel-heading">#}
-                    {#                                <h4 class="panel-title">#}
-                    {#                                    <a data-toggle="collapse" href="#erosion-collapse-sec">Erosion operation</a>#}
-                    {#                                </h4>#}
-                    {#                            </div>#}
-                    {#                            <div id="erosion-collapse-sec" class="panel-collapse collapse">#}
-                    {#                                <ul class="list-group">#}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Erosing kernel size</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-erosion-kernel" type="range" min="1" max="10"#}
-                    {#                                                   value="3" step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-erosion-val-kernel" type="text" placeholder="3"#}
-                    {#                                                   readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {#                                    </div>#}
-                    {##}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Erosion iterations</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-erosion-iter" type="range" min="1" max="5"#}
-                    {#                                                   value="1" step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-erosion-val-iter" type="text" placeholder="1"#}
-                    {#                                                   readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                    </div>#}
-                    {#                                </ul>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    {##}
-                    {#                    <div id="dilation" class="panel-group" hidden>#}
-                    {#                        <div class="panel panel-default">#}
-                    {#                            <div class="panel-heading">#}
-                    {#                                <h4 class="panel-title">#}
-                    {#                                    <a data-toggle="collapse" href="#dilation-collapse-sec">Dilation#}
-                    {#                                        operation</a>#}
-                    {#                                </h4>#}
-                    {#                            </div>#}
-                    {#                            <div id="dilation-collapse-sec" class="panel-collapse collapse">#}
-                    {#                                <ul class="list-group">#}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Dilation kernel size</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-dilation-kernel" type="range" min="1" max="10"#}
-                    {#                                                   value="3" step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-dilation-val-kernel" type="text"#}
-                    {#                                                   placeholder="3" readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {#                                    </div>#}
-                    {##}
-                    {#                                    <div class="form-group row">#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <label class="control-label"> Dilation iterations</label>#}
-                    {#                                        </div>#}
-                    {#                                        <div class="col-lg-5">#}
-                    {#                                            <input id="slider-dilation-iter" type="range" min="1" max="5"#}
-                    {#                                                   value="1" step="1">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                        <div class="col-lg-2">#}
-                    {#                                            <input id="slider-dilation-val-iter" type="text" placeholder="1"#}
-                    {#                                                   readonly#}
-                    {#                                                   style="border:0; color:#f6931f; font-weight:bold;">#}
-                    {#                                        </div>#}
-                    {##}
-                    {#                                    </div>#}
-                    {#                                </ul>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-
-
+                    {#Undo, Reset, Save#}
                     <div class="form-group row">
                         <div class="col-lg-2">
                             <button id="btn_undo" type="button" class="btn btn-primary">
@@ -706,22 +563,16 @@
                                 Reset
                             </button>
                         </div>
-                    </div>
 
-                    <div id="canvas-toolbar"></div>
-                    {#                    <div id="canvas-hidden-wrapper"></div>#}
-
-                    <div class="form-group row">
                         <div class="col-lg-2">
-                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                            <button type="button" class="btn btn-info" data-toggle="modal"
                                     data-target="#saveCrystal">Save crystal
                             </button>
                         </div>
                     </div>
 
-                    <!-- Trigger the modal with a button -->
 
-
+                    <!-- Trigger the modal with a button -->-
                     <!-- Modal -->
                     <div id="saveCrystal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
