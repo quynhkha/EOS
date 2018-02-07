@@ -11,8 +11,7 @@ function disp_hist_thumbnail(data) {
             src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
             onmouseover: "on_hover_thumbnail(id)",
             onclick: "on_click_thumbnail(id)",
-
-
+            onmouseout: "on_mouseout_thumbnail(id)"
         }));
 
     }
@@ -34,9 +33,22 @@ function on_hover_thumbnail(thumbnail_id){
             document.body.style.cursor = "default";
         },
         success: function (data) {
-                large_thumbnail_src = "data:image/jpeg;charset=utf-8;base64," + data['image_id'];
-                image.src = large_thumbnail_src;
-                image = imageToDataUri(image, 640, 480);
+                large_thumbnail_src = "data:image/jpeg;charset=utf-8;base64," + data['image_data'];
+                 image.src = large_thumbnail_src;
+                 console.log('image height', 'image width', image.height, image.width, thumbnail_id);
+            document.getElementById(thumbnail_id).setAttribute('data-zoom-image', image.src);
+
+        $("#"+thumbnail_id).elevateZoom({	zoomWindowFadeIn:0,
+			zoomWindowFadeOut: 0,
+			lensFadeIn: 500,
+			lensFadeOut: 500,
+        zoomWindowWidth: 640,
+        zoomWindowHeight: 480,
+        scrollZoom: true,
+  //         zoomType				: "lens",
+  // lensShape : "round",
+  // lensSize    : 200,
+        });
         },
 
         error: function (data) {
@@ -44,16 +56,33 @@ function on_hover_thumbnail(thumbnail_id){
         }
 
     });
-
-
-        document.getElementById(thumbnail_id).setAttribute('data-zoom-image', image.src);
-        // document.getElementById(thumbnail_id).setAttribute('data-zoom-image','https://upload.wikimedia.org/wikipedia/commons/e/e0/Large_Scaled_Forest_Lizard.jpg');
-
-        $("#"+thumbnail_id).elevateZoom({constrainType:"height", constrainSize:2740});
 }
+
+function on_mouseout_thumbnail(thumbnail_id){
+
+}
+
+
 function on_click_thumbnail(thumbnail_id) {
     console.log("thumbnail id: ", thumbnail_id);
     do_ajax_post_val_only([thumbnail_id], ['input'], '/img-from-thumbnail/');
+}
+
+function imageToDataUri(img, width, height) {
+
+    // create an off-screen canvas
+    var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
+
+    // set its dimension to target size
+    canvas.width = width;
+    canvas.height = height;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL();
 }
 
 /**************** UTIL FUNCTIONS ******************/

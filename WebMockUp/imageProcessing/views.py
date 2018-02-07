@@ -750,7 +750,8 @@ def large_thumbnail(request, thumbnail_id):
     temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
     state_img = temp.s_img_last_arr[id]
     print(state_img)
-    _, image_data = cv_to_json(state_img)
+    compressed_img = compress_image(state_img.img_data, mod_size=4)
+    _, image_data = cv_to_json(compressed_img, False)
 
     return JsonResponse({'image_data': image_data})
 

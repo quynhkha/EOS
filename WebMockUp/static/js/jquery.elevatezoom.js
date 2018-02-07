@@ -39,6 +39,7 @@ if ( typeof Object.create !== 'function' ) {
 				var self = this;
 
 				self.elem = elem;
+
 				self.$elem = $( elem );
 
 				self.imageSrc = self.$elem.data("zoom-image") ? self.$elem.data("zoom-image") : self.$elem.attr("src");
@@ -119,6 +120,7 @@ if ( typeof Object.create !== 'function' ) {
 				self.nzWidth = self.$elem.width();
 				self.nzHeight = self.$elem.height();
 
+				console.log('nzWidth', self.nzWidth, 'nzHeight', self.nzHeight);
 				//activated elements
 				self.isWindowActive = false;
 				self.isLensActive = false;
@@ -140,8 +142,10 @@ if ( typeof Object.create !== 'function' ) {
 				//get offset of the non zoomed image
 				self.nzOffset = self.$elem.offset();
 				//calculate the width ratio of the large/small image
+				console.log ('largeWidth', self.largeWidth, 'largeHeight', self.largeHeight);
 				self.widthRatio = (self.largeWidth/self.currentZoomLevel) / self.nzWidth;
-				self.heightRatio = (self.largeHeight/self.currentZoomLevel) / self.nzHeight; 
+				self.heightRatio = (self.largeHeight/self.currentZoomLevel) / self.nzHeight;
+				console.log('height, width ration', self.heightRatio, self.widthRatio);
 
 
 				//if window zoom        

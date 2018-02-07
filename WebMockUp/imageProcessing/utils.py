@@ -23,15 +23,21 @@ def timing(f):
     return wrap
 
 @timing
-def cv_to_json(opencv_state_img):
+def cv_to_json(image, is_state_img = True):
     # img_file = open("/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.small.png", "rb")
     # img = img_file.read()
     #opencv_img = cv2.imread('/home/long/PycharmProjects/EOS/ImageProcessing/data/1947-1_plg6.tif')
-    opencv_img = opencv_state_img.img_data
+    if is_state_img:
+        opencv_img = image.img_data
+    else:
+        opencv_img = image
     retval, img = cv2.imencode('.jpg', opencv_img)
     base64_bytes = base64.b64encode(img)
     base64_string = base64_bytes.decode('utf8')
-    json_data = {'image_data': base64_string, 'func_name': opencv_state_img.func_name}
+    if is_state_img:
+        json_data = {'image_data': base64_string, 'func_name': image.func_name}
+    else:
+        json_data = {'image_data': base64_string}
     return json_data, base64_string
 
 def json_to_cv(json_img):
@@ -66,17 +72,20 @@ def absolute_file_dir(filename, target_url):
 # def absolute_uploaded_file_dir(url):
 #      return str(BASE_DIR)+url
 
-def compress_image(image):
+def compress_image(image, mod_size=0):
     if len(image.shape) == 3:
         (height, width, _) =image.shape
     else:
         (height, width) = image.shape
-    if width <= 800:
-        resize_factor = 4
-    elif width <= 1600:
-        resize_factor = 8
+    if mod_size == 0:
+        if width <= 800:
+            resize_factor = 4
+        elif width <= 1600:
+            resize_factor = 8
+        else:
+            resize_factor = 16
     else:
-        resize_factor = 16
+        resize_factor = mod_size
     return cv2.resize(image, (int(width/resize_factor), int(height/resize_factor)), interpolation=cv2.INTER_CUBIC)
 
 
