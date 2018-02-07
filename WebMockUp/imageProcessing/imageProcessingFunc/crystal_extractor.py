@@ -296,14 +296,14 @@ class ProcessingFunction:
         thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
         image_copy = copy.copy(current_image)
-        image_copy[image_2D<thresh_val] = 255
+        image_copy[image_2D<thresh_val] = 0
         return image_copy
 
     def upper_thesholding(self, original_image, current_image, thresh_val):
         thresh_val = int(thresh_val)
         image_2D = self.seg.two_channel_grayscale(original_image)
         image_copy = copy.copy(current_image)
-        image_copy[image_2D > thresh_val] = 255
+        image_copy[image_2D > thresh_val] = 0
         return image_copy
 
     def kmeans(self, current_image, segments):

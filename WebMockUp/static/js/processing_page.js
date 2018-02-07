@@ -3,6 +3,8 @@
 function disp_hist_thumbnail(data) {
     var hist_thumbnail_data_arr = data["thumbnail_arr"];
     $('#hist-thumbnail').empty();
+    //remove all the zoom div
+     $('.zoomContainer').remove();
     for (i = 0; i < hist_thumbnail_data_arr.length; i++) {
         var thumbnail_id = "thumb_" + i;
         $('#hist-thumbnail').prepend($('<img>', {
@@ -11,7 +13,7 @@ function disp_hist_thumbnail(data) {
             src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
             onmouseover: "on_hover_thumbnail(id)",
             onclick: "on_click_thumbnail(id)",
-            onmouseout: "on_mouseout_thumbnail(id)"
+
         }));
 
     }
@@ -56,10 +58,6 @@ function on_hover_thumbnail(thumbnail_id){
         }
 
     });
-}
-
-function on_mouseout_thumbnail(thumbnail_id){
-
 }
 
 
