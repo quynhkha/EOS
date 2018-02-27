@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('EOSWebApp.imageProcessing.urls')),
+    url(r'^', include('EOSWebApp.user.urls'))
 ]
 
 if settings.DEBUG:

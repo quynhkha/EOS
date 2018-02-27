@@ -1,4 +1,4 @@
-{% extends 'imageProcessing/base.html' %}
+{% extends 'base.html' %}
 {% block title %}Upload Image{% endblock %}
 
 {% block body %}
@@ -16,7 +16,7 @@
                         {% endif %}
                         <form class="form-horizontal" role="form" method="post" action="" enctype="multipart/form-data">
                             {% csrf_token %}
-                            {% include "imageProcessing/form_template.html" %}
+                            {% include "form_template.html" %}
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button type="submit" class="btn btn-success">Upload</button>

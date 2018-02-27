@@ -8,12 +8,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
+from EOSWebApp.utils import shared_data
 from .forms import *
 from .imageProcessingFunc.crystal_extractor import ProcessingFunction
 from .utils import *
 
 ps_func = ProcessingFunction()
-temp_data_arr = []
+
+# shared_data = SharedData()
+temp_data_arr = shared_data.temp_data_arr
 temp_idx = 0
 
 IMAGE_URL = '/media/images/'
@@ -29,89 +32,17 @@ def show_base64(request):
     return JsonResponse(json_data, safe=False)
 
 
-@csrf_exempt
-def register(request):
-    form = UserForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False) # create a user object but does not save it to DB yet
-        # clean (normalized) the data
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user.set_password(password) # need to set password in this way because password is stored as encrypted text
-        user.save()
 
-        # return User object it credentials are correct
-        user = authenticate(username=username, password = password)
-
-        return render(request, 'imageProcessing/login.html')
-        # if user is not None:
-        #     if user.is_active:
-
-    context = {
-        "form": form,
-    }
-
-    return render(request, 'imageProcessing/register.html', context)
-
-@csrf_exempt
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-
-
-                # return render(request, 'imageProcessing/index.html', {'user': user})
-                return redirect('imageProcessing:index')
-            else:
-                return render(request, 'imageProcessing/error.html', {'error_message': "Your account has been deactivated"})
-        else:
-            return render(request, 'imageProcessing/login.html', {'error_message:': "Invalid login"})
-    return render(request, 'imageProcessing/login.html')
-
-
-def logout_user(request):
-
-    # TODO: clear user's temp data
-    global temp_data_arr
-    try:
-        for temp in temp_data_arr:
-            if temp.user_id == request.session['user_id'] and temp.image_id == request.session['image_id']:
-                temp_data_arr.remove(temp)
-    except KeyError:
-        pass
-    print('temp_data_arr', temp_data_arr)
-
-    # Flush session info
-    try:
-        del request.session['user_id']
-        if request.session['image_id'] is not None:
-            del request.session['image_id']
-    except KeyError:
-        pass
-
-    logout(request)
-    form = UserForm(request.POST or None)
-    context = {
-        "form": form,
-    }
-
-    return render(request, 'imageProcessing/login.html', context)
 
 def index(request):
     if not request.user.is_authenticated():
-        return render(request, 'imageProcessing/login.html')
+        return render(request, 'user/login.html')
     else:
         images = UploadedImage.objects.filter(user=request.user)
         # update session info
         request.session['user_id'] = request.user.id
         # print(images)
-        return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
+        return render(request, 'index.html', {'user': request.user, 'images': images})
 
 
 @csrf_exempt
@@ -702,7 +633,7 @@ def save_processed(request, temp_idx=0):
 @csrf_exempt
 def library_page(request):
     if not request.user.is_authenticated():
-        return render(request, 'imageProcessing/login.html')
+        return render(request, 'user/login.html')
     else:
         images = UploadedImage.objects.filter(user=request.user)
         # update session info
@@ -743,6 +674,7 @@ def download_crystal(request, mask_id=0):
     image = mask.image
     image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
     image_cv = cv2.imread(image_file_dir)
+    print ("mask dir ", mask.mask_dir, "image dir ",image_file_dir )
     # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
     file_infos = ps_func.save_crystals_to_file(mask.name, '/home/long/EOSImages/', image_cv, mask_cv)
 
@@ -770,7 +702,7 @@ def delete_image(request, image_id):
 
     images = UploadedImage.objects.filter(user=request.user)
 
-    return render(request, 'imageProcessing/index.html', {'user': request.user, 'images': images})
+    return render(request, 'index.html', {'user': request.user, 'images': images})
 
 @csrf_exempt
 def delete_mask(request, mask_id):

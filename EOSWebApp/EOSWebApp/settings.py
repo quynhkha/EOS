@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# from EOSWebApp.imageProcessing.utils import TempData
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -30,6 +32,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 USE_TZ = True
 TIME_ZONE = 'SG'
 
+# TODO: fix this
+# SHARED_DATA = SharedData()
+# temp = TempData()
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +61,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'EOSWebApp.urls'
+
 
 # loaders = [
 #     'django.template.loaders.filesystem.Loader',

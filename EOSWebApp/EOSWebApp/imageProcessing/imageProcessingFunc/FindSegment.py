@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 from EOSWebApp.imageProcessing import FindingHoles
-from .utils import findImageDir
+from EOSWebApp.imageProcessing.utils import findImageDir
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 findDir = findImageDir()
@@ -35,7 +35,8 @@ class FindSegment():
         image_copy_name = db_image.imageName + "_copy"
         #image_copy dir
         db_image_dir= findDir.imageDirfromDatabaseImg(db_image)
-        image_copy_dir= os.path.join(BASE_DIR, '../../EOSWebApp/media') + "/" + image_copy_name + '.' + db_image.imageType
+        image_copy_dir= os.path.join(BASE_DIR,
+                                     '../../EOSWebApp/../../../media') + "/" + image_copy_name + '.' + db_image.imageType
         #make a copy of db_image
         shutil.copy2(db_image_dir, image_copy_dir)
         return image_copy_dir
