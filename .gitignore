@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-WebMockUp/__pycache__/*
-WebMockUp/imageProcessing/__pycache__/*
+EOSWebApp/__pycache__/*
+EOSWebApp/imageProcessing/__pycache__/*
 ImageProcessing/__pycache__/*
 *.py[cod]
 *$py.class
@@ -15,9 +15,9 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # IDEA
-WebMockUp/.idea/*
+EOSWebApp/.idea/*
 ImageProcessing/.idea/*
 
 # Image 
-WebMockUp/media/*
+EOSWebApp/media/*
 ImageProcessing/data/*
