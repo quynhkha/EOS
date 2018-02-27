@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# from EOSWebApp.imageProcessing.utils import TempData
+# from EOSWebApp.imageProcessing.utils.js import TempData
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))

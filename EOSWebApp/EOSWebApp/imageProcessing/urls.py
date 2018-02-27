@@ -18,7 +18,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^upload/$', views.upload_image, name='upload'),
     url(r'^base64/$', views.show_base64, name='show_base64'),
-
     url(r'^processing_page/(?P<image_id>[0-9]+)/$', views.processing_page, name='processing_page'),
     # url(r'^upload/$', ImageProcessingView.as_view()),
     url(r'^lower-thresholding-white/(?P<temp_idx>[0-9]+)/$', views.lower_thresholding_white, name='lower-thesholding-white'),
@@ -35,7 +34,7 @@ urlpatterns = [
     url(r'^top-crystal/(?P<temp_idx>[0-9]+)/$', views.show_top_area_crystal, name='show-max-area-crystal'),
     url(r'^reset/(?P<temp_idx>[0-9]+)/$', views.reset, name="reset"),
     url(r'^img-from-thumbnail/(?P<temp_idx>[0-9]+)/$', views.set_image_from_thumbnail, name="img-from-thumbnail"),
-    url(r'^histogram/(?P<temp_idx>[0-9]+)/$', views.plot_histogram, name="plot-histogram"),
+
     url(r'^opening/(?P<temp_idx>[0-9]+)/$', views.do_opening, name='opening'),
     url(r'^closing/(?P<temp_idx>[0-9]+)/$', views.do_closing, name='closing'),
     url(r'^erosion/(?P<temp_idx>[0-9]+)/$', views.do_erosion, name='erosion'),

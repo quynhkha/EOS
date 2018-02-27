@@ -14,11 +14,8 @@ from .processingFunc.crystal_extractor import ProcessingFunction
 from .utils import *
 
 ps_func = ProcessingFunction()
-
-# shared_data = SharedData()
 temp_data_arr = shared_data.temp_data_arr
 temp_idx = 0
-
 
 # FIXME: deprecated
 # for testing purpose only
@@ -37,7 +34,6 @@ def index(request):
         request.session['user_id'] = request.user.id
         # print(images)
         return render(request, 'index.html', {'user': request.user, 'images': images})
-
 
 @csrf_exempt
 @login_required
@@ -382,15 +378,6 @@ def set_image_from_thumbnail(request, temp_idx=0):
     return render(request, 'imageProcessing/processing_page.html',
                   {'image_data': image_data, 'temp_index': temp_idx})
 
-@csrf_exempt
-def plot_histogram(request, temp_idx=0):
-
-    global temp_data_arr
-    temp = get_temp_data(temp_data_arr, request.session['user_id'], request.session['image_id'])
-
-    hist_y_axis, hist_x_axis = ps_func.plot_histogram(temp.s_img_cur.img_data, temp.s_mask_cur.img_data)
-    json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
-    return JsonResponse(json_data)
 
 @csrf_exempt
 def do_opening(request, temp_idx=0):

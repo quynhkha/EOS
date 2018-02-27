@@ -356,7 +356,9 @@ class ProcessingFunction:
         return removed_noise_mask
 
     def plot_histogram(self, image, image_mask):
-        hist_with_mask = cv2.calcHist([image], [0], image_mask, [256], [0,256])
+        mask = copy.copy(image_mask)
+        mask = self.seg.two_channel_grayscale(mask)
+        hist_with_mask = cv2.calcHist([image], [0], mask, [256], [0,256])
         # plt.plot(hist_mask)
         # plt.show()
         hist_y_axis = np.reshape(hist_with_mask, 256)

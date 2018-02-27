@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^download-crystal/(?P<mask_id>[0-9]+)/$', views.download_crystal, name='download-crystal'),
     url(r'^delete-mask/(?P<mask_id>[0-9]+)/$', views.delete_mask, name='delete-mask'),
     url(r'^library/$', views.library_page, name='library'),
+    url(r'^histogram/(?P<mask_id>[0-9]+)/$', views.plot_histogram, name="plot-histogram"),
 ]
