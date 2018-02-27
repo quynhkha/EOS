@@ -1,0 +1,12 @@
+{% extends base.html %}
+{% block title %}Ops, something went wrong{% endblock %}
+{% block body %}
+    <div class = "container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <h1>Ops, something went wrong</h1>
+                <h3>An error has been occured: {{ error_message }}</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
