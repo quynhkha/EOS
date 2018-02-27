@@ -2,7 +2,7 @@
 
 {% block css %}
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/../../static/css/library_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/library_page.css' %}">
 {% endblock %}
 
 {% block title %}My library{% endblock %}
@@ -72,7 +72,7 @@
 
                                                 <td>
                                                     {#                                                form for download the crystals#}
-                                                    <form action="{% url 'imageProcessing:download-crystal' mask.id %}"
+                                                    <form action="{% url 'crystalManagement:download-crystal' mask.id %}"
                                                           method="post" style="display: inline;">
                                                         {% csrf_token %}
                                                         <button type="submit"
@@ -115,7 +115,7 @@
 
 
                                                 <td>
-                                                    <form action="{% url 'imageProcessing:delete-mask' mask.id %}" method="post" style="display: inline;">
+                                                    <form action="{% url 'crystalManagement:delete-mask' mask.id %}" method="post" style="display: inline;">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="mask_id" value="{{ mask.id }}"/>
                                                         <button type="submit" class="btn btn-danger btn-xs">
@@ -183,5 +183,5 @@
 
 {% block javascript %}
     {% load staticfiles %}
-    <script src="{% static 'assets/../../static/js/library_page.js' %}"></script>
+    <script src="{% static 'js/library_page.js' %}"></script>
 {% endblock %}

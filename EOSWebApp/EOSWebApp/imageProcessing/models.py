@@ -12,13 +12,6 @@ from django.db import models
 #     def __str__(self):
 #         return self.imageName + '.' +self.imageType
 
-class Post (models.Model):
-    title = models.CharField(max_length=100)
-    text = models.CharField(max_length=100)
-
-class NumberInput(models.Model):
-    input = models.IntegerField()
-
 class UploadedImage(models.Model):
     user = models.ForeignKey(User, default=1)
     description = models.CharField(max_length=255, blank=True)

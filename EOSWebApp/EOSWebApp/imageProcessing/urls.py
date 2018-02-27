@@ -18,9 +18,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^upload/$', views.upload_image, name='upload'),
     url(r'^base64/$', views.show_base64, name='show_base64'),
-    url(r'^library/$', views.library_page, name='library'),
-    url(r'^modal-show-crystal/(?P<mask_id>[0-9]+)/$', views.modal_show_crystal, name='modal-show-crystal'),
-    url(r'^download-crystal/(?P<mask_id>[0-9]+)/$', views.download_crystal, name='download-crystal'),
 
     url(r'^processing_page/(?P<image_id>[0-9]+)/$', views.processing_page, name='processing_page'),
     # url(r'^upload/$', ImageProcessingView.as_view()),
@@ -51,7 +48,7 @@ urlpatterns = [
     url(r'^noise-removal/(?P<temp_idx>[0-9]+)/$', views.noise_removal, name='noise-removal'),
     url(r'^save-processed/(?P<temp_idx>[0-9]+)/$', views.save_processed, name='save-processed'),
     url(r'^delete-image/(?P<image_id>[0-9]+)/$', views.delete_image, name='delete-image'),
-    url(r'^delete-mask/(?P<mask_id>[0-9]+)/$', views.delete_mask, name='delete-mask'),
+
     url(r'^fourier/(?P<temp_idx>[0-9]+)/$', views.do_fourier, name='fourier'),
     url(r'^backproj/(?P<temp_idx>[0-9]+)/$', views.do_backproj, name='backproj'),
     url(r'^large-thumbnail/(?P<thumbnail_id>[0-9]+)/$', views.large_thumbnail, name='large-thumbnail')
