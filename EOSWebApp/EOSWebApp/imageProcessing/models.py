@@ -25,6 +25,7 @@ class UploadedImage(models.Model):
     #    return self.document
 
 class CrystalMask(models.Model):
+    # TODO: add crystal image field
     image = models.ForeignKey(UploadedImage, default=1)
     name = models.CharField(max_length=255, default="no name")
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -33,3 +34,4 @@ class CrystalMask(models.Model):
     @classmethod
     def create(cls, image, mask_dir):
         return cls(image=image, mask_dir=mask_dir)
+

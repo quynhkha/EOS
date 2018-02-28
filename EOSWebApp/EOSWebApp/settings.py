@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # local apps
-    'EOSWebApp.imageProcessing'
+    'EOSWebApp.imageProcessing',
+    'EOSWebApp.user',
+    'EOSWebApp.crystalManagement'
 
 ]
 

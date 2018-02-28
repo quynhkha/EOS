@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
+from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.crystalManagement.utils import get_image_mask, HistProcessing
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
@@ -57,7 +58,9 @@ def download_crystal(request, mask_id=0):
     mask, image_cv, mask_cv = get_image_mask(mask_id)
     # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
     file_infos = ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
+    #TODO: seperate to download and create crystal
 
+    #TODO: choose correct dir to zip
     zf = zipfile.ZipFile('/home/long/EOSImages.zip', "w")
     for (file_dir, file_name) in file_infos:
         zf.write(file_dir, file_name)
@@ -90,6 +93,4 @@ def modal_show_crystal(request, mask_id=0):
 
 @csrf_exempt
 def modal_show_individual_crystal(request, crystal_name):
-
     return
-

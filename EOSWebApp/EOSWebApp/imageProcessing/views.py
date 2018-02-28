@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from EOSWebApp.utils import shared_data, THUMBNAIL_URL, IMAGE_URL, CRYSTAL_MASK_URL
+from EOSWebApp.crystalManagement.models import Crystal
+from EOSWebApp.utils import shared_data, THUMBNAIL_URL, IMAGE_URL, CRYSTAL_MASK_URL, CRYSTAL_URL
 from .forms import *
 from .processingFunc.crystal_extractor import ProcessingFunction
 from .utils import *
@@ -606,8 +607,16 @@ def save_processed(request, temp_idx=0):
     mask_dir= absolute_file_dir(image_name, CRYSTAL_MASK_URL) + str(int(time.time())) + "_mask.png"
     print(mask_dir)
     cv2.imwrite(mask_dir, temp.s_mask_cur.img_data)
-    crystalMask = CrystalMask.objects.create(name= crystal_name, image = image, mask_dir = mask_dir)
-    crystalMask.save()
+    mask = CrystalMask.objects.create(name= crystal_name, image = image, mask_dir = mask_dir)
+    mask.save()
+
+    # save crystal to files
+    CRYSTAL_DIR = PROJECT_ROOT +CRYSTAL_URL
+
+    file_infos = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
+    for (file_dir, file_name) in file_infos:
+        crystal = Crystal.objects.create(mask=mask, name=file_name, dir=file_dir)
+        crystal.save()
 
     return JsonResponse({'mask_dir': mask_dir}, safe=False)
 

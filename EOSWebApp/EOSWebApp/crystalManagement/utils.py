@@ -1,6 +1,7 @@
 # TODO: remember hist_area
 import cv2
 
+from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.imageProcessing.models import CrystalMask
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.utils import absolute_file_dir
@@ -8,12 +9,10 @@ from EOSWebApp.utils import IMAGE_URL, TEMP_DIR
 
 ps_func = ProcessingFunction()
 class HistObj:
-    def __init__(self, x, y, mask_id, crystal_name, crystal_img_link=None):
+    def __init__(self, x, y, crystal=None):
         self.x = x # a list
         self.y = y
-        self.mask_id = mask_id
-        self.crystal_name = crystal_name
-        self.crystal_img_link = crystal_img_link
+        self.crystal = crystal
         self.similarities = []
         self.hist_area = 0
         self.num_pair = 0
@@ -54,15 +53,26 @@ class HistProcessing:
 
     @classmethod
     def hist_extraction(cls, mask_id):
-        mask, image_cv, mask_cv = get_image_mask(mask_id)
-        file_infos = ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
+        # mask, image_cv, mask_cv = get_image_mask(mask_id)
+        # file_infos = ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
+        # hist_objs = []
+        # for (file_dir, file_name) in file_infos:
+        #     crystal_cv = cv2.imread(file_dir)
+        #     hist_y_axis, hist_x_axis = ps_func.plot_histogram(crystal_cv)
+        #     hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), mask_id,
+        #                        file_name, file_dir)
+        #     hist_obj.hist_area = cls.calc_hist_area(hist_obj)
+        #     hist_objs.append(hist_obj)
+        # return hist_objs
+        mask_id = int(mask_id)
+        mask = CrystalMask.objects.get(id=mask_id)
+        crystals = Crystal.objects.filter(mask=mask)
+
         hist_objs = []
-        for (file_dir, file_name) in file_infos:
-            crystal_cv = cv2.imread(file_dir)
+        for crystal in crystals:
+            crystal_cv = cv2.imread(crystal.dir)
             hist_y_axis, hist_x_axis = ps_func.plot_histogram(crystal_cv)
-            hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), mask_id,
-                               file_name, file_dir)
-            hist_obj.hist_area = cls.calc_hist_area(hist_obj)
+            hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), crystal)
             hist_objs.append(hist_obj)
         return hist_objs
 
@@ -81,7 +91,7 @@ class HistProcessing:
         mask, image_cv, mask_cv = get_image_mask(mask_id)
         crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
         hist_y_axis, hist_x_axis = ps_func.plot_histogram(image_cv, mask_cv)
-        crystal_hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), mask.name, None)
+        crystal_hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), None)
         for hist_obj in hist_objs:
             hist_obj.overall_sim = cls.calc_hist_sim(hist_obj, crystal_hist_obj, threshold)
 
