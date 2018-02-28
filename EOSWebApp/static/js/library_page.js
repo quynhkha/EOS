@@ -203,6 +203,14 @@ $(".btn_modal_show_histogram").click(function (e) {
     });
 });
 
+// TODO: not using ajax
+$(".btn_process_crystal").click(function (e) {
+    e.preventDefault();
+       mask_id = $(this).val();
+    url= "/crystal_processing/" + mask_id.toString() + "/" ;
+    $('.form_process_crystal').attr('action', url).submit();
+});
+
 $("#btn_truncated_hist").click(function (e) {
     e.preventDefault();
     hist_min_thresh = $("#hist_min_thresh").val();

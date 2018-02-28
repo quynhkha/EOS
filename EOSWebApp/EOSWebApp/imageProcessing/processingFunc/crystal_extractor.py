@@ -355,10 +355,15 @@ class ProcessingFunction:
         removed_noise_mask = self.seg.remove_small_components(mask, 8, area_thresh)
         return removed_noise_mask
 
-    def plot_histogram(self, image, image_mask):
-        mask = copy.copy(image_mask)
-        mask = self.seg.two_channel_grayscale(mask)
-        hist_with_mask = cv2.calcHist([image], [0], mask, [256], [0,256])
+    def plot_histogram(self, image, image_mask=None):
+        if image_mask is not None:
+            mask = copy.copy(image_mask)
+            mask = self.seg.two_channel_grayscale(mask)
+        else:
+            mask = None
+        image_copy = copy.copy(image)
+        image_gray = cv2.cvtColor(image_copy, cv2.COLOR_BGR2GRAY)
+        hist_with_mask = cv2.calcHist([image_gray], [0], mask, [256], [0,256])
         # plt.plot(hist_mask)
         # plt.show()
         hist_y_axis = np.reshape(hist_with_mask, 256)

@@ -1,13 +1,14 @@
 import zipfile
 import cv2
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
+from EOSWebApp.crystalManagement.utils import get_image_mask, HistProcessing
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
 from EOSWebApp.imageProcessing.utils import absolute_file_dir, StateImage, cv_to_json, get_temp_data
-from EOSWebApp.utils import IMAGE_URL
+from EOSWebApp.utils import IMAGE_URL, TEMP_DIR
 
 ps_func = ProcessingFunction()
 
@@ -24,10 +25,36 @@ def library_page(request):
 
 # TODO: delete images, thumbnails, masks
 
+#TODO: use compressed image
+@csrf_exempt
+def crystal_processing_page(request, mask_id):
+    if not request.user.is_authenticated():
+        return render(request, 'user/login.html')
+    else:
+        _, image_cv, mask_cv = get_image_mask(mask_id)
+        _, ori_img_data = cv_to_json(image_cv, False)
 
+        crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
+        _, crys_img_data = cv_to_json(crystal_cv, False)
+        hist_objs = HistProcessing.generate_sim_table(mask_id, 80, 90)
+
+        return render_to_response('crystalManagement/crystal_processing.html',
+                      {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id),
+                       'hist_objs': hist_objs   })
+
+#Individual crystal
+def generate_hist_confusion_table(request, mask_id):
+    if not request.user.is_authenticated():
+        return render(request, 'user/login.html')
+    else:
+
+        return render_to_response('crystalManagement/crystal_processing.html', {'hist_objs': hist_objs})
+
+#Individual histogram
+
+# Compare
 @csrf_exempt
 def plot_histogram(request, mask_id=0):
-
     _, image_cv, mask_cv = get_image_mask(mask_id)
     hist_y_axis, hist_x_axis = ps_func.plot_histogram(image_cv, mask_cv)
     json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
@@ -39,7 +66,7 @@ def download_crystal(request, mask_id=0):
 
     mask, image_cv, mask_cv = get_image_mask(mask_id)
     # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
-    file_infos = ps_func.save_crystals_to_file(mask.name, '/home/long/EOSImages/', image_cv, mask_cv)
+    file_infos = ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
 
     zf = zipfile.ZipFile('/home/long/EOSImages.zip', "w")
     for (file_dir, file_name) in file_infos:
@@ -65,31 +92,10 @@ def delete_mask(request, mask_id):
 @csrf_exempt
 def modal_show_crystal(request, mask_id=0):
     #TODO: try except
-    mask_id = int(mask_id)
-
-    mask = CrystalMask.objects.get(pk=mask_id)
-    print(mask.mask_dir)
-    mask_cv = cv2.imread(mask.mask_dir)
-
-    image = mask.image
-    image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
-    print("image file dir", image_file_dir)
-    image_cv = cv2.imread(image_file_dir)
-
+    mask, image_cv, mask_cv = get_image_mask(mask_id)
     crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
-    crystal_image =StateImage(func_name='', img_data=crystal_cv)
-    _, image_data = cv_to_json(crystal_image)
+    _, image_data = cv_to_json(crystal_cv,False)
 
     return JsonResponse({'image_data': image_data, 'image_name': mask.name})
 
-def get_image_mask(mask_id):
-    mask_id = int(mask_id)
 
-    mask = CrystalMask.objects.get(pk=mask_id)
-    mask_cv = cv2.imread(mask.mask_dir)
-    image = mask.image
-    image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
-    image_cv = cv2.imread(image_file_dir)
-    print("mask dir ", mask.mask_dir, "image dir ", image_file_dir)
-
-    return mask, image_cv, mask_cv

@@ -99,13 +99,13 @@
 
                                                 <td>
                                                     {#                                                form for download the histogram #}
-                                                    <form action=""
-                                                          method="post" style="display: inline;">
+                                                    <form action="" class="form_process_crystal"
+                                                          method="get" style="display: inline;">
                                                         {% csrf_token %}
                                                         <button type="submit"
-                                                                class="btn_download_crystal btn btn-success btn-xs"
+                                                                class="btn_process_crystal btn btn-success btn-xs"
                                                                 value={{ mask.id }}>
-                                                            <input type="hidden" name="mask_id" value="{{ mask.id }}"/>
+{#                                                            <input type="hidden" name="mask_id" value="{{ mask.id }}"/>#}
 
                                                             <span class="glyphicon glyphicon-download"></span>&nbsp;
                                                             Download histogram
@@ -180,6 +180,7 @@
                                                     <div class="row">
                                                         <div class="col-sm-12">
                                                             <div id="histogram"></div>
+
 {#                                                            <div id="truncated-histogram"></div>#}
 {#                                                            <div id="composition-histogram"></div>#}
 

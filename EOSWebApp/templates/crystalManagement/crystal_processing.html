@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/processing_page.css' %}">
+{% endblock %}
+
+{% block title %}Crystal Processing {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="header">
+            <h2 class="text-center">Crystal Processing</h2>
+            <input hidden id="mask_id" value = {{ mask_id }}>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>Original Image</h3>
+                <img id="image" class="img-fluid centered"
+                     src="data:image/jpeg;charset=utf-8;base64,{{ ori_img_data }}">
+            </div>
+
+            <div class="col-lg-6">
+                <h3>Crystal Image</h3>
+                <img id="image" class="img-fluid centered"
+                     src="data:image/jpeg;charset=utf-8;base64,{{ crys_img_data }}">
+            </div>
+        </div>
+
+        <div class="row">
+            <h3>Settings</h3>
+{#            {% url 'crystalManagement:hist-conf-table' mask_id %}#}
+{#            <form type="get" action="{% url 'crystalManagement:hist-conf-table' mask_id %}">#}
+{#                 <button class="btn btn-primary" id="btn_table_1">Table1</button>#}
+{#            </form>#}
+            <div class = "table-responsive">
+            <table class = "table text-center " style="overflow: auto; ">
+                {#                column name#}
+                <tr>
+                    {% for hist_obj in hist_objs %}
+                        <td>{{ hist_obj.crystal_name}}</td>
+                    {% endfor %}
+                </tr>
+
+                {% for hist_obj in hist_objs %}
+                    <tr>
+                        <td>{{ hist_obj.num_pair }}</td>
+                        <td>{{ hist_obj.overall_sim }}</td>
+                        {% for similarity in hist_obj.similarities %}
+                            <td>{{ similarity.similarity_percentage }} %, {{ similarity.is_same_type }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
+            </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="{% static 'js/library_page.js' %}"></script>
+    <script src="{% static 'js/crystal_processing.js' %}"></script>
+
+{% endblock %}
