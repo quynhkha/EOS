@@ -38,7 +38,11 @@
             <div class = "table-responsive">
             <table class = "table text-center " style="overflow: auto; ">
                 {#                column name#}
+
                 <tr>
+                    <td>Crystal name</td>
+                    <td>Num of pairs</td>
+                    <td>Similarity with overall image</td>
                     {% for hist_obj in hist_objs %}
                         <td><a>{{ hist_obj.crystal.name}}</a></td>
                     {% endfor %}
@@ -46,6 +50,7 @@
 
                 {% for hist_obj in hist_objs %}
                     <tr>
+                        <td>{{ hist_obj.crystal.name }}</td>
                         <td>{{ hist_obj.num_pair }}</td>
                         <td>{{ hist_obj.overall_sim }}</td>
                         {% for similarity in hist_obj.similarities %}
