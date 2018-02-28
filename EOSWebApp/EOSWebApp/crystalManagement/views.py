@@ -42,16 +42,6 @@ def crystal_processing_page(request, mask_id):
                       {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id),
                        'hist_objs': hist_objs   })
 
-#Individual crystal
-def generate_hist_confusion_table(request, mask_id):
-    if not request.user.is_authenticated():
-        return render(request, 'user/login.html')
-    else:
-
-        return render_to_response('crystalManagement/crystal_processing.html', {'hist_objs': hist_objs})
-
-#Individual histogram
-
 # Compare
 @csrf_exempt
 def plot_histogram(request, mask_id=0):
@@ -98,4 +88,8 @@ def modal_show_crystal(request, mask_id=0):
 
     return JsonResponse({'image_data': image_data, 'image_name': mask.name})
 
+@csrf_exempt
+def modal_show_individual_crystal(request, crystal_name):
+
+    return
 

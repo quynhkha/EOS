@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+#TODO: using decouple
+# from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # from EOSWebApp.imageProcessing.utils.js import TempData
@@ -90,10 +92,21 @@ WSGI_APPLICATION = 'EOSWebApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'eos',
+        'USER': 'long',
+        'PASSWORD': '11111111',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

@@ -15,7 +15,7 @@ class HistObj:
         self.crystal_name = crystal_name
         self.crystal_img_link = crystal_img_link
         self.similarities = []
-        self.hist_area = []
+        self.hist_area = 0
         self.num_pair = 0
         self.overall_sim = 0
 
