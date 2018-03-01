@@ -12,6 +12,7 @@ from EOSWebApp.imageProcessing.utils import absolute_file_dir, StateImage, cv_to
 from EOSWebApp.utils import IMAGE_URL, TEMP_DIR
 
 ps_func = ProcessingFunction()
+hist_objs = []
 
 @csrf_exempt
 def library_page(request):
@@ -37,6 +38,8 @@ def crystal_processing_page(request, mask_id):
 
         crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
         _, crys_img_data = cv_to_json(crystal_cv, False)
+
+        global hist_objs
         hist_objs = HistProcessing.generate_sim_table(mask_id, 80, 90)
 
         return render_to_response('crystalManagement/crystal_processing.html',
@@ -91,6 +94,32 @@ def modal_show_crystal(request, mask_id=0):
 
     return JsonResponse({'image_data': image_data, 'image_name': mask.name})
 
+
 @csrf_exempt
-def modal_show_individual_crystal(request, crystal_name):
-    return
+def modal_show_individual_crystal(request, crystal_id):
+    crystal_id = int(crystal_id)
+    crystal = Crystal.objects.get(pk=crystal_id)
+    crystal_cv = cv2.imread(crystal.dir)
+    _, image_data = cv_to_json(crystal_cv, False)
+
+    return JsonResponse({'image_data': image_data, 'image_name': crystal.name})
+
+@csrf_exempt
+def modal_show_conf_graph(request, i):
+    i = int(i)
+    global hist_obj
+    hist_obj = hist_objs[i]
+
+    labels = []
+    similarities = []
+    for j in range (0, len(hist_obj.similarities)):
+        if j is not i:
+            label = hist_objs[j].crystal.name
+            labels.append(label)
+            similarity = hist_obj.similarities[j]['similarity_percentage']
+            similarities.append(similarity)
+
+    json_data = {'labels': labels, 'similarities': similarities}
+    return JsonResponse(json_data)
+
+
