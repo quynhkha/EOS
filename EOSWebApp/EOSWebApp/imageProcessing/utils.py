@@ -11,13 +11,13 @@ import time
 from EOSWebApp.settings import PROJECT_ROOT
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PERFORMANCE_TEST = False
+PERFORMANCE_TEST = True
 
 
 def timing(f):
-    def wrap(*args):
+    def wrap(*args, **kw):
         time1 = time.time()
-        ret = f(*args)
+        ret = f(*args, **kw)
         time2 = time.time()
         if PERFORMANCE_TEST:
             print('%s function took %0.3f ms' % (f.__name__, (time2 - time1) * 1000.0))
@@ -115,6 +115,7 @@ def new_temp_data(temp_data_arr, user_id, image_id):
 #     i = int(index)
 #     return temp_data_arr[i]
 
+@timing
 def get_temp_data(temp_data_arr, user_id, image_id):
     return next((temp for temp in temp_data_arr if temp.user_id == user_id and temp.image_id == image_id), None)
 

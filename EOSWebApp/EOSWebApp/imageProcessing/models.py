@@ -13,7 +13,7 @@ from django.db import models
 #         return self.imageName + '.' +self.imageType
 
 class UploadedImage(models.Model):
-    user = models.ForeignKey(User, default=1)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, blank=True)
     document = models.ImageField(upload_to="images/")
     filename = models.CharField(max_length=255, blank=True)
@@ -26,7 +26,7 @@ class UploadedImage(models.Model):
 
 class CrystalMask(models.Model):
     # TODO: add crystal image field
-    image = models.ForeignKey(UploadedImage, default=1)
+    image = models.ForeignKey(UploadedImage, default=1, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default="no name")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     mask_dir = models.CharField(max_length=255, blank=True)

@@ -6,7 +6,7 @@ from EOSWebApp.imageProcessing.models import CrystalMask
 
 
 class Crystal(models.Model):
-    mask = models.ForeignKey(CrystalMask, default=1)
+    mask = models.ForeignKey(CrystalMask, default=1, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     dir = models.CharField(max_length=255, blank=True)
 
@@ -15,7 +15,7 @@ class Crystal(models.Model):
         return cls(mask=mask, name=name, crystal_dir=crystal_dir)
 
 class Histogram(models.Model):
-    crystal = models.ForeignKey(Crystal, default=1)
+    crystal = models.ForeignKey(Crystal, default=1, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     hist_x = ArrayField(
             models.IntegerField(blank=True),

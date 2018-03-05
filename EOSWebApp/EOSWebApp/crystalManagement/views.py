@@ -8,7 +8,7 @@ from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.crystalManagement.utils import get_image_mask, HistProcessing
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
-from EOSWebApp.imageProcessing.utils import absolute_file_dir, StateImage, cv_to_json, get_temp_data
+from EOSWebApp.imageProcessing.utils import absolute_file_dir, StateImage, cv_to_json, get_temp_data, timing
 from EOSWebApp.utils import IMAGE_URL, TEMP_DIR
 
 ps_func = ProcessingFunction()
@@ -96,13 +96,19 @@ def modal_show_crystal(request, mask_id=0):
 
 
 @csrf_exempt
+@timing
 def modal_show_individual_crystal(request, crystal_id):
     crystal_id = int(crystal_id)
     crystal = Crystal.objects.get(pk=crystal_id)
-    crystal_cv = cv2.imread(crystal.dir)
+    # crystal_cv = cv2.imread(crystal.dir)
+    crystal_cv = read_img(crystal.dir)
     _, image_data = cv_to_json(crystal_cv, False)
 
     return JsonResponse({'image_data': image_data, 'image_name': crystal.name})
+
+@timing
+def read_img(dir):
+    return cv2.imread(dir)
 
 @csrf_exempt
 def modal_show_conf_graph(request, i):
