@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from EOSWebApp.crystalManagement.models import Crystal
-from EOSWebApp.utils import shared_data, THUMBNAIL_URL, IMAGE_URL, CRYSTAL_MASK_URL, CRYSTAL_URL
+from EOSWebApp.utils import shared_data, THUMBNAIL_URL, IMAGE_URL, CRYSTAL_MASK_URL, CRYSTAL_URL, cv_to_bytesIO
 from .forms import *
 from .processingFunc.crystal_extractor import ProcessingFunction
 from .utils import *
@@ -44,21 +44,21 @@ def upload_image(request):
         if imageForm.is_valid():
             imageDB = imageForm.save()
 
-            file= request.FILES['document']
+            file= request.FILES['image']
             print("filename", file.name, "file content type", file.content_type, "file size", file.size)
             imageDB.filename = file.name
             imageDB.user = request.user
             imageDB.save()
 
-
-            image_file_dir = absolute_file_dir(file.name, IMAGE_URL)
-            print ("image file dir", image_file_dir)
-            thumbnail_data = compress_image(cv2.imread(image_file_dir))
-
-            thumbnail_name = file.name + "_thumbnail.png"
-            cv2.imwrite(absolute_file_dir(thumbnail_name, THUMBNAIL_URL), thumbnail_data)
-            imageDB.thumbnail_url = THUMBNAIL_URL + thumbnail_name
-            imageDB.save()
+            #
+            # image_file_dir = absolute_file_dir(file.name, IMAGE_URL)
+            # print ("image file dir", image_file_dir)
+            # thumbnail_data = compress_image(cv2.imread(image_file_dir))
+            #
+            # thumbnail_name = file.name + "_thumbnail.png"
+            # cv2.imwrite(absolute_file_dir(thumbnail_name, THUMBNAIL_URL), thumbnail_data)
+            # imageDB.thumbnail_url = THUMBNAIL_URL + thumbnail_name
+            # imageDB.save()
 
             return redirect('imageProcessing:processing_page', image_id=imageDB.id)
             #return render(request, 'imageProcessing/processing_page.html', {'image_data':image_data, 'temp_index':temp_idx})
@@ -540,6 +540,12 @@ def do_blackhat(request, temp_idx=0):
         temp.update_s_img_cur('blackhat', img_data)
         temp.s_mask_cur = copy.copy(temp.s_img_cur)
 
+        temp_image = TempImage()
+
+        temp_image.save("foo", img_data)
+        # temp_image.delete()
+
+
         save_state(temp)
         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
         return JsonResponse(json_data, safe=False)
@@ -626,11 +632,11 @@ def delete_image(request, image_id):
     image_id = int(image_id)
     image = UploadedImage.objects.get(pk=image_id)
 
-    # delete image from disk
-    delete_file(image.document.path)
-    # delete thumb from disk
-    delete_file(str(BASE_DIR)+image.thumbnail_url)
-    # delete from db
+    # # delete image from disk
+    # delete_file(image.document.path)
+    # # delete thumb from disk
+    # delete_file(str(BASE_DIR)+image.thumbnail_url)
+    # # delete from db
     image.delete()
 
     images = UploadedImage.objects.filter(user=request.user)
