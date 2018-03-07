@@ -8,8 +8,8 @@ from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.crystalManagement.utils import get_image_mask, HistProcessing
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
-from EOSWebApp.imageProcessing.utils import absolute_file_dir, StateImage, cv_to_json, get_temp_data, timing
-from EOSWebApp.utils import IMAGE_URL, TEMP_DIR
+
+from EOSWebApp.utils import IMAGE_URL, TEMP_DIR, timing, cv_to_json, absolute_file_dir
 
 ps_func = ProcessingFunction()
 hist_objs = []

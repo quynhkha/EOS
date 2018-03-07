@@ -17,16 +17,16 @@ class Crystal(models.Model):
 class Histogram(models.Model):
     crystal = models.ForeignKey(Crystal, default=1, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    hist_x = ArrayField(
-            models.IntegerField(blank=True),
-            size=256)
-    hist_y = ArrayField(
-        models.IntegerField(blank=True),
-        size = 256
-    )
-    similarities = ArrayField(
-        models.FloatField(blank=True)
-    )
+    # hist_x = ArrayField(
+    #         models.IntegerField(blank=True),
+    #         size=256)
+    # hist_y = ArrayField(
+    #     models.IntegerField(blank=True),
+    #     size = 256
+    # )
+    # similarities = ArrayField(
+    #     models.FloatField(blank=True)
+    # )
     hist_area = models.IntegerField(blank=True)
     num_pair = models.IntegerField(blank=True)
     overall_sim = models.IntegerField(blank=True)
