@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from EOSWebApp.imageProcessing.services import s_laplacian, s_kmeans
+from EOSWebApp.imageProcessing.services import *
 from EOSWebApp.utils import shared_data, cv_to_json, get_func_name
 from .forms import *
 from .processingFunc.crystal_extractor import ProcessingFunction
@@ -69,99 +69,39 @@ def processing_page(request, image_id):
 
 
 @csrf_exempt
-def laplacian(request, temp_idx=0):
+def laplacian(request):
     json_data = s_laplacian(request)
     return JsonResponse(json_data, safe=False)
 
 @csrf_exempt
-def kmeans(request, temp_idx=0):
+def kmeans(request):
     json_data = s_kmeans(request)
     return JsonResponse(json_data, safe=False)
 
-# @csrf_exempt
-# def lower_thresholding_white(request, temp_idx=0):
-#
-#     global temp_data_arr
-#     state_data =get_state_data(temp_data_arr, request.session['image_id'])
-#     #reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
-#
-#     if request.method == 'POST':
-#         input = request.POST.get('input')
-#         input = int(input)
-#
-#         img_data = ps_func.lower_thesholding_white(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-#         temp.update_s_img_cur('lower thresholding white', img_data)
-#
-#         save_state(temp)
-#         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-#         return JsonResponse(json_data, safe=False)
-#     else:
-#         _, image_data = cv_to_json(temp.s_img_cur)
-#     return render(request, 'imageProcessing/processing_page.html',
-#                   {'image_data': image_data, 'temp_index': temp_idx})
-#
-# @csrf_exempt
-# def upper_thresholding_white(request, temp_idx=0):
-#
-#     global temp_data_arr
-#     #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
-#     state_data =get_state_data(temp_data_arr, request.session['image_id'])
-#     if request.method == 'POST':
-#         input = request.POST.get('input')
-#         input = int(input)
-#
-#         img_data= ps_func.upper_thesholding_white(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-#         temp.update_s_img_cur('upper thresholding white', img_data)
-#         #json_data, _ = cv_to_json(s_img_cur)
-#         save_state(temp)
-#         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-#         return JsonResponse(json_data, safe=False)
-#     else:
-#         _, image_data = cv_to_json(temp.s_img_cur)
-#     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
-#
-# @csrf_exempt
-# def lower_thresholding_black(request, temp_idx=0):
-#
-#     global temp_data_arr
-#     state_data =get_state_data(temp_data_arr, request.session['image_id'])
-#     #reset_current_image('lower_thesholding', temp_idx, temp_data_arr)
-#
-#     if request.method == 'POST':
-#         input = request.POST.get('input')
-#         input = int(input)
-#
-#         img_data = ps_func.lower_thesholding_black(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-#         temp.update_s_img_cur('lower thresholding black', img_data)
-#
-#         save_state(temp)
-#         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-#         return JsonResponse(json_data, safe=False)
-#     else:
-#         _, image_data = cv_to_json(temp.s_img_cur)
-#     return render(request, 'imageProcessing/processing_page.html',
-#                   {'image_data': image_data, 'temp_index': temp_idx})
-#
-# @csrf_exempt
-# def upper_thresholding_black(request, temp_idx=0):
-#
-#     global temp_data_arr
-#     #reset_current_image('upper_theshoding', temp_idx, temp_data_arr)
-#     state_data =get_state_data(temp_data_arr, request.session['image_id'])
-#     if request.method == 'POST':
-#         input = request.POST.get('input')
-#         input = int(input)
-#
-#         img_data= ps_func.upper_thesholding_black(temp.s_img_ori.img_data, temp.s_img_cur.img_data, thresh_val=input)
-#         temp.update_s_img_cur('upper thresholding black', img_data)
-#         #json_data, _ = cv_to_json(s_img_cur)
-#         save_state(temp)
-#         json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-#         return JsonResponse(json_data, safe=False)
-#     else:
-#         _, image_data = cv_to_json(temp.s_img_cur)
-#     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index': temp_idx})
-#
+@csrf_exempt
+def extract_crystal_mask(request):
+    json_data = s_extract_crystal_mask(request)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def lower_thresholding_white(request):
+    json_data = s_lower_thresholding_white(request)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def upper_thresholding_white(request):
+    json_data = s_upper_thresholding_white(request)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def lower_thresholding_black(request):
+    json_data = s_lower_thresholding_black(request)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
+def upper_thresholding_black(request, temp_idx=0):
+    json_data = s_upper_thresholding_black(request)
+    return JsonResponse(json_data, safe=False)
 # @csrf_exempt
 # def undo_last_step(request, temp_idx=0):
 #

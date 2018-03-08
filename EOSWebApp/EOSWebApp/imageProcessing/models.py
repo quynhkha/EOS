@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.files.base import ContentFile
 from django.db import models
 from django.dispatch import receiver
-from EOSWebApp.utils import cv_to_bytesIO, compress_image
+from EOSWebApp.utils import cv_to_bytesIO, compress_image, timing
 
 
 class UploadedImage(models.Model):
@@ -55,9 +55,9 @@ class CrystalMask(models.Model):
 class TempMask(models.Model):
     mask = models.ImageField(upload_to='temp_masks/', null=True)
 
-    def save(self, mask_data=None):
-        if mask_data:
-            mask_full_name = self.image.name.split('/')[-1] + "_mask.png"
+    def save(self, image_name=None, mask_data=None):
+        if mask_data is not None:
+            mask_full_name = image_name.split('/')[-1] + "_mask.png"
             mask_bytesIO = cv_to_bytesIO(mask_data, format="PNG")
             self.mask.save(mask_full_name, content=ContentFile(mask_bytesIO.getvalue()), save=False)
 
@@ -72,9 +72,10 @@ class TempImage(models.Model):
 
     func_name = models.CharField(max_length=255, null=True, blank=True)
     func_setting = models.CharField(max_length=255, null=True, blank=True)
-    gray_levels = ArrayField(ArrayField(models.IntegerField(null=True, blank=True)))
-    k_labels = ArrayField(models.IntegerField(null=True, blank=True))
+    gray_levels = ArrayField(models.IntegerField(null=True, blank=True))
+    k_labels =  ArrayField(ArrayField(models.IntegerField(null=True, blank=True)))
 
+    @timing
     def save(self, image_name, image_data, func_name, mask, func_setting='', gray_levels= [], k_labels = [] ):
         self.func_name = func_name
         self.func_setting = func_setting
@@ -96,6 +97,9 @@ class TempImage(models.Model):
         _delete_file(self.thumbnail.path)
         super(TempImage, self).delete()
 
+# class Dummy(models.Model):
+#     k_labels = ArrayField(models.IntegerField(null=True, blank=True))
+#     gray_levels = ArrayField(ArrayField(models.IntegerField(null=True, blank=True)))
 
 def _delete_file(path):
     """ Deletes file from filesystem. """

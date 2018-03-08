@@ -1,6 +1,7 @@
 import os
 
 import cv2
+import numpy as np
 
 from EOSWebApp.imageProcessing.models import TempImage, UploadedImage, TempMask
 from EOSWebApp.utils import timing, thumbnail_plus_img_json
@@ -58,6 +59,15 @@ class StateData:
     def get_ori_image_cv(self):
         ori_image = self.get_ori_image()
         return cv2.imread(ori_image.image.path)
+
+    def get_temp_mask_cv(self, image_id):
+        temp_image = TempImage.objects.get(pk=image_id)
+        temp_mask = temp_image.mask
+        print (temp_mask.mask.name)
+
+        mask_cv = cv2.imread(temp_mask.mask.path)
+        print("******max of mask cv", np.amax(mask_cv))
+        return mask_cv
 
     def get_hist_thumbnail_cvs(self):
         thumbnail_cvs = []
@@ -153,14 +163,16 @@ def new_state_data(temp_data_arr, image_id):
 
 
 
-def update_state_data(state_data, func_name, image_cv, func_setting='', gray_levels = [], k_labels = []):
+def update_state_data(state_data, func_name, image_cv, mask_data = None, func_setting='', gray_levels = [], k_labels = []):
     temp_image = TempImage()
+    temp_image_name = func_name + state_data.get_ori_image().image.name.split('/')[-1]
+
     temp_mask = TempMask()
-    temp_mask.save()
+    temp_mask.save(temp_image_name, mask_data)
 
     # temp_image.save(get_func_name(), img_data, get_func_name(), TempMask())
 
-    temp_image.save(func_name + state_data.get_ori_image().image.name.split('/')[-1],
+    temp_image.save(temp_image_name,
                     image_cv, func_name, temp_mask, func_setting, gray_levels, k_labels)
     state_data.s_img_cur_id = temp_image.id
     # json_data, _ = cv_to_json(s_img_cur)
@@ -168,5 +180,6 @@ def update_state_data(state_data, func_name, image_cv, func_setting='', gray_lev
 
 
 def get_thumbnail_plus_img_json(state_data):
-    return thumbnail_plus_img_json(state_data.get_cur_image_cv(), state_data.get_hist_thumbnail_cvs(),
-                            state_data.get_hist_func_names())
+    return thumbnail_plus_img_json(image_cv=state_data.get_cur_image_cv(), thumbnail_cvs=state_data.get_hist_thumbnail_cvs(),
+                            func_names=state_data.get_hist_func_names(), func_name=state_data.get_cur_image().func_name,
+                                   gray_levels=state_data.get_cur_image().gray_levels)

@@ -256,8 +256,9 @@ function extract_mask(){
 }
 
 function get_temp_index() {
-    tempIndexText = document.getElementById('temp-index').innerText.toString();
-    return parseInt(tempIndexText);
+    // tempIndexText = document.getElementById('temp-index').innerText.toString();
+    // return parseInt(tempIndexText);
+    return ''
 }
 
 function set_click_ability(ctrlList, clickable) {

@@ -8,7 +8,8 @@ function do_ajax_post(e, domNameArr, inputNameArr, targetUrl, option){
         domName = domNameArr[i];
         json_data[inputName] = $("#" + domName + "").val();
     }
-    var URL = targetUrl + get_temp_index() + "/";
+    // var URL = targetUrl + get_temp_index() + "/";
+     var URL = targetUrl;
     $.ajax({
         url: URL,
         type: "POST",
@@ -44,7 +45,8 @@ function do_ajax_post_val_only(valArr, inputNameArr, targetUrl, option) {
         val = valArr[i];
         json_data[inputName] = val;
     }
-    var URL = targetUrl + get_temp_index() + "/";
+    // var URL = targetUrl + get_temp_index() + "/";
+     var URL = targetUrl;
 
     $.ajax({
         url: URL,
@@ -74,7 +76,8 @@ function do_ajax_post_val_only(valArr, inputNameArr, targetUrl, option) {
 function do_ajax_get(e, targetUrl, option) {
     e.preventDefault();
 
-    var URL = targetUrl + get_temp_index() + "/";
+    // var URL = targetUrl + get_temp_index() + "/";
+     var URL = targetUrl;
     $.ajax({
         url: URL,
         type: "GET",

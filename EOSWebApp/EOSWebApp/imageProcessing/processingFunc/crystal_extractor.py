@@ -7,6 +7,9 @@ from scipy import ndimage
 import argparse
 import sys
 
+from EOSWebApp.utils import timing
+
+
 class Segment:
     def __init__(self):
         """"""
@@ -320,6 +323,7 @@ class ProcessingFunction:
         image_copy[image_2D > thresh_val] = 0
         return image_copy
 
+    @timing
     def kmeans(self, current_image, segments):
         labels, result = self.seg.kmeans(current_image, segments)
         kmean_image, gray_levels = self.seg.kmeans_image(current_image, labels, segments)
