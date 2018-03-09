@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^library/$', views.library_page, name='library'),
     url(r'^histogram/(?P<mask_id>[0-9]+)/$', views.plot_histogram, name="plot-histogram"),
     url(r'^crystal_processing/(?P<mask_id>[0-9]+)/$', views.crystal_processing_page, name="crystal-processing-page"),
-
+    url(r'^regenerate-conf-table/$', views.regenerate_conf_table, name="regenerate-conf-table"),
 ]

@@ -59,3 +59,14 @@ $(".btn_modal_show_conf_graph").click(function (e) {
         }
     });
 });
+
+$(".btn_regen_conf_graph").click(function(e){
+    e.preventDefault();
+    $.ajax({
+        type: "GET",
+        url: "/regenerate-conf-table/",
+
+    })
+    }
+
+)

@@ -32,10 +32,20 @@
         <div class="row" style="margin-top: 100px;">
             <h3 class="text-center">Result table </h3>
 
-            {#            {% url 'crystalManagement:hist-conf-table' mask_id %}#}
-            {#            <form type="get" action="{% url 'crystalManagement:hist-conf-table' mask_id %}">#}
-            {#                 <button class="btn btn-primary" id="btn_table_1">Table1</button>#}
-            {#            </form>#}
+{#                        {% url 'crystalManagement:regenerate-conf-table' mask_id %}#}
+            <div class = "row text-center">
+                        <form method="post" action="{% url 'crystalManagement:regenerate-conf-table' %}">
+                                        <h3>Setting: </h3>
+
+  Co-similarity:<br>
+  <input type="int" name="cosim"><br>
+ Overall-similarity:<br>
+  <input type="int" name="oversim"><br>
+
+
+                             <button class="btn btn-primary" id="btn_table_1">Submit</button>
+                        </form>
+</div>
             <div class="table-responsive">
                 <table class="table text-center " style="overflow: auto; ">
                     {#                column name#}

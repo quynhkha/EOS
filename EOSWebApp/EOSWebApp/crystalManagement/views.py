@@ -33,6 +33,7 @@ def crystal_processing_page(request, mask_id):
     if not request.user.is_authenticated():
         return render(request, 'user/login.html')
     else:
+        request.session['mask_id'] = mask_id
         _, image_cv, mask_cv = get_image_mask(mask_id)
         _, ori_img_data = cv_to_json(image_cv, False)
 
@@ -129,3 +130,24 @@ def modal_show_conf_graph(request, i):
     return JsonResponse(json_data)
 
 
+@csrf_exempt
+def regenerate_conf_table(request):
+    global hist_objs
+    print(request.POST.get('oversim'))
+    overall_sim = int(request.POST.get('oversim'))
+    co_sim = int(request.POST.get('cosim'))
+    mask_id = int(request.session['mask_id'])
+    _, image_cv, mask_cv = get_image_mask(mask_id)
+    _, ori_img_data = cv_to_json(image_cv, False)
+
+    crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
+    _, crys_img_data = cv_to_json(crystal_cv, False)
+
+    global hist_objs
+    hist_objs = HistProcessing.generate_sim_table(mask_id, co_sim, overall_sim )
+
+    return render_to_response('crystalManagement/crystal_processing.html',
+                              {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id),
+                               'hist_objs': hist_objs})
+
+    # hist_objs = HistProcessing.generate_sim_table(request.session['mask_id'], 60, 60)
