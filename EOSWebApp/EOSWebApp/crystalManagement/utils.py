@@ -69,7 +69,7 @@ class HistProcessing:
 
         hist_objs = []
         for crystal in crystals:
-            crystal_cv = cv2.imread(crystal.dir)
+            crystal_cv = cv2.imread(crystal.crystal.path)
             hist_y_axis, hist_x_axis = ps_func.plot_histogram(crystal_cv)
             hist_obj = HistObj(hist_x_axis.tolist(), hist_y_axis.tolist(), crystal)
             hist_objs.append(hist_obj)
@@ -116,13 +116,14 @@ class HistProcessing:
 def get_image_mask(mask_id):
     mask_id = int(mask_id)
 
-    mask = CrystalMask.objects.get(pk=mask_id)
-    mask_cv = cv2.imread(mask.mask_dir)
-    image = mask.image
-    image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
-    image_cv = cv2.imread(image_file_dir)
-    print("mask dir ", mask.mask_dir, "image dir ", image_file_dir)
+    crystal_mask = CrystalMask.objects.get(pk=mask_id)
+    mask_cv = cv2.imread(crystal_mask.mask.path)
+    image = crystal_mask.image
+    # image_file_dir = absolute_file_dir(image.filename, IMAGE_URL)
+    # image_cv = cv2.imread(image_file_dir)
+    image_cv = cv2.imread(image.image.path)
+    # print("mask dir ", mask.mask_dir, "image dir ", image_file_dir)
 
-    return mask, image_cv, mask_cv
+    return crystal_mask, image_cv, mask_cv
 
 # Generate table

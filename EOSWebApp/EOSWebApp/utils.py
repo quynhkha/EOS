@@ -1,5 +1,6 @@
 import base64
 import inspect
+import os
 import time
 
 import numpy as np
@@ -126,3 +127,12 @@ def get_func_name():
     # frame = inspect.currentframe()
     # return inspect.getframeinfo(frame).function
     return inspect.stack()[1][3]
+
+
+def _delete_file(path):
+    """ Deletes file from filesystem. """
+    print(path)
+    if os.path.isfile(path):
+        os.remove(path)
+
+

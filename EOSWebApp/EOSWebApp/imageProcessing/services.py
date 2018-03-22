@@ -1,12 +1,15 @@
-from EOSWebApp.imageProcessing.models import TempImage
+import time
+
+from EOSWebApp.crystalManagement.models import Crystal
+from EOSWebApp.imageProcessing.models import TempImage, UploadedImage, CrystalMask
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.utils import get_state_data, update_state_data, get_thumbnail_plus_img_json
-from EOSWebApp.utils import shared_data, get_func_name
+from EOSWebApp.utils import shared_data, get_func_name, compress_image, cv_to_json, absolute_file_dir, CRYSTAL_MASK_URL
 import numpy as np
 
 ps_func = ProcessingFunction()
 temp_data_arr = shared_data.temp_data_arr
-
+CRYSTAL_DIR = '/home/long/EOS/'
 def s_laplacian(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv = ps_func.laplacian_func(state_data.get_cur_image_cv())
@@ -25,7 +28,8 @@ def s_kmeans(request):
     #print ("labels: ", labels, "gray_levels: ", gray_levels)
     #print("******max of labels", np.amax(labels))
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=np.uint8(labels), gray_levels=np.array(gray_levels).tolist())
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=np.uint8(labels),
+                      gray_levels=np.array(gray_levels).tolist(), update_mask=True)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -36,12 +40,13 @@ def s_extract_crystal_mask(request):
     print("crystal mask: ", input)
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
-    prev_temp_image_id = state_data.s_img_hist_ids[-2] #top always the original image
+    # prev_temp_image_id = state_data.s_img_hist_ids[-2] #top always the original image
 
-    image_cv = ps_func.extract_crystal_mask(state_data.get_cur_image_cv(), labels=state_data.get_temp_mask_cv(prev_temp_image_id), user_chosen_label=input)
-
+    # image_cv = ps_func.extract_crystal_mask(state_data.get_cur_image_cv(), labels=state_data.get_temp_mask_cv(prev_temp_image_id), user_chosen_label=input)
+    image_cv = ps_func.extract_crystal_mask(state_data.get_cur_image_cv(),
+                                            labels=state_data.get_temp_mask_cv(state_data.s_img_mask_id), user_chosen_label=input)
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv, update_mask=True)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -96,4 +101,182 @@ def s_upper_thresholding_black(request):
     update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
     json_data = get_thumbnail_plus_img_json(state_data)
 
+    return json_data
+
+def s_undo(request):
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+
+    if state_data.s_pointer >= 1:
+        state_data.s_pointer -= 1
+    state_data.s_img_cur_id = state_data.s_img_hist_ids[state_data.s_pointer]
+    print('undo---pointer', state_data.s_pointer)
+    # json_data, _ = cv_to_json(s_img_cur)
+    # save_state(temp)
+    json_data = get_thumbnail_plus_img_json(state_data)
+
+    return json_data
+
+def s_reset(request):
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+
+    state_data.s_img_cur_id = state_data.s_img_hist_ids[-1]
+    state_data.s_img_hist_ids = []
+
+    state_data.s_pointer = 1
+    state_data.s_img_hist_ids.append(state_data.s_img_cur_id)
+    print("---reset--- img_cur_id: ", state_data.s_img_cur_id)
+
+    json_data = get_thumbnail_plus_img_json(state_data)
+
+    return json_data
+
+def s_show_all_crystal(request):
+    state_data =get_state_data(temp_data_arr, request.session['image_id'])
+
+    image_cv= ps_func.show_all_crystal(state_data.get_ori_image_cv(), state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+
+    func_name = get_func_name()
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    json_data = get_thumbnail_plus_img_json(state_data)
+
+    return json_data
+
+#TODO: how to let user know theu need to pass a mask
+def s_fill_holes(request):
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+
+    mask_data, filled_image = ps_func.imfill(state_data.get_ori_image_cv(),state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+    func_name = get_func_name()
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=mask_data, mask_data=mask_data, update_mask=True)
+
+    json_data = get_thumbnail_plus_img_json(state_data)
+    return json_data
+
+def s_show_top_area_crystal(request):
+
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+
+    num_of_crystals = int(request.POST.get('input'))
+    image_cv, mask_data = ps_func.show_top_area_crystals(state_data.get_ori_image_cv(),
+                                                    image_mask=state_data.get_temp_mask_cv(state_data.s_img_mask_id),
+                                                    num_of_crystals=num_of_crystals)
+    func_name = get_func_name()
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=mask_data, update_mask=True)
+
+    json_data = get_thumbnail_plus_img_json(state_data)
+    return json_data
+
+def s_set_image_from_thumbnail(request):
+
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+
+    input = request.POST.get('input')
+    thumbnail_id = str(input)
+    id = int(thumbnail_id.split("_")[1])
+
+    state_data.s_pointer = id
+    state_data.s_img_cur_id = state_data.s_img_hist_ids[state_data.s_pointer]
+    print('set_img_thumbnail---pointer', state_data.s_pointer)
+    # json_data, _ = cv_to_json(s_img_cur)
+    # save_state(temp)
+    json_data = get_thumbnail_plus_img_json(state_data)
+
+    return json_data
+
+def s_large_thumbnail(request, thumbnail_id):
+    id = int(thumbnail_id)
+    print(id)
+
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+    temp_image_id = state_data.s_img_hist_ids[id]
+    image_cv = state_data.get_temp_image_cv(temp_image_id)
+    compressed_img = compress_image(image_cv, mod_size=4)
+    _, image_data = cv_to_json(compressed_img, False)
+
+    json_data = {'image_data': image_data}
+
+    return json_data
+
+
+def s_do_opening(request):
+    state_data =get_state_data(temp_data_arr, request.session['image_id'])
+    kernel_size = int(request.POST.get('kernel_size'))
+    num_of_iter = int(request.POST.get('num_of_iter'))
+
+    image_cv= ps_func.opening(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
+    func_name = get_func_name()
+
+    if len(image_cv.shape) ==2: # only update mask if user process mask with this func
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
+                          update_mask=True)
+
+    else:
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    json_data = get_thumbnail_plus_img_json(state_data)
+    return json_data
+
+
+def s_save_processed(request):
+
+    crystal_name = str(request.POST.get('name'))
+    state_data =get_state_data(temp_data_arr, request.session['image_id'])
+    #
+    # image = UploadedImage.objects.get(pk=request.session['image_id'])
+    # # original image name (extract name from path, ex: document/imageName)+ current time
+    # _, image_name = image.document.name.split('/', 1)
+    # mask_dir= absolute_file_dir(image_name, CRYSTAL_MASK_URL) + str(int(time.time())) + "_mask.png"
+    # print(mask_dir)
+    # cv2.imwrite(mask_dir, temp.s_mask_cur.img_data)
+    # mask = CrystalMask.objects.create(name= crystal_name, image = image, mask_dir = mask_dir)
+    # mask.save()
+    image = state_data.get_ori_image()
+    crystal_mask = CrystalMask()
+    crystal_mask.save(image=image, name=crystal_name, mask_data=state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+
+
+    # file_infos = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
+    # for (file_dir, file_name) in file_infos:
+    #     crystal = Crystal.objects.create(mask=mask, name=file_name, dir=file_dir)
+    #     crystal.save()
+    _, crystal_datas = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
+                                                     state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+
+    for i, crystal_data in enumerate(crystal_datas):
+        crystal = Crystal()
+        crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data)
+    json_data = {'result': 'true'}
+    return json_data
+
+def s_do_blackhat(request):
+
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+    # reset_current_image('do_dilation', temp_idx, temp_data_arr)
+    kernel_size = int(request.POST.get('kernel_size'))
+    num_of_iter = int(request.POST.get('num_of_iter'))
+
+    image_cv = ps_func.black_hat(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
+    func_name = get_func_name()
+
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+
+    json_data = get_thumbnail_plus_img_json(state_data)
+    return json_data
+
+def s_noise_removal(request):
+    state_data =get_state_data(temp_data_arr, request.session['image_id'])
+
+    area_thresh = request.POST.get('input')
+    area_thresh = int(area_thresh)
+
+    image_cv = ps_func.noise_removal(state_data.get_cur_image_cv(), area_thresh)
+
+    func_name = get_func_name()
+
+    if len(image_cv.shape) ==2: # only update mask if user process mask with this func
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
+                          update_mask=True)
+
+    else:
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    json_data = get_thumbnail_plus_img_json(state_data)
     return json_data

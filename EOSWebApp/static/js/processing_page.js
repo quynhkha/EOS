@@ -94,8 +94,9 @@ var unclickableCtrlList = [];
 var currentCtrlName = '';
 
 function ctrlObject(ctrlDom, ctrlName) {
-    this.ctrlName = ctrlName;
     this.ctrlDom = ctrlDom;
+    this.ctrlName = ctrlName;
+
 }
 
 var ctrlUpload = new ctrlObject('btn_upload', 'upload');
@@ -541,10 +542,11 @@ $("#btn_save_crystal").click(function(e){
    json_data = {'name': $("#crystal_name").val()};
     $.ajax({
         type: "POST",
-        url: '/save-processed/'+get_temp_index() + "/",
+        url: '/save-processed/',
         data: json_data,
         success: function (data) {
             alert("Image saved sucessfully!");
+            set_click_ability([ctrlToCrysProcess], true); //now user can process to next page
             console.log(data);
         },
         error: function (data) {
@@ -552,6 +554,14 @@ $("#btn_save_crystal").click(function(e){
             alert('error');
         }
     });
+});
+/************* TO CRYSTAL PROCESSING PAGE ************/
+var ctrlToCrysProcess = new ctrlObject("btn_to_crystal_process", "To crystal process");
+//init set the clickable to false
+set_click_ability([ctrlToCrysProcess], false);
+
+$("#btn_to_crystal_process").click(function(e){
+
 });
 
 

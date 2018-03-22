@@ -180,6 +180,7 @@ function plot_composition(data, a, b) {
         type: 'bar'
     }];
     Plotly.newPlot('composition-histogram', hist_data);
+    return composition_hist
 
 }
 
@@ -256,10 +257,33 @@ $("#btn_comp").click(function (e) {
 
 
     if (is_valid) {
-        plot_composition(truncated_hist, a, b);
+        composition_hist=plot_composition(truncated_hist, a, b);
+
     }
 
     else {
         alert("invalid composition value. Please input again.")
     }
 });
+
+function send_composition(composition_hist){
+     $.ajax({
+        type: "GET",
+        url: '/update-composition/'+ mask_id.toString() + "/",
+         beforeSend: function () {
+            document.body.style.cursor = "wait";
+            document.getElementById('modal-crystal-img').src ='';
+        },
+           complete: function () {
+            document.body.style.cursor = "default";
+        },
+        success: function (data) {
+          document.getElementById('modal-crystal-img').src = "data:image/jpeg;charset=utf-8;base64,"+data['image_data'];
+          document.getElementById('modal-crystal-name').innerText = data['image_name'];
+        },
+        error: function (data) {
+            console.log(data);
+            alert('error');
+        }
+    });
+}

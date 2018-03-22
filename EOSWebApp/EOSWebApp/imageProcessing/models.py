@@ -1,12 +1,10 @@
-import os
-
 import cv2
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.files.base import ContentFile
 from django.db import models
-from django.dispatch import receiver
-from EOSWebApp.utils import cv_to_bytesIO, compress_image, timing
+
+from EOSWebApp.utils import cv_to_bytesIO, compress_image, timing, _delete_file
 
 
 class UploadedImage(models.Model):
@@ -43,14 +41,28 @@ class UploadedImage(models.Model):
 class CrystalMask(models.Model):
     # TODO: add crystal image field
     image = models.ForeignKey(UploadedImage, default=1, on_delete=models.CASCADE)
+    mask = models.ImageField(upload_to='masks/', null=True)
     name = models.CharField(max_length=255, default="no name")
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    mask_dir = models.CharField(max_length=255, blank=True)
+    # mask_dir = models.CharField(max_length=255, blank=True)
 
-    @classmethod
-    def create(cls, image, mask_dir):
-        return cls(image=image, mask_dir=mask_dir)
+    # @classmethod
+    # def create(cls, image, mask_dir):
+    #     return cls(image=image, mask_dir=mask_dir)
+    def save(self, image=None, name=None, mask_data=None):
+        if mask_data is not None:
+            self.image = image
+            self.name = name
+            mask_full_name = name + "_mask.png"
+            mask_bytesIO = cv_to_bytesIO(mask_data, format="PNG")
+            self.mask.save(mask_full_name, content=ContentFile(mask_bytesIO.getvalue()), save=False)
 
+        super(CrystalMask, self).save()
+
+    def delete(self):
+
+        _delete_file(self.mask.path)
+        super(CrystalMask, self).delete()
 
 class TempMask(models.Model):
     mask = models.ImageField(upload_to='temp_masks/', null=True)
@@ -62,6 +74,11 @@ class TempMask(models.Model):
             self.mask.save(mask_full_name, content=ContentFile(mask_bytesIO.getvalue()), save=False)
 
         super(TempMask, self).save()
+
+    def delete(self):
+        _delete_file(self.mask.path)
+
+        super(TempMask, self).delete()
 
 
 class TempImage(models.Model):
@@ -100,13 +117,6 @@ class TempImage(models.Model):
 # class Dummy(models.Model):
 #     k_labels = ArrayField(models.IntegerField(null=True, blank=True))
 #     gray_levels = ArrayField(ArrayField(models.IntegerField(null=True, blank=True)))
-
-def _delete_file(path):
-    """ Deletes file from filesystem. """
-    print(path)
-    if os.path.isfile(path):
-        os.remove(path)
-
 
 # @receiver(models.signals.pre_delete, sender=UploadedImage)
 # def delete_file(sender, instance, *args, **kwargs):

@@ -429,6 +429,7 @@ class ProcessingFunction:
 
         fg_stats = stats[1:]  # index 0 = background
         file_infos = []
+        crystal_datas = []
         #TODO: improve efficiency
         for i in range(0, len(fg_stats)):
             stat = fg_stats[i]
@@ -452,7 +453,9 @@ class ProcessingFunction:
             file_dir = dir+file_name
             file_infos.append((file_dir, file_name))
             cv2.imwrite(file_dir, crystal)
-        return file_infos
+
+            crystal_datas.append(crystal)
+        return file_infos, crystal_datas
 
     # def fill_holes(self, original_image, image_mask, lo, hi, flags):
     #     img_floodfill = copy.copy(image_mask)

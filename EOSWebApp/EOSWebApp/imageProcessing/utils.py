@@ -7,7 +7,7 @@ from EOSWebApp.imageProcessing.models import TempImage, UploadedImage, TempMask
 from EOSWebApp.utils import timing, thumbnail_plus_img_json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAX_UNDO_STEP = 5
+MAX_UNDO_STEP = 10
 
 
 # def absolute_uploaded_file_dir(url):
@@ -42,7 +42,8 @@ MAX_UNDO_STEP = 5
 class StateData:
     def __init__(self, image_id):
         self.s_img_ori_id = image_id
-        self.s_img_cur_id = image_id
+        self.s_img_cur_id = 0
+        self.s_img_mask_id = 0
         self.s_img_hist_ids = []
         self.s_pointer = 1 #when delete old photo / push new photo need to update location of this pointer
 
@@ -51,6 +52,10 @@ class StateData:
 
     def get_cur_image(self):
         return TempImage.objects.get(pk=self.s_img_cur_id)
+
+    def get_temp_image_cv(self, image_id):
+        temp_image = TempImage.objects.get(pk=image_id)
+        return cv2.imread(temp_image.image.path)
 
     def get_cur_image_cv(self):
         cur_image = self.get_cur_image()
@@ -163,7 +168,7 @@ def new_state_data(temp_data_arr, image_id):
 
 
 
-def update_state_data(state_data, func_name, image_cv, mask_data = None, func_setting='', gray_levels = [], k_labels = []):
+def update_state_data(state_data, func_name, image_cv, mask_data = None, func_setting='', gray_levels = [], k_labels = [], update_mask=False):
     temp_image = TempImage()
     temp_image_name = func_name + state_data.get_ori_image().image.name.split('/')[-1]
 
@@ -175,6 +180,9 @@ def update_state_data(state_data, func_name, image_cv, mask_data = None, func_se
     temp_image.save(temp_image_name,
                     image_cv, func_name, temp_mask, func_setting, gray_levels, k_labels)
     state_data.s_img_cur_id = temp_image.id
+
+    if update_mask:
+        state_data.s_img_mask_id = temp_image.id
     # json_data, _ = cv_to_json(s_img_cur)
     state_data.save_state()
 
