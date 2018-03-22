@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^delete-mask/(?P<mask_id>[0-9]+)/$', views.delete_mask, name='delete-mask'),
     url(r'^library/$', views.library_page, name='library'),
     url(r'^histogram/(?P<mask_id>[0-9]+)/$', views.plot_histogram, name="plot-histogram"),
-    url(r'^crystal_processing/(?P<mask_id>[0-9]+)/$', views.crystal_processing_page, name="crystal-processing-page"),
+    # url(r'^crystal_processing/(?P<mask_id>[0-9]+)/$', views.crystal_processing_page, name="crystal-processing-page"),
+url(r'^crystal_processing/$', views.crystal_processing_page, name="crystal-processing-page"),
+    url(r'^gen-crystal-processing-result/$', views.gen_crystal_processing_result, name='gen-crystal-processing-result')
 
 ]

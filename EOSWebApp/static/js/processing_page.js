@@ -276,6 +276,7 @@ function set_click_ability(ctrlList, clickable) {
     for (var i = 0; i < ctrlList.length; i++) {
         var ctrlElement = ctrlList[i];
         var element = document.getElementById(ctrlElement.ctrlDom);
+        // console.log(element);
         if (element != null) {
             element.style.pointerEvents = style;
             element.style.opacity = opacity;
@@ -546,6 +547,7 @@ $("#btn_save_crystal").click(function(e){
         data: json_data,
         success: function (data) {
             alert("Image saved sucessfully!");
+            document.getElementById('mask_id').value = data['mask_id'];
             set_click_ability([ctrlToCrysProcess], true); //now user can process to next page
             console.log(data);
         },
@@ -559,10 +561,10 @@ $("#btn_save_crystal").click(function(e){
 var ctrlToCrysProcess = new ctrlObject("btn_to_crystal_process", "To crystal process");
 //init set the clickable to false
 set_click_ability([ctrlToCrysProcess], false);
-
-$("#btn_to_crystal_process").click(function(e){
-
-});
+//
+// $("#btn_to_crystal_process").click(function(e){
+//     mask_id
+// });
 
 
 /*********************** CANVAS **************************/

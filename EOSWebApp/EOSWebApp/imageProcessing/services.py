@@ -244,7 +244,7 @@ def s_save_processed(request):
     for i, crystal_data in enumerate(crystal_datas):
         crystal = Crystal()
         crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data)
-    json_data = {'result': 'true'}
+    json_data = {'mask_id': crystal_mask.id}
     return json_data
 
 def s_do_blackhat(request):

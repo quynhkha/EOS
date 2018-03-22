@@ -12,7 +12,7 @@ from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
 from EOSWebApp.utils import IMAGE_URL, TEMP_DIR, timing, cv_to_json, absolute_file_dir
 
 ps_func = ProcessingFunction()
-hist_objs = []
+hist_objs = [] #TODO: multiple users problem
 
 @csrf_exempt
 def library_page(request):
@@ -29,22 +29,49 @@ def library_page(request):
 
 #TODO: use compressed image
 @csrf_exempt
-def crystal_processing_page(request, mask_id):
+def crystal_processing_page(request):
     if not request.user.is_authenticated():
         return render(request, 'user/login.html')
     else:
+        mask_id = int(request.POST['mask_id'])
+        print (mask_id)
         _, image_cv, mask_cv = get_image_mask(mask_id)
         _, ori_img_data = cv_to_json(image_cv, False)
 
         crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
         _, crys_img_data = cv_to_json(crystal_cv, False)
 
-        global hist_objs
-        hist_objs = HistProcessing.generate_sim_table(mask_id, 80, 90)
+
 
         return render_to_response('crystalManagement/crystal_processing.html',
-                      {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id),
-                       'hist_objs': hist_objs   })
+                      {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id)})
+
+@csrf_exempt
+def gen_crystal_processing_result(request):
+    trunc_min = request.POST['trunc_min']
+    trunc_max = request.POST['trunc_max']
+    comp_a = request.POST['comp_a']
+    comp_b = request.POST['comp_b']
+    pair_thresh = request.POST['pair_thresh']
+    overall_thresh = request.POST['overall_thresh']
+    mask_id = int(request.POST['mask_id'])
+
+    print (trunc_min, trunc_max, comp_a, comp_b, pair_thresh, overall_thresh)
+
+    _, image_cv, mask_cv = get_image_mask(mask_id)
+    _, ori_img_data = cv_to_json(image_cv, False)
+
+    crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
+    _, crys_img_data = cv_to_json(crystal_cv, False)
+
+
+    global hist_objs
+    hist_objs, ref_section, idea_section = HistProcessing.generate_result(mask_id, pair_thresh, overall_thresh, trunc_min,
+                                                                           trunc_max, comp_a, comp_b)
+
+    return render_to_response('crystalManagement/crystal_processing.html',
+                              {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'mask_id': int(mask_id),
+                               'hist_objs': hist_objs, 'ref_section': ref_section, 'idea_section': idea_section})
 
 # Compare
 @csrf_exempt
@@ -101,7 +128,7 @@ def modal_show_individual_crystal(request, crystal_id):
     crystal_id = int(crystal_id)
     crystal = Crystal.objects.get(pk=crystal_id)
     # crystal_cv = cv2.imread(crystal.dir)
-    crystal_cv = read_img(crystal.dir)
+    crystal_cv = read_img(crystal.crystal.path)
     _, image_data = cv_to_json(crystal_cv, False)
 
     return JsonResponse({'image_data': image_data, 'image_name': crystal.name})
