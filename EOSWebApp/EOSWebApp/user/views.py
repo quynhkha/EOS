@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
+from EOSWebApp.imageProcessing.models import UploadedImage
 from EOSWebApp.user.forms import UserForm
 from EOSWebApp.utils import shared_data
 
@@ -66,6 +68,11 @@ def logout_user(request):
         pass
     print('temp_data_arr', temp_data_arr)
 
+    # try:
+    #
+    #     uploaded_images = UploadedImage.objects.filter(user=request.user)
+    #     for uploaded_image in uploaded_images:
+    #         temp_images = TempImage.objects.filter(image)
     # Flush session info
     try:
         del request.session['user_id']

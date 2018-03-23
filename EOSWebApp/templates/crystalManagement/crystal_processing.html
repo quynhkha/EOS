@@ -14,263 +14,273 @@
         </div>
 
 
-        <div class="">
-            <div class="row">
-                <div class="col-lg-offset-1 col-lg-5">
-                    <h3 class="text-center">Original Image</h3>
-                    <img id="image" class="img-fluid centered"
-                         src="data:image/jpeg;charset=utf-8;base64,{{ ori_img_data }}">
-                </div>
-
-                <div class="col-lg-5 col-lg-offset-1">
-                    <h3 class="text-center">Crystal Image</h3>
-                    <img id="image" class="img-fluid centered"
-                         src="data:image/jpeg;charset=utf-8;base64,{{ crys_img_data }}">
-                </div>
-            </div>
-
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">
-                        <a data-toggle="collapse" href="#pro-hist">Settings</a>
+                        <a data-toggle="collapse" href="#image-sec">Images</a>
                     </h2>
                 </div>
-                <div id="pro-hist" class="panel-collapse collapse">
-
+                <div id="image-sec" class="panel-collapse collapse">
                     <div class="panel-body">
-                            <form action="{% url 'crystalManagement:gen-crystal-processing-result' %}"
-                                                          method="post" style="display: inline;">
-                                    {% csrf_token %}
-                          <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Overall similarity threshold </label>
+
+
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-5">
+                                <h3 class="text-center">Original Image</h3>
+                                <img id="image" class="img-fluid centered"
+                                     src="data:image/jpeg;charset=utf-8;base64,{{ ori_img_data }}">
                             </div>
 
-                            <div class="col-lg-2">
-                                <input id="overall_thresh" type="number" placeholder=90 name="overall_thresh" value=90>
-                            </div>
-
-                          </div>
-                         <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Between crystal similarity threshold </label>
-                            </div>
-
-                            <div class="col-lg-2">
-                                <input id="pair_thresh" type="number" placeholder=80 name="pair_thresh" value=80>
-                            </div>
-
-                          </div>
-
-
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Original histogram </label>
-                            </div>
-                            <div class="col-lg-5">
-                                <button id="btn_histogram" type="button" data-toggle="modal"
-                                        data-target="#showHistogram"
-                                        value={{ mask_id }}>
-                                    Plot histogram
-                                </button>
-
-                            </div>
-
-                            <div class="col-lg-2"></div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Custom histogram </label>
-                            </div>
-                            <div class="col-lg-2">
-                                <input id="hist_min_thresh" type="number" placeholder="min" name="trunc_min" value="0">
-                            </div>
-                            <div class="col-lg-2">
-                                <input id="hist_max_thresh" type="number" placeholder="max" name="trunc_max" value = "255">
-                            </div>
-
-                            <div class="col-lg-3">
-                                <button id="btn_truncated_hist" data-toggle="modal" data-target="#showHistogram"
-                                        value={{ mask.id }}>Plot histogram
-                                </button>
+                            <div class="col-lg-5 col-lg-offset-1">
+                                <h3 class="text-center">Crystal Image</h3>
+                                <img id="image" class="img-fluid centered"
+                                     src="data:image/jpeg;charset=utf-8;base64,{{ crys_img_data }}">
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="control-label"> Composition </label>
-                            </div>
-                            <div class="col-lg-2">
-                                <input id="comp_a" type="float" placeholder="a value" name="comp_a" value="1">
-                            </div>
-                            <div class="col-lg-2">
-                                <input id="comp_b" type="float" placeholder="b value" name="comp_b" value="0">
-                            </div>
-
-                            <div class="col-lg-3">
-                                <button id="btn_comp" data-toggle="modal" data-target="#showHistogram"
-                                        value={{ mask.id }}>Plot composition
-                                </button>
-                            </div>
-                        </div>
-
-
-                        <div class = "form-group row">
-                                <div class="col-lg-2">
-                            <button type="submit" class="btn btn-info" id="gen_crystal_processing_result">Generate result
-                            </button>
-                        </div>
-                        </div>
-
-                                                    <input type="hidden" name="mask_id" value="{{ mask_id }}"/>
-
-                            </form>
-{##}
-{##}
-{#                             <form action="{% url 'crystalManagement:gen-crystal-processing-result' %}"#}
-{#                                                          method="post" style="display: inline;">#}
-{#                                                        {% csrf_token %}#}
-{#                                                        <button type="submit"#}
-{#                                                                class="btn_download_crystal btn btn-success btn-xs"#}
-{#                                                                value={{ mask.id }}>#}
-{#                                                            <input type="hidden" name="mask_id" value="{{ mask.id }}"/>#}
-{#                                                              <input type="hidden" name="trunc_min" value=""/>#}
-{#                                                              <input type="hidden" name="trunc_max" value=""/>#}
-{#                                                              <input type="hidden" name="mask_id" value=""/>#}
-{#                                                              <input type="hidden" name="mask_id" value=""/>#}
-{#                                                              <input type="hidden" name="mask_id" value=""/>#}
-{#                                                              <input type="hidden" name="mask_id" value=""/>#}
-{##}
-{#                                                            <span class="glyphicon glyphicon-download"></span>&nbsp;#}
-{#                                                            Generate result#}
-{#                                                        </button>#}
-{#                                                    </form>#}
-
-
-
-                        {#                        <button type="button"#}
-                        {#                                class="btn_modal_show_histogram btn btn-primary btn-xs"#}
-                        {#                                data-toggle="modal" data-target="#showHistogram"#}
-                        {#                                value={{ mask.id }}>#}
-                        {#                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp; Show#}
-                        {#                            histogram#}
-                        {#                        </button>#}
                     </div>
-                    <div class="panel-footer"></div>
+
                 </div>
-            </div>
-        </div>
 
-            <div class="row" style="margin-top: 100px;">
-                <h3 class="text-center">Result table </h3>
-
-                {#            {% url 'crystalManagement:hist-conf-table' mask_id %}#}
-                {#            <form type="get" action="{% url 'crystalManagement:hist-conf-table' mask_id %}">#}
-                {#                 <button class="btn btn-primary" id="btn_table_1">Table1</button>#}
-                {#            </form>#}
-                <div class="table-responsive">
-                    <table class="table text-center " style="overflow: auto; ">
-                        {#                column name#}
-
-                        <tr>
-                            <th class="text-center">Crystal name</th>
-                            <th class="text-center">Num of pairs</th>
-                            <th class="text-center">Similarity with overall image</th>
-                            <th class="text-center">Confusion graph</th>
-                            {#                        {% for hist_obj in hist_objs %}#}
-                            {#                            <td>#}
-                            {##}
-                            {#                            </td>#}
-                            {#                        {% endfor %}#}
-                        </tr>
-
-                        {% for hist_obj in hist_objs %}
-                            <tr>
-                                <td>
-                                    <button type="button"
-                                            class="btn_modal_show_individual_crystal"
-                                            data-toggle="modal" data-target="#showCrystal"
-                                            value={{ hist_obj.crystal.id }}>
-                                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;
-                                        {{ hist_obj.crystal.name }}
-                                    </button>
-                                </td>
-                                <td>{{ hist_obj.num_pair }}</td>
-                                <td>{{ hist_obj.overall_sim }}</td>
-                                {#                            {% for similarity in hist_obj.similarities %}#}
-                                {#                                <td>{{ similarity.similarity_percentage }} %, {{ similarity.is_same_type }}</td>#}
-                                {#                                <td>#}
-                                {#                                    <div id="confusion-graph-i{{ forloop.counter0 }}"></div></td>#}
-                                <td>
-                                    <button type="button"
-                                            class="btn_modal_show_conf_graph"
-                                            data-toggle="modal" data-target="#showConfGraph"
-                                            value={{ forloop.counter0 }}>
-                                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;
-                                        Show confusion graph
-                                    </button>
-                                </td>
-                                {#                            {% endfor %}#}
-                            </tr>
-                        {% endfor %}
-                    </table>
-
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr>
-                                <th>Reference section</th>
-                                <th>Ideal section</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="{{ ref_section.crystal.crystal.url }}">
-                                </td>
-                                <td>
-                                    <img src="{{ idea_section.crystal.crystal.url }}">
-                                </td>
-                            </tr>
-                        </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#setting-sec">Settings</a>
+                        </h2>
                     </div>
+                    <div id="setting-sec" class="panel-collapse collapse">
 
-                    <div id="showCrystal" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;
-                                    </button>
-                                    <h4 class="modal-title" id="modal-crystal-name"></h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <img id="modal-crystal-img" class="centered"
-                                                 width="100%"
-                                                 src="">
-                                        </div>
+                        <div class="panel-body">
+                            <form action="{% url 'crystalManagement:gen-crystal-processing-result' %}"
+                                  method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Overall similarity threshold </label>
                                     </div>
 
+                                    <div class="col-lg-2">
+                                        <input id="overall_thresh" type="number" placeholder=90 name="overall_thresh"
+                                               value=90>
+                                    </div>
 
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default"
-                                            data-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Between crystal similarity threshold </label>
+                                    </div>
 
+                                    <div class="col-lg-2">
+                                        <input id="pair_thresh" type="number" placeholder=80 name="pair_thresh"
+                                               value=80>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Original histogram </label>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <button id="btn_histogram" type="button" data-toggle="modal"
+                                                data-target="#showHistogram"
+                                                value={{ mask_id }}>
+                                            Plot histogram
+                                        </button>
+
+                                    </div>
+
+                                    <div class="col-lg-2"></div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Custom histogram </label>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input id="hist_min_thresh" type="number" placeholder="min" name="trunc_min"
+                                               value="0">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input id="hist_max_thresh" type="number" placeholder="max" name="trunc_max"
+                                               value="255">
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <button id="btn_truncated_hist" data-toggle="modal" data-target="#showHistogram"
+                                                value={{ mask.id }}>Plot histogram
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <label class="control-label"> Composition </label>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input id="comp_a" type="float" placeholder="a value" name="comp_a" value="1">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input id="comp_b" type="float" placeholder="b value" name="comp_b" value="0">
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <button id="btn_comp" data-toggle="modal" data-target="#showHistogram"
+                                                value={{ mask.id }}>Plot composition
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <div class="col-lg-2">
+                                        <button type="submit" class="btn btn-info" id="gen_crystal_processing_result">
+                                            Generate result
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="mask_id" value="{{ mask_id }}"/>
+
+                            </form>
+                            {##}
+                            {##}
+                            {#                             <form action="{% url 'crystalManagement:gen-crystal-processing-result' %}"#}
+                            {#                                                          method="post" style="display: inline;">#}
+                            {#                                                        {% csrf_token %}#}
+                            {#                                                        <button type="submit"#}
+                            {#                                                                class="btn_download_crystal btn btn-success btn-xs"#}
+                            {#                                                                value={{ mask.id }}>#}
+                            {#                                                            <input type="hidden" name="mask_id" value="{{ mask.id }}"/>#}
+                            {#                                                              <input type="hidden" name="trunc_min" value=""/>#}
+                            {#                                                              <input type="hidden" name="trunc_max" value=""/>#}
+                            {#                                                              <input type="hidden" name="mask_id" value=""/>#}
+                            {#                                                              <input type="hidden" name="mask_id" value=""/>#}
+                            {#                                                              <input type="hidden" name="mask_id" value=""/>#}
+                            {#                                                              <input type="hidden" name="mask_id" value=""/>#}
+                            {##}
+                            {#                                                            <span class="glyphicon glyphicon-download"></span>&nbsp;#}
+                            {#                                                            Generate result#}
+                            {#                                                        </button>#}
+                            {#                                                    </form>#}
+
+
+                            {#                        <button type="button"#}
+                            {#                                class="btn_modal_show_histogram btn btn-primary btn-xs"#}
+                            {#                                data-toggle="modal" data-target="#showHistogram"#}
+                            {#                                value={{ mask.id }}>#}
+                            {#                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp; Show#}
+                            {#                            histogram#}
+                            {#                        </button>#}
                         </div>
+                        <div class="panel-footer"></div>
                     </div>
-
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#ref-sec">Reference and Idea section</a>
+                        </h2>
+                    </div>
+                    <div id="ref-sec" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <th>Reference section</th>
+                                        <th>Ideal section</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="{{ ref_section.crystal.crystal.url }}">
+                                        </td>
+                                        <td>
+                                            <img src="{{ idea_section.crystal.crystal.url }}">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel-footer"></div>
+                    </div>
                 </div>
 
-                <div id="showConfGraph" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#conf-table-sec">Confusion table</a>
+                        </h2>
+                    </div>
+                    <div id="conf-table-sec" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row" style="margin-top: 100px;">
+                                <h3 class="text-center">Result table </h3>
+
+                                {#            {% url 'crystalManagement:hist-conf-table' mask_id %}#}
+                                {#            <form type="get" action="{% url 'crystalManagement:hist-conf-table' mask_id %}">#}
+                                {#                 <button class="btn btn-primary" id="btn_table_1">Table1</button>#}
+                                {#            </form>#}
+                                <div class="table-responsive">
+                                    <table class="table text-center " style="overflow: auto; ">
+                                        {#                column name#}
+
+                                        <tr>
+                                            <th class="text-center">Crystal name</th>
+                                            <th class="text-center">Num of pairs</th>
+                                            <th class="text-center">Similarity with overall image</th>
+                                            <th class="text-center">Confusion graph</th>
+                                            {#                        {% for hist_obj in hist_objs %}#}
+                                            {#                            <td>#}
+                                            {##}
+                                            {#                            </td>#}
+                                            {#                        {% endfor %}#}
+                                        </tr>
+
+                                        {% for hist_obj in hist_objs %}
+                                            <tr>
+                                                <td>
+                                                    <button type="button"
+                                                            class="btn_modal_show_individual_crystal"
+                                                            data-toggle="modal" data-target="#showCrystal"
+                                                            value={{ hist_obj.crystal.id }}>
+                                                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;
+                                                        {{ hist_obj.crystal.name }}
+                                                    </button>
+                                                </td>
+                                                <td>{{ hist_obj.num_pair }}</td>
+                                                <td>{{ hist_obj.overall_sim }}</td>
+                                                {#                            {% for similarity in hist_obj.similarities %}#}
+                                                {#                                <td>{{ similarity.similarity_percentage }} %, {{ similarity.is_same_type }}</td>#}
+                                                {#                                <td>#}
+                                                {#                                    <div id="confusion-graph-i{{ forloop.counter0 }}"></div></td>#}
+                                                <td>
+                                                    <button type="button"
+                                                            class="btn_modal_show_conf_graph"
+                                                            data-toggle="modal" data-target="#showConfGraph"
+                                                            value={{ forloop.counter0 }}>
+                                                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;
+                                                        Show confusion graph
+                                                    </button>
+                                                </td>
+                                                {#                            {% endfor %}#}
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="panel-footer"></div>
+                    </div>
+                </div>
+
+
+                <div id="showCrystal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
 
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -282,7 +292,9 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div id="confusion-graph"></div>
+                                        <img id="modal-crystal-img" class="centered"
+                                             width="100%"
+                                             src="">
                                     </div>
                                 </div>
 
@@ -300,45 +312,75 @@
                 </div>
 
             </div>
-        </div>
 
+            <div id="showConfGraph" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-lg">
 
-
-
-        {#                                    Histogram #}
-        <div id="showHistogram" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-lg">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;
-                        </button>
-                        <h4 class="modal-title" id="modal-crystal-name"></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div id="histogram"></div>
-
-                                {#                                <div id="truncated-histogram"></div>#}
-                                {#                                <div id="composition-histogram"></div>#}
-
-                            </div>
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;
+                            </button>
+                            <h4 class="modal-title" id="modal-crystal-name"></h4>
                         </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div id="confusion-graph"></div>
+                                </div>
+                            </div>
 
 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default"
-                                data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
+
                 </div>
-
             </div>
+
         </div>
+    </div>
+
+
+    {#                                    Histogram #}
+    <div id="showHistogram" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                    <h4 class="modal-title" id="modal-crystal-name"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="histogram"></div>
+
+                            {#                                <div id="truncated-histogram"></div>#}
+                            {#                                <div id="composition-histogram"></div>#}
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     </div>
     </div>
