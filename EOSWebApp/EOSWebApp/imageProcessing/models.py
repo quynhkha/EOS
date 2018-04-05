@@ -41,6 +41,7 @@ class TempMask(models.Model):
     def save(self, image_name=None, mask_data=None):
         if mask_data is not None:
             mask_full_name = image_name.split('/')[-1] + "_mask.png"
+            # need to use PNG format (lossless), otherwise later processing step will have noise
             mask_bytesIO = cv_to_bytesIO(mask_data, format="PNG")
             self.mask.save(mask_full_name, content=ContentFile(mask_bytesIO.getvalue()), save=False)
 
@@ -70,10 +71,12 @@ class TempImage(models.Model):
         self.mask = mask
         self.gray_levels = gray_levels
         self.k_labels = k_labels
-        image_full_name = image_name + ".jpg"
-        image_bytesIO = cv_to_bytesIO(image_data)
+        image_full_name = image_name + ".png"
+        # need to use PNG format (lossless), otherwise later processing step will have noise
+        image_bytesIO = cv_to_bytesIO(image_data, format="PNG")
         self.image.save(image_full_name, content=ContentFile(image_bytesIO.getvalue()), save=False)
 
+        # use jpeg format for thumbnail for smaller file
         thumbnail_full_name = image_name + "_thumb" + ".jpg"
         thumbnail_cv = compress_image(image_data)
         thumbnail_bytesIO = cv_to_bytesIO(thumbnail_cv)

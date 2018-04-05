@@ -816,7 +816,7 @@ function saveCanvas(cx) {
     // var image = document.getElementById('image');
     // image.src = jpegUrl;
 
-    do_ajax_post_val_only([jpegUrl], ['mask'], '/update-mask/');
+    do_ajax_post_val_only([jpegUrl], ['mask'], '/update-mask/', []);
     // setCanvasWrapperSize();
     cx.canvas.style.display = "none";
 
