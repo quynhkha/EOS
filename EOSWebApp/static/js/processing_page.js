@@ -5,13 +5,13 @@ function disp_hist_thumbnail(data) {
     $('#hist-thumbnail').empty();
     //remove all the zoom div
     //remove all the zoom div
-     $('.zoomContainer').remove();
+    $('.zoomContainer').remove();
     for (i = 0; i < hist_thumbnail_data_arr.length; i++) {
         var thumbnail_id = "thumb_" + i;
         $('#hist-thumbnail').prepend($('<img>', {
             id: thumbnail_id,
             class: "img-fluid centered thumbnail",
-            src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i],
+            src: "data:image/jpeg;charset=utf-8;base64," + hist_thumbnail_data_arr[i]['image_data'],
             onmouseover: "on_hover_thumbnail(id)",
             onclick: "on_click_thumbnail(id)",
 
@@ -20,7 +20,7 @@ function disp_hist_thumbnail(data) {
     }
 }
 
-function on_hover_thumbnail(thumbnail_id){
+function on_hover_thumbnail(thumbnail_id) {
     id = thumbnail_id.split("_")[1];
     var URL = "/large-thumbnail/" + id + "/";
     var large_thumbnail_src = '';
@@ -36,22 +36,23 @@ function on_hover_thumbnail(thumbnail_id){
             document.body.style.cursor = "default";
         },
         success: function (data) {
-                large_thumbnail_src = "data:image/jpeg;charset=utf-8;base64," + data['image_data'];
-                 image.src = large_thumbnail_src;
-                 console.log('image height', 'image width', image.height, image.width, thumbnail_id);
+            large_thumbnail_src = "data:image/jpeg;charset=utf-8;base64," + data['image_data'];
+            image.src = large_thumbnail_src;
+            console.log('image height', 'image width', image.height, image.width, thumbnail_id);
             document.getElementById(thumbnail_id).setAttribute('data-zoom-image', image.src);
 
-        $("#"+thumbnail_id).elevateZoom({	zoomWindowFadeIn:0,
-			zoomWindowFadeOut: 0,
-			lensFadeIn: 500,
-			lensFadeOut: 500,
-        zoomWindowWidth: 640,
-        zoomWindowHeight: 480,
-        scrollZoom: true,
-  //         zoomType				: "lens",
-  // lensShape : "round",
-  // lensSize    : 200,
-        });
+            $("#" + thumbnail_id).elevateZoom({
+                zoomWindowFadeIn: 0,
+                zoomWindowFadeOut: 0,
+                lensFadeIn: 500,
+                lensFadeOut: 500,
+                zoomWindowWidth: 640,
+                zoomWindowHeight: 480,
+                scrollZoom: true,
+                //         zoomType				: "lens",
+                // lensShape : "round",
+                // lensSize    : 200,
+            });
         },
 
         error: function (data) {
@@ -71,7 +72,7 @@ function imageToDataUri(img, width, height) {
 
     // create an off-screen canvas
     var canvas = document.createElement('canvas'),
-    ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d');
 
     // set its dimension to target size
     canvas.width = width;
@@ -89,6 +90,7 @@ function disp_slider_val(dispDom, sliderDom) {
     $("#" + dispDom + "").val($("#" + sliderDom + "").val());
     return $("#" + sliderDom + "").val();
 }
+
 var clickableCtrlList = [];
 var unclickableCtrlList = [];
 var currentCtrlName = '';
@@ -203,8 +205,7 @@ function update_clickable(data) {
 }
 
 function update_gray_levels(data) {
-    console.log("data", data);
-    //init the element
+
     var grayLevelDom = document.getElementById('label-extraction');
     if (!document.getElementById('gray-level-list')) {
         var grayLevelList = elt("div", {id: "gray-level-list"});
@@ -218,7 +219,7 @@ function update_gray_levels(data) {
 
     //update the list content
     //update with new list content if kmeans is done
-    if (data['gray_levels'] !='') {
+    if (data['gray_levels'] != '') {
         grayLevelList.innerHTML = '';
         var grayLevels = data["gray_levels"];
         for (var i = 0; i < grayLevels.length; i++) {
@@ -250,9 +251,9 @@ function update_gray_levels(data) {
     }
 }
 
-function extract_mask(){
-     var label_index = this.value;
-    do_ajax_post_val_only([label_index], ['input'], '/extract-crystal-mask/');
+function extract_mask() {
+    var label_index = this.value;
+    do_ajax_post_val_only([label_index], ['input'], '/extract-crystal-mask/', [label_index]);
     console.log("label: ", label_index);
 }
 
@@ -286,17 +287,17 @@ function set_click_ability(ctrlList, clickable) {
 }
 
 
-function morphCtrlMapping(input){
+function morphCtrlMapping(input) {
     var kernel = 1;
     var iter = 1;
     image = document.getElementById('image');
     var naturalWidth = image.naturalWidth;
-    var coeff = Math.floor(naturalWidth/2000)+1; //base case: width = 500 -> coeff =1
+    var coeff = Math.floor(naturalWidth / 2000) + 1; //base case: width = 500 -> coeff =1
 
     input = parseInt(input);
-    switch(input){
+    switch (input) {
         case 1:
-            kernel =1;
+            kernel = 1;
             iter = 1;
             break;
         case 2:
@@ -320,7 +321,7 @@ function morphCtrlMapping(input){
             iter = 2;
             break;
         case 7:
-            kernel =5;
+            kernel = 5;
             iter = 2;
             break;
         case 8:
@@ -333,7 +334,7 @@ function morphCtrlMapping(input){
             iter = 3;
             break;
         case 10:
-            kernel =5;
+            kernel = 5;
             iter = 3;
             break;
         case 11:
@@ -346,7 +347,7 @@ function morphCtrlMapping(input){
             break;
         case 13:
             kernel = 5;
-            iter =4;
+            iter = 4;
             break;
         case 14:
             kernel = 6;
@@ -361,7 +362,7 @@ function morphCtrlMapping(input){
             iter = 1;
             break;
     }
-    return {'kernel_size': kernel*coeff, 'num_of_iter': iter};
+    return {'kernel_size': kernel * coeff, 'num_of_iter': iter};
 }
 
 /******************* DOM EVENT HANDLING *********************/
@@ -372,79 +373,79 @@ $("#btn_laplacian").click(function (e) {
 
 $("#slider-lower-thresh-white").change(function (e) {
     disp_slider_val('slider-val-lower-thresh-white', 'slider-lower-thresh-white');
-    do_ajax_post(e, ['slider-lower-thresh-white'], ['input'], '/lower-thresholding-white/', {'update_image': true});
+    do_ajax_post(e, ['slider-lower-thresh-white'], ['input'], '/lower-thresholding-white/', ['slider-val-lower-thresh-white', 'slider-lower-thresh-white'], {'update_image': true});
 });
 
 $("#slider-upper-thresh-white").change(function (e) {
     disp_slider_val('slider-val-upper-thresh-white', 'slider-upper-thresh-white');
-    do_ajax_post(e, ['slider-upper-thresh-white'], ['input'], '/upper-thresholding-white/', {'update_image': true});
+    do_ajax_post(e, ['slider-upper-thresh-white'], ['input'], '/upper-thresholding-white/', ['slider-val-upper-thresh-white', 'slider-upper-thresh-white'], {'update_image': true});
 });
 
 $("#slider-lower-thresh-black").change(function (e) {
     disp_slider_val('slider-val-lower-thresh-black', 'slider-lower-thresh-black');
-    do_ajax_post(e, ['slider-lower-thresh-black'], ['input'], '/lower-thresholding-black/', {'update_image': true});
+    do_ajax_post(e, ['slider-lower-thresh-black'], ['input'], '/lower-thresholding-black/', ['slider-val-lower-thresh-black', 'slider-lower-thresh-black'], {'update_image': true});
 });
 
 $("#slider-upper-thresh-black").change(function (e) {
     disp_slider_val('slider-val-upper-thresh-black', 'slider-upper-thresh-black');
-    do_ajax_post(e, ['slider-upper-thresh-black'], ['input'], '/upper-thresholding-black/', {'update_image': true});
+    do_ajax_post(e, ['slider-upper-thresh-black'], ['input'], '/upper-thresholding-black/', ['slider-val-upper-thresh-black', 'slider-upper-thresh-black'], {'update_image': true});
 });
 
 
 $("#slider-kmeans").click(function (e) {
     disp_slider_val('slider-val-kmeans', 'slider-kmeans');
-    do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/', {'update_image': true});
+    do_ajax_post(e, ['slider-kmeans'], ['input'], '/kmeans/', ['slider-val-kmeans', 'slider-kmeans'], {'update_image': true});
 });
 
 $("#btn_extract_crystal_mask").click(function (e) {
-    do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/', {'update_image': true});
+    do_ajax_post(e, ['crystal_label'], ['input'], '/extract-crystal-mask/', ['crystal_label'], {'update_image': true});
 });
 
 $("#slider-opening").click(function (e) {
     input_val = disp_slider_val('slider-val-opening', 'slider-opening');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/opening/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/opening/', ['slider-val-opening', 'slider-opening'], {'update_image': true});
 });
 
 $("#slider-closing").click(function (e) {
     input_val = disp_slider_val('slider-val-closing', 'slider-closing');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/closing/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/closing/', ['slider-val-closing', 'slider-closing'], {'update_image': true});
 });
 
 $("#slider-erosion").click(function (e) {
     input_val = disp_slider_val('slider-val-erosion', 'slider-erosion');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/erosion/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/erosion/', ['slider-val-erosion', 'slider-erosion'], {'update_image': true});
 });
 
 $("#slider-dilation").click(function (e) {
     input_val = disp_slider_val('slider-val-dilation', 'slider-dilation');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/dilation/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/dilation/', ['slider-val-dilation', 'slider-dilation'], {'update_image': true});
 });
 
 $("#slider-morphgrad").click(function (e) {
     input_val = disp_slider_val('slider-val-morphgrad', 'slider-morphgrad');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/morphgrad/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/morphgrad/', ['slider-val-morphgrad', 'slider-morphgrad'], {'update_image': true});
 });
 $("#slider-tophat").click(function (e) {
     input_val = disp_slider_val('slider-val-tophat', 'slider-tophat');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/tophat/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/tophat/', ['slider-val-tophat', 'slider-tophat'], {'update_image': true});
 });
 $("#slider-blackhat").click(function (e) {
     input_val = disp_slider_val('slider-val-blackhat', 'slider-blackhat');
     kernel_iter_val = morphCtrlMapping(input_val);
-    console.log (input_val, kernel_iter_val);
-    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/blackhat/', {'update_image': true});
+    console.log(input_val, kernel_iter_val);
+    do_ajax_post_val_only([kernel_iter_val['kernel_size'], kernel_iter_val['num_of_iter']], ['kernel_size', 'num_of_iter'], '/blackhat/', ['slider-val-blackhat', 'slider-blackhat'], {'update_image': true});
 });
 // $("#slider-opening-kernel").change(function (e) {
 //     disp_slider_val('slider-opening-val-kernel', 'slider-opening-kernel');
@@ -493,15 +494,15 @@ $("#slider-blackhat").click(function (e) {
 //     do_ajax_post(e, ['slider-dilation-kernel', 'slider-dilation-iter'], ['kernel_size', 'num_of_iter'], '/dilation/');
 // });
 
-$("#btn_fourier").click(function(e){
+$("#btn_fourier").click(function (e) {
     do_ajax_get(e, '/fourier/', {'update_image': true})
 });
 
-$("#btn_backproj").click(function(e){
+$("#btn_backproj").click(function (e) {
     do_ajax_get(e, '/backproj/', {'update_image': true})
 });
-$("#btn_noise_removal").click(function(e){
-    do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/', {'update_image': true})
+$("#btn_noise_removal").click(function (e) {
+    do_ajax_post(e, ['area_thresh'], ['input'], '/noise-removal/', ['area_thresh'], {'update_image': true})
 });
 
 // $("#btn_fill_hole").click(function (e) {
@@ -509,15 +510,15 @@ $("#btn_noise_removal").click(function(e){
 // });
 
 $("#btn_fill_hole").click(function (e) {
-     do_ajax_get(e, '/fill-holes/', {'update_image': true});
- });
+    do_ajax_get(e, '/fill-holes/', {'update_image': true});
+});
 
 $("#btn_all_crystal").click(function (e) {
     do_ajax_get(e, '/all-crystal/', {'update_image': true});
 });
 
 $("#btn_extract_top_crystal").click(function (e) {
-    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/', {'update_image': true});
+    do_ajax_post(e, ['num_crystal_label'], ['input'], '/top-crystal/', ['num_crystal_label'], {'update_image': true});
 });
 
 
@@ -534,13 +535,9 @@ $("#btn_base64").click(function (e) {
     do_ajax_get(e, '/base64/', {'update_image': true});
 });
 
-$("#btn_undo").click(function (e) {
-    do_ajax_get(e, '/undo/', {'update_image': true});
-});
-
-$("#btn_save_crystal").click(function(e){
-   e.preventDefault();
-   json_data = {'name': $("#crystal_name").val()};
+$("#btn_save_crystal").click(function (e) {
+    e.preventDefault();
+    json_data = {'name': $("#crystal_name").val()};
     $.ajax({
         type: "POST",
         url: '/save-processed/',
@@ -565,6 +562,53 @@ set_click_ability([ctrlToCrysProcess], false);
 // $("#btn_to_crystal_process").click(function(e){
 //     mask_id
 // });
+
+
+/************ UNDO/RESET ************************/
+function reset_func_setting(data) {
+    func_setting = data['func_setting'];
+    if (data['func_setting'] != "") {
+        func_setting = JSON.parse(func_setting);
+        if (Array.isArray(func_setting)) {
+            for (var i = 0; i < func_setting.length; i++) {
+                setting = func_setting[i];
+
+                $("#" + setting['domName'] + "").val(setting['domVal']);
+            }
+        }
+    }
+
+}
+
+
+$("#btn_undo").click(function (e) {
+
+    // do_ajax_get(e, '/undo/', {'update_image': true});
+    URL = '/undo/';
+    $.ajax({
+        url: URL,
+        type: "GET",
+
+        beforeSend: function () {
+            document.body.style.cursor = "wait";
+        },
+        complete: function () {
+            document.body.style.cursor = "default";
+        },
+        success: function (data) {
+            update_image(data);
+            update_clickable(data);
+            disp_hist_thumbnail(data);
+            update_gray_levels(data);
+            reset_func_setting(data);
+        },
+
+        error: function (data) {
+            alert('error');
+        }
+
+    });
+});
 
 
 /*********************** CANVAS **************************/
@@ -727,7 +771,7 @@ controls.brushSize = function (cx) {
     });
     select.addEventListener("change", function () {
         cx.lineWidth = select.value;
-         document.body.style.cursor = "cursor: url(cursor.png)";
+        document.body.style.cursor = "cursor: url(cursor.png)";
     });
     return elt("span", null, "Brush size: ", select);
 };
@@ -789,14 +833,14 @@ controls.saveDrawing = function (cx) {
     return form;
 };
 
-controls.clearDrawing = function (cx){
+controls.clearDrawing = function (cx) {
     var form = elt("form", null,
         elt("button", {type: "submit"}, "Clear drawing"
         ));
-    form.addEventListener("submit", function(event){
+    form.addEventListener("submit", function (event) {
         event.preventDefault();
         //if canvas is shown
-        if (cx.canvas.style.display == "block"){
+        if (cx.canvas.style.display == "block") {
             cx.clearRect(0, 0, cx.canvas.width, cx.canvas.height);
         }
     });

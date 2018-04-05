@@ -24,13 +24,14 @@ def s_kmeans(request):
     print('kmean input', input)
     input = int(input)
 
+    func_setting = request.POST.get('func_setting')
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv, labels, gray_levels = ps_func.kmeans(state_data.get_cur_image_cv(), segments=input)
     #print ("labels: ", labels, "gray_levels: ", gray_levels)
     #print("******max of labels", np.amax(labels))
     func_name = get_func_name()
     update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=np.uint8(labels),
-                      gray_levels=np.array(gray_levels).tolist(), update_mask=True)
+                      func_setting= func_setting, gray_levels=np.array(gray_levels).tolist(), update_mask=True)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -39,6 +40,7 @@ def s_extract_crystal_mask(request):
     input = request.POST.get('input')
     input = int(input)
     print("crystal mask: ", input)
+    func_setting = request.POST.get('func_setting')
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     # prev_temp_image_id = state_data.s_img_hist_ids[-2] #top always the original image
@@ -47,7 +49,8 @@ def s_extract_crystal_mask(request):
     image_cv = ps_func.extract_crystal_mask(state_data.get_cur_image_cv(),
                                             labels=state_data.get_temp_mask_cv(state_data.s_img_mask_id), user_chosen_label=input)
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv, update_mask=True)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
+                      func_setting=func_setting, update_mask=True)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -55,12 +58,13 @@ def s_extract_crystal_mask(request):
 def s_lower_thresholding_white(request):
     input = request.POST.get('input')
     input = int(input)
+    func_setting = request.POST.get('func_setting')
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv = ps_func.lower_thesholding_white(state_data.get_ori_image_cv(), state_data.get_cur_image_cv(), thresh_val=input)
 
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -68,12 +72,13 @@ def s_lower_thresholding_white(request):
 def s_upper_thresholding_white(request):
     input = request.POST.get('input')
     input = int(input)
+    func_setting = request.POST.get('func_setting')
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv = ps_func.upper_thesholding_white(state_data.get_ori_image_cv(), state_data.get_cur_image_cv(), thresh_val=input)
 
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting )
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -81,12 +86,13 @@ def s_upper_thresholding_white(request):
 def s_lower_thresholding_black(request):
     input = request.POST.get('input')
     input = int(input)
+    func_setting = request.POST.get('func_setting')
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv = ps_func.lower_thesholding_black(state_data.get_ori_image_cv(), state_data.get_cur_image_cv(), thresh_val=input)
 
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -94,12 +100,13 @@ def s_lower_thresholding_black(request):
 def s_upper_thresholding_black(request):
     input = request.POST.get('input')
     input = int(input)
+    func_setting = request.POST.get('func_setting')
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
-    image_cv = ps_func.upper_thesholding_black(state_data.get_ori_image_cv(), state_data.get_cur_image_cv(), thresh_val=input)
+    image_cv = ps_func.upper_thesholding_black(state_data.get_ori_image_cv(), state_data.get_cur_image_cv(),thresh_val=input)
 
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
 
     return json_data
@@ -158,11 +165,15 @@ def s_show_top_area_crystal(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
 
     num_of_crystals = int(request.POST.get('input'))
+    func_setting = request.POST.get('func_setting')
+
+
     image_cv, mask_data = ps_func.show_top_area_crystals(state_data.get_ori_image_cv(),
                                                     image_mask=state_data.get_temp_mask_cv(state_data.s_img_mask_id),
                                                     num_of_crystals=num_of_crystals)
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=mask_data, update_mask=True)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=mask_data,
+                      update_mask=True, func_setting= func_setting,)
 
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
@@ -172,6 +183,7 @@ def s_set_image_from_thumbnail(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
 
     input = request.POST.get('input')
+
     thumbnail_id = str(input)
     id = int(thumbnail_id.split("_")[1])
 
@@ -203,16 +215,17 @@ def s_do_opening(request):
     state_data =get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
 
     image_cv= ps_func.opening(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
     if len(image_cv.shape) ==2: # only update mask if user process mask with this func
         update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
-                          update_mask=True)
+                          func_setting=func_setting, update_mask=True)
 
     else:
-        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
@@ -220,15 +233,17 @@ def s_do_closing(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
+
     image_cv= ps_func.closing(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
     if len(image_cv.shape) ==2: # only update mask if user process mask with this func
         update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
-                          update_mask=True)
+                          func_setting=func_setting, update_mask=True)
 
     else:
-        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
@@ -237,15 +252,17 @@ def s_do_erosion(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
+
     image_cv = ps_func.erosion(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
     if len(image_cv.shape) == 2:  # only update mask if user process mask with this func
         update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
-                          update_mask=True)
+                          func_setting=func_setting, update_mask=True)
 
     else:
-        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
@@ -253,15 +270,17 @@ def s_do_dilation(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
+
     image_cv = ps_func.dilation(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
     if len(image_cv.shape) == 2:  # only update mask if user process mask with this func
         update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
-                          update_mask=True)
+                          func_setting=func_setting, update_mask=True)
 
     else:
-        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
@@ -269,6 +288,7 @@ def s_save_processed(request):
 
     crystal_name = str(request.POST.get('name'))
     state_data =get_state_data(temp_data_arr, request.session['image_id'])
+
     #
     # image = UploadedImage.objects.get(pk=request.session['image_id'])
     # # original image name (extract name from path, ex: document/imageName)+ current time
@@ -302,11 +322,12 @@ def s_do_blackhat(request):
     # reset_current_image('do_dilation', temp_idx, temp_data_arr)
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
 
     image_cv = ps_func.black_hat(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
 
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
@@ -316,11 +337,12 @@ def s_do_morphgrad(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
 
     image_cv = ps_func.morph_gradient(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
 
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
@@ -329,11 +351,12 @@ def s_do_tophat(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     kernel_size = int(request.POST.get('kernel_size'))
     num_of_iter = int(request.POST.get('num_of_iter'))
+    func_setting = request.POST.get('func_setting')
 
     image_cv = ps_func.top_hat(state_data.get_cur_image_cv(), kernel_size, num_of_iter)
     func_name = get_func_name()
 
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
 
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
@@ -343,6 +366,7 @@ def s_noise_removal(request):
 
     area_thresh = request.POST.get('input')
     area_thresh = int(area_thresh)
+    func_setting = request.POST.get('func_setting')
 
     image_cv = ps_func.noise_removal(state_data.get_cur_image_cv(), area_thresh)
 
@@ -350,10 +374,10 @@ def s_noise_removal(request):
 
     if len(image_cv.shape) ==2: # only update mask if user process mask with this func
         update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=image_cv,
-                          update_mask=True)
+                          update_mask=True, func_setting= func_setting)
 
     else:
-        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+        update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
@@ -367,8 +391,7 @@ def s_update_mask(request):
 
 
     func_name = get_func_name()
-    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=mask_cv,
-                      update_mask=True)
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, mask_data=mask_cv, update_mask=True)
     json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 

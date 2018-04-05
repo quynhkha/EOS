@@ -15,7 +15,7 @@ urlpatterns = [
     # url(r'^post/new/$', views.post_new, name ='post_new'),
     # url(r'^success/$', views.success_message, name='success_message'),
 
-    url(r'^$', views.index, name='index'),
+
     url(r'^processing_page/(?P<image_id>[0-9]+)/$', views.processing_page, name='processing_page'),
     # url(r'^upload/$', ImageProcessingView.as_view()),
     url(r'^lower-thresholding-white/$', views.lower_thresholding_white, name='lower-thesholding-white'),

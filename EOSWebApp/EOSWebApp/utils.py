@@ -85,20 +85,22 @@ def json_to_cv(json_img):
 
 
 @timing
-def thumbnail_plus_img_json(image_cv, thumbnail_cvs, func_names, func_name= None, gray_levels= None):
-    thumbnail_arr_base64 = []
-    thumbnail_arr_func_name = []
-    _, base64_image = cv_to_json(image_cv)
+def thumbnail_plus_img_json(image_obj, thumbnail_objs):
 
-    for thumbnail_cv in thumbnail_cvs:
-        _, thumbnail_base64 = cv_to_json(thumbnail_cv)
-        thumbnail_arr_base64.append(thumbnail_base64)
+    thumbnail_arr = []
+    _, base64_image = cv_to_json(image_obj.image_data)
 
-    for func_name in func_names:
-        thumbnail_arr_func_name.append(func_name)
 
-    json_data = {'image_data': base64_image, 'func_name': func_name, 'gray_levels': gray_levels,
-                 'thumbnail_arr': thumbnail_arr_base64, 'thumb_func_name': thumbnail_arr_func_name}
+    for thumbnail_obj in thumbnail_objs:
+
+        _, thumbnail_base64 = cv_to_json(thumbnail_obj.image_data)
+        thumbnail_arr.append({'image_data': thumbnail_base64, 'func_name': thumbnail_obj.func_name,
+                              'func_setting': thumbnail_obj.func_setting})
+
+    json_data = {'image_data': base64_image, 'func_name': image_obj.func_name,
+                 'func_setting': image_obj.func_setting,
+                 'gray_levels': image_obj.gray_levels,
+                 'thumbnail_arr': thumbnail_arr}
     return json_data
 
 

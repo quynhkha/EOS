@@ -12,18 +12,6 @@ from .utils import *
 ps_func = ProcessingFunction()
 temp_data_arr = shared_data.temp_data_arr
 
-def index(request):
-    if not request.user.is_authenticated():
-        return render(request, 'user/login.html')
-    else:
-        images = UploadedImage.objects.filter(user=request.user)
-
-        # update session info
-        request.session['user_id'] = request.user.id
-        # print(images)
-        return render(request, 'index.html', {'user': request.user, 'images': images})
-
-
 
 @csrf_exempt
 def processing_page(request, image_id):

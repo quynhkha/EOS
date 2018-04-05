@@ -73,26 +73,41 @@ class StateData:
         mask_cv = cv2.imread(temp_mask.mask.path)
         print("******max of mask cv", np.amax(mask_cv))
         return mask_cv
+    #
+    # def get_hist_thumbnail_cvs(self):
+    #     thumbnail_cvs = []
+    #
+    #     for img_hist_id in self.s_img_hist_ids:
+    #         temp_image = TempImage.objects.get(pk=img_hist_id)
+    #         thumbnail = temp_image.thumbnail
+    #         thumbnail_cv = cv2.imread(thumbnail.path)
+    #         thumbnail_cvs.append(thumbnail_cv)
+    #
+    #     return thumbnail_cvs
+    #
+    # def get_hist_func_names(self):
+    #     func_names = []
+    #
+    #     for img_hist_id in self.s_img_hist_ids:
+    #         temp_image = TempImage.objects.get(pk=img_hist_id)
+    #         func_name = temp_image.func_name
+    #         func_names.append(func_name)
+    #     return func_names
 
-    def get_hist_thumbnail_cvs(self):
-        thumbnail_cvs = []
-
-        for img_hist_id in self.s_img_hist_ids:
-            temp_image = TempImage.objects.get(pk=img_hist_id)
-            thumbnail = temp_image.thumbnail
-            thumbnail_cv = cv2.imread(thumbnail.path)
-            thumbnail_cvs.append(thumbnail_cv)
-
-        return thumbnail_cvs
-
-    def get_hist_func_names(self):
-        func_names = []
+    def get_hist_image_objs(self):
+        hist_img_objs = []
 
         for img_hist_id in self.s_img_hist_ids:
             temp_image = TempImage.objects.get(pk=img_hist_id)
             func_name = temp_image.func_name
-            func_names.append(func_name)
-        return func_names
+            thumbnail = temp_image.thumbnail
+            thumbnail_cv = cv2.imread(thumbnail.path)
+            func_setting = temp_image.func_setting
+            hist_obj = ImgObj(thumbnail_cv, func_name, func_setting)
+            hist_img_objs.append(hist_obj)
+
+        return hist_img_objs
+
 
     def pop_img_hist(self):
         img_hist_id = self.s_img_hist_ids.pop(0)
@@ -166,7 +181,12 @@ def new_state_data(temp_data_arr, image_id):
 #     i = int(index)
 #     return temp_data_arr[i]
 
-
+class ImgObj():
+    def __init__(self, image_data, func_name, func_setting, gray_levels = None):
+        self.image_data = image_data
+        self.func_name = func_name
+        self.func_setting = func_setting
+        self.gray_levels = gray_levels
 
 def update_state_data(state_data, func_name, image_cv, mask_data = None, func_setting='', gray_levels = [], k_labels = [], update_mask=False):
     temp_image = TempImage()
@@ -188,6 +208,13 @@ def update_state_data(state_data, func_name, image_cv, mask_data = None, func_se
 
 
 def get_thumbnail_plus_img_json(state_data):
-    return thumbnail_plus_img_json(image_cv=state_data.get_cur_image_cv(), thumbnail_cvs=state_data.get_hist_thumbnail_cvs(),
-                            func_names=state_data.get_hist_func_names(), func_name=state_data.get_cur_image().func_name,
-                                   gray_levels=state_data.get_cur_image().gray_levels)
+    image_obj = ImgObj(image_data = state_data.get_cur_image_cv(), func_name=state_data.get_cur_image().func_name,
+                       func_setting= state_data.get_cur_image().func_setting,
+                       gray_levels=state_data.get_cur_image().gray_levels)
+
+    thumbnail_objs = state_data.get_hist_image_objs()
+    # return thumbnail_plus_img_json(image_cv=state_data.get_cur_image_cv(), thumbnail_cvs=state_data.get_hist_thumbnail_cvs(),
+    #                         func_names=state_data.get_hist_func_names(), func_name=state_data.get_cur_image().func_name,
+    #                                gray_levels=state_data.get_cur_image().gray_levels)
+
+    return thumbnail_plus_img_json(image_obj, thumbnail_objs)
