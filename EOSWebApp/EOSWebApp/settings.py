@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     # local apps
     'EOSWebApp.imageProcessing',
     'EOSWebApp.user',
-    'EOSWebApp.crystalManagement'
+    'EOSWebApp.crystalManagement',
+    'EOSWebApp.uploadImage'
 
 ]
 

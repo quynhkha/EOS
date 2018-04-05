@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import *
+from EOSWebApp.uploadImage.models import *
 
 class ImageForm(forms.ModelForm):
     class Meta:

@@ -22,9 +22,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('EOSWebApp.imageProcessing.urls')),
     url(r'^', include('EOSWebApp.user.urls')),
-    url(r'^', include('EOSWebApp.crystalManagement.urls'))
+    url(r'^', include('EOSWebApp.crystalManagement.urls')),
+    url(r'^', include('EOSWebApp.uploadImage.urls'))
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
