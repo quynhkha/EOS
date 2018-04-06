@@ -19,19 +19,15 @@ var imageHeight = image.height;
 var canvas = document.getElementById("scale-canvas");
 var ctx = canvas.getContext("2d");
 
-// set canvas size to current image size
-canvas.width = imageWidth;
-canvas.height = imageHeight;
 
 var startX, startY, mouseX, mouseY;
 var isDown = false;
 
 
 function initScaleCanvas() {
-    ctx.strokeStyle = "green";
-    ctx.lineWidth = 3;
+
     // set the wrapper size to current canvas size
-    setCanvasWrapperSize();
+    initCanvas();
 
     // draw the image to canvas wrapper
     drawTheImage();
@@ -51,6 +47,14 @@ function initScaleCanvas() {
     });
 
 
+}
+
+function setCanvasProperty(width, height, color, lineWidth) {
+    // set canvas size to current image size
+    canvas.width = width;
+    canvas.height = height;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
 }
 
 function draw() {
@@ -131,28 +135,32 @@ function getElementSize(elementId) {
 }
 
 
-function setCanvasWrapperSize() {
+function initCanvas() {
     canvasWrapperSize = getElementSize('canvas-wrapper');
     var canvasWrapperHeight = Math.floor(imageHeight * canvasWrapperSize.width / imageWidth) + 1;
     canvasWrapper.style.height = canvasWrapperHeight.toString() + 'px';
+    var canvasWrapperWidth = Math.floor(canvasWrapperHeight * imageWidth / imageHeight) + 1;
+    canvasWrapper.style.width = canvasWrapperWidth.toString() + 'px';
+
+    setCanvasProperty(canvasWrapperWidth, canvasWrapperHeight, 'green', 3);
 }
 
 
 function updateDistance() {
     var relativeDist = Math.sqrt((mouseX - startX) * (mouseX - startX) +
         (mouseY - startY) * (mouseY - startY));
-    var realPixelDist = parseInt(relativeDist * imageNaturalWidth / imageNaturalWidth);
+    var realPixelDist = parseInt(relativeDist * imageNaturalWidth / canvas.width);
     $("#pixel-dist").val(realPixelDist);
     console.log('realPixelDist', realPixelDist);
 }
 
 
-$("#update_scale").click(function (e){
-     URL = '/update-scale/';
-     var json_data = {};
-        json_data['image_id'] = $("#image_id").val();
-         json_data['pixel_dist'] = $("#pixel-dist").val();
-         json_data['real_dist'] =  $("#real-dist").val();
+$("#update_scale").click(function (e) {
+    URL = '/update-scale/';
+    var json_data = {};
+    json_data['image_id'] = $("#image_id").val();
+    json_data['pixel_dist'] = $("#pixel-dist").val();
+    json_data['real_dist'] = $("#real-dist").val();
     $.ajax({
         url: URL,
         type: "POST",
@@ -165,7 +173,7 @@ $("#update_scale").click(function (e){
             document.body.style.cursor = "default";
         },
         success: function (data) {
-                alert("Image scale updated!");
+            alert("Image scale updated!");
         },
 
         error: function (data) {

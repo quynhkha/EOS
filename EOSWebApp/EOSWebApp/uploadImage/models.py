@@ -2,7 +2,7 @@ import cv2
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 from EOSWebApp.utils import compress_image, cv_to_bytesIO, _delete_file
 
@@ -13,7 +13,7 @@ class UploadedImage(models.Model):
     thumbnail = models.ImageField(upload_to='thumbnails/', null=True)
     description = models.CharField(max_length=255, blank=True)
     filename = models.CharField(max_length=255, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
     dist_per_pixel = models.FloatField(null=True)
 
     # thumbnail_url = models.CharField(max_length=255, blank=True)

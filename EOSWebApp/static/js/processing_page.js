@@ -65,7 +65,7 @@ function on_hover_thumbnail(thumbnail_id) {
 
 function on_click_thumbnail(thumbnail_id) {
     console.log("thumbnail id: ", thumbnail_id);
-    do_ajax_post_val_only([thumbnail_id], ['input'], '/img-from-thumbnail/');
+    do_ajax_post_val_only([thumbnail_id], ['input'], '/img-from-thumbnail/', []);
 }
 
 function imageToDataUri(img, width, height) {
@@ -805,7 +805,7 @@ controls.updateImage = function (cx) {
 function saveCanvas(cx) {
     var jpegUrl = convertCanvasData(cx);
     do_ajax_post_val_only([jpegUrl], ['mask'], '/update-mask/', []);
-    // setCanvasWrapperSize();
+    // initCanvas();
     cx.canvas.style.display = "none";
 
 }

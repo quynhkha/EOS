@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.files.base import ContentFile
 from django.db import models
+from django.utils import timezone
 
 from EOSWebApp.uploadImage.models import UploadedImage
 from EOSWebApp.utils import cv_to_bytesIO, compress_image, timing, _delete_file
@@ -14,7 +15,7 @@ class CrystalMask(models.Model):
     image = models.ForeignKey(UploadedImage, default=1, on_delete=models.CASCADE)
     mask = models.ImageField(upload_to='masks/', null=True)
     name = models.CharField(max_length=255, default="no name")
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
     # mask_dir = models.CharField(max_length=255, blank=True)
 
     # @classmethod
