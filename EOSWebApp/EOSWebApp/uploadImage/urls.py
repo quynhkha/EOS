@@ -6,5 +6,7 @@ app_name = 'uploadImage'
 urlpatterns = [
 url(r'^$', views.index, name='index'),
     url(r'^upload/$', views.upload_image, name='upload'),
+    url(r'^update-scale/$', views.update_image_scale, name='update scale'),
+
 
 ]

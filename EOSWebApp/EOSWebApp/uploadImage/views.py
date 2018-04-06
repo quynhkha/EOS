@@ -1,5 +1,6 @@
 import cv2
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -41,11 +42,24 @@ def upload_image(request):
             image_cv = cv2.imread(uploaded_image.image.path)
             _, image_data = cv_to_json(image_cv)
             # return redirect('imageProcessing:processing_page', image_id=imageDB.id)
-            return render(request, 'uploadImage/update_image_scale.html', {'image_data': image_data})
+            return render(request, 'uploadImage/update_image_scale.html', {'image_data': image_data, 'image_id': uploaded_image.id})
     else:
         image_form =ImageForm()
     return render(request, 'uploadImage/upload_image.html', {'form': image_form})
 
-
+@csrf_exempt
 def update_image_scale(request):
-    return
+    pixel_dist = int(request.POST.get('pixel_dist'))
+    real_dist = int(request.POST.get('real_dist'))
+    image_id = int(request.POST.get('image_id'))
+
+    image = UploadedImage.objects.get(pk=image_id)
+    image.dist_per_pixel = float(real_dist/pixel_dist)
+    image.save()
+
+    json_data = {'status': 'success'}
+    return JsonResponse(json_data)
+
+
+
+
