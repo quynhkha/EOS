@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Update Image Info{% endblock %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/update_image_scale.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-6">
+
+                <div id="canvas-wrapper">
+                     <canvas id="scale-canvas"></canvas>
+                </div>
+                <img class="img-responsive centered" id="scale-canvas-img" style="display: none;" src= "data:image/jpeg;charset=utf-8;base64,{{ image_data }}">
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+        <script src="{% static 'js/update_image_scale.js' %}"></script>
+    <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+    <script>initScaleCanvas();</script>
+{% endblock %}

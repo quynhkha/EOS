@@ -1,3 +1,4 @@
+import cv2
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -6,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from EOSWebApp.uploadImage.forms import ImageForm
 from EOSWebApp.uploadImage.models import UploadedImage
+from EOSWebApp.utils import cv_to_json
 
 
 def index(request):
@@ -24,18 +26,26 @@ def index(request):
 @login_required
 def upload_image(request):
     if request.method == 'POST':
-        imageForm = ImageForm(request.POST, request.FILES)
-        if imageForm.is_valid():
-            imageDB = imageForm.save()
+        image_form = ImageForm(request.POST, request.FILES)
+        if image_form.is_valid():
+            uploaded_image = image_form.save()
 
             file= request.FILES['image']
             print("filename", file.name, "file content type", file.content_type, "file size", file.size)
-            imageDB.filename = file.name
-            imageDB.user = request.user
-            imageDB.save()
-            return redirect('imageProcessing:processing_page', image_id=imageDB.id)
+            uploaded_image.filename = file.name
+            uploaded_image.user = request.user
+            uploaded_image.save()
+
+            # need to pass base64 image instead of img url because some images are in tif format which is non-displayable
+            # by html <img src=""> method
+            image_cv = cv2.imread(uploaded_image.image.path)
+            _, image_data = cv_to_json(image_cv)
+            # return redirect('imageProcessing:processing_page', image_id=imageDB.id)
+            return render(request, 'uploadImage/update_image_scale.html', {'image_data': image_data})
     else:
-        imageForm =ImageForm()
-    return render(request, 'uploadImage/upload_image.html', {'form': imageForm})
+        image_form =ImageForm()
+    return render(request, 'uploadImage/upload_image.html', {'form': image_form})
 
 
+def update_image_scale(request):
+    return

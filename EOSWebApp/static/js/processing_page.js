@@ -803,19 +803,7 @@ controls.updateImage = function (cx) {
 };
 
 function saveCanvas(cx) {
-    // var data = cx.getImageData(0, 0, cx.canvas.width, cx.canvas.height).data;
-    // console.log(data);
-    // console.log(JSON.stringify(data));
-
-    // var jpegUrl = cx.canvas.toDataURL("image/jpeg");
-
     var jpegUrl = convertCanvasData(cx);
-    // console.log(jpegUrl);
-
-    // return data;
-    // var image = document.getElementById('image');
-    // image.src = jpegUrl;
-
     do_ajax_post_val_only([jpegUrl], ['mask'], '/update-mask/', []);
     // setCanvasWrapperSize();
     cx.canvas.style.display = "none";

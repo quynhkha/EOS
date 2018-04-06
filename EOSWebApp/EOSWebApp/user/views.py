@@ -48,7 +48,7 @@ def login_user(request):
                 login(request, user)
 
                 # return render(request, 'imageProcessing/index.html', {'user': user})
-                return redirect('imageProcessing:index')
+                return redirect('uploadImage:index')
             else:
                 return render(request, 'error.html', {'error_message': "Your account has been deactivated"})
         else:
