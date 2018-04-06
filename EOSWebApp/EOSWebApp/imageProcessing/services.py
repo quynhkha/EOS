@@ -307,12 +307,19 @@ def s_save_processed(request):
     # for (file_dir, file_name) in file_infos:
     #     crystal = Crystal.objects.create(mask=mask, name=file_name, dir=file_dir)
     #     crystal.save()
-    _, crystal_datas = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
+    _, crystal_datas, crystal_areas = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
                                                      state_data.get_temp_mask_cv(state_data.s_img_mask_id))
 
     for i, crystal_data in enumerate(crystal_datas):
         crystal = Crystal()
-        crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data)
+
+        # round to 2 decimal place
+        pixel_area = round(float(crystal_areas[i]), 2)
+        dist_per_pixel = image.dist_per_pixel
+        real_area = round(pixel_area* dist_per_pixel * dist_per_pixel, 2)
+
+        crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data,
+                     pixel_area= pixel_area, real_area = real_area)
     json_data = {'mask_id': crystal_mask.id}
     return json_data
 

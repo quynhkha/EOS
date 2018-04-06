@@ -133,7 +133,7 @@ def get_func_name():
 
 def _delete_file(path):
     """ Deletes file from filesystem. """
-    print(path)
+    print("delete file at: ", path)
     if os.path.isfile(path):
         os.remove(path)
 

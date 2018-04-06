@@ -49,7 +49,8 @@ class TempMask(models.Model):
         super(TempMask, self).save()
 
     def delete(self):
-        _delete_file(self.mask.path)
+        if self.mask:
+            _delete_file(self.mask.path)
 
         super(TempMask, self).delete()
 

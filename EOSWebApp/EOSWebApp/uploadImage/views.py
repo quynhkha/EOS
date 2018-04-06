@@ -24,28 +24,40 @@ def index(request):
 
 
 @csrf_exempt
-@login_required
 def upload_image(request):
-    if request.method == 'POST':
-        image_form = ImageForm(request.POST, request.FILES)
-        if image_form.is_valid():
-            uploaded_image = image_form.save()
-
-            file= request.FILES['image']
-            print("filename", file.name, "file content type", file.content_type, "file size", file.size)
-            uploaded_image.filename = file.name
-            uploaded_image.user = request.user
-            uploaded_image.save()
-
-            # need to pass base64 image instead of img url because some images are in tif format which is non-displayable
-            # by html <img src=""> method
-            image_cv = cv2.imread(uploaded_image.image.path)
-            _, image_data = cv_to_json(image_cv)
-            # return redirect('imageProcessing:processing_page', image_id=imageDB.id)
-            return render(request, 'uploadImage/update_image_scale.html', {'image_data': image_data, 'image_id': uploaded_image.id})
+    if not request.user.is_authenticated():
+        return render(request, 'user/login.html')
     else:
-        image_form =ImageForm()
-    return render(request, 'uploadImage/upload_image.html', {'form': image_form})
+        if request.method == 'POST':
+            image_form = ImageForm(request.POST, request.FILES)
+            if image_form.is_valid():
+                uploaded_image = image_form.save()
+
+                file= request.FILES['image']
+                print("filename", file.name, "file content type", file.content_type, "file size", file.size)
+                uploaded_image.filename = file.name
+                uploaded_image.user = request.user
+                uploaded_image.save()
+            return update_image_scale_page(request, uploaded_image.id)
+
+        else:
+            image_form =ImageForm()
+        return render(request, 'uploadImage/upload_image.html', {'form': image_form})
+
+@csrf_exempt
+def update_image_scale_page(request, image_id):
+    if not request.user.is_authenticated():
+        return render(request, 'user/login.html')
+    else:
+        image_id = int(image_id)
+        uploaded_image = UploadedImage.objects.get(pk=image_id)
+        # need to pass base64 image instead of img url because some images are in tif format which is non-displayable
+        # by html <img src=""> method
+        image_cv = cv2.imread(uploaded_image.image.path)
+        _, image_data = cv_to_json(image_cv)
+        # return redirect('imageProcessing:processing_page', image_id=imageDB.id)
+        return render(request, 'uploadImage/update_image_scale.html',
+                      {'image_data': image_data, 'image_id': uploaded_image.id})
 
 @csrf_exempt
 def update_image_scale(request):
@@ -54,7 +66,8 @@ def update_image_scale(request):
     image_id = int(request.POST.get('image_id'))
 
     image = UploadedImage.objects.get(pk=image_id)
-    image.dist_per_pixel = float(real_dist/pixel_dist)
+    # round to 2 decimal place
+    image.dist_per_pixel = round(float(real_dist/pixel_dist), 2)
     image.save()
 
     json_data = {'status': 'success'}

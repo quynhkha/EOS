@@ -87,7 +87,7 @@ def download_crystal(request, mask_id=0):
 
     mask, image_cv, mask_cv = get_image_mask(mask_id)
     # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
-    file_infos,_ = ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
+    file_infos,_, _= ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
     #TODO: seperate to download and create crystal
 
     #TODO: choose correct dir to zip

@@ -16,7 +16,7 @@ temp_data_arr = shared_data.temp_data_arr
 @csrf_exempt
 def processing_page(request, image_id):
     # update the session info
-    request.session['image_id'] = image_id
+    request.session['image_id'] = int(image_id)
     print(request.session['image_id']) #debug
 
     global temp_data_arr
@@ -28,14 +28,9 @@ def processing_page(request, image_id):
     temp_image.save(get_func_name() + state_data.get_ori_image().image.name.split('/')[-1], state_data.get_ori_image_cv(), get_func_name(), temp_mask)
     state_data.s_img_cur_id = temp_image.id
 
-    # json_data, _ = cv_to_json(s_img_cur)
     state_data.save_state()
 
-    # image = UploadedImage.objects.get(pk=request.session['image_id'])
-
     _, image_data = cv_to_json(state_data.get_cur_image_cv())
-    # json_data = thumbnail_plus_img_json(state_data.s_img_cur, state_data.s_thumb_hist_arr)
-    # return JsonResponse(json_data, safe=False)
 
     return render(request, 'imageProcessing/processing_page.html', {'image_data': image_data, 'temp_index':0})
     #  TODO: fix with thumbnail
@@ -179,29 +174,6 @@ def do_blackhat(request):
 
 @csrf_exempt
 def update_mask(request):
-    # if request.method == 'POST':
-    #     rgb_mask_data = request.POST.get('mask')
-    #     rgb_mask = json_to_cv(rgb_mask_data)
-    #
-    #
-    #     global temp_data_arstate_datatemp =get_state_data(temp_data_arr, request.session['image_id'])
-    #
-    #     img_data, mask_data = ps_func.handle_mask(rgb_mask, temp.s_mask_cur.img_data, temp.s_img_ori.img_data)
-    #
-    #     temp.update_s_img_cur('update mask', img_data)
-    #     temp.s_mask_cur.img_data = mask_data
-    #     temp.s_mask_cur.func_name = 'update mask'
-    #     # s_img_cur = ps_func.show_all_crystal(s_img_ori=s_img_ori,
-    #     #                                                     image_mask=s_mask_cur)
-    #     # json_data, _ = cv_to_json(s_img_cur)
-    #
-    #     save_state(temp)
-    #
-    #     json_data = thumbnail_plus_img_json(temp.s_img_cur, temp.s_thumb_hist_arr)
-    #     return JsonResponse(json_data, safe=False)
-    #     # json_data = thumbnail_plus_img_json(mask, s_thumb_hist_arr)
-    #     # return JsonResponse(json_data, safe=False)
-
     json_data = s_update_mask(request)
     return JsonResponse(json_data, safe=False)
 
@@ -216,12 +188,10 @@ def save_processed(request):
     # TODO: check whether is a mask
     json_data = s_save_processed(request)
     return JsonResponse(json_data, safe=False)
-    # return JsonResponse({'mask_dir': mask_dir}, safe=False)
 
 
 @csrf_exempt
 def large_thumbnail(request, thumbnail_id):
     json_data = s_large_thumbnail(request, thumbnail_id)
-
     return JsonResponse(json_data)
 

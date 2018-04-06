@@ -11,16 +11,20 @@ class Crystal(models.Model):
     mask = models.ForeignKey(CrystalMask, default=1, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     crystal =  models.ImageField(upload_to="crystals/", null=True)
+    pixel_area = models.IntegerField(null=True)
+    real_area = models.IntegerField(null=True)
     # dir = models.CharField(max_length=255, blank=True)
     #
     # @classmethod
     # def create(cls, mask, name, crystal_dir):
     #     return cls(mask=mask, name=name, crystal_dir=crystal_dir)
 
-    def save(self, mask = None, name=None, crystal_data = None):
+    def save(self, mask = None, name=None, crystal_data = None, pixel_area = None, real_area = None):
         if crystal_data is not None:
             self.mask = mask
             self.name = name
+            self.pixel_area = pixel_area
+            self.real_area = real_area
             crystal_bytesIO = cv_to_bytesIO(crystal_data, format="PNG")
             self.crystal.save(name+'.png', content=ContentFile(crystal_bytesIO.getvalue()), save=False)
         super(Crystal, self).save()

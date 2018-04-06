@@ -112,7 +112,12 @@ class StateData:
     def pop_img_hist(self):
         img_hist_id = self.s_img_hist_ids.pop(0)
         temp_image = TempImage.objects.filter(pk=img_hist_id)
-        temp_image.delete()
+        temp_mask = temp_image.mask
+        try:
+            temp_image.delete()
+            temp_mask.delete()
+        except:
+            pass
 
     def save_state(self):
         if len(self.s_img_hist_ids) >= MAX_UNDO_STEP:
@@ -147,7 +152,25 @@ class StateData:
         print('pointer position', self.s_pointer)
 
     def reset(self):
-        pass
+        self.delete_hist_imgs()
+        self.s_img_cur_id = 0
+        self.s_img_mask_id = 0
+        self.s_img_hist_ids = []
+        self.s_pointer = 1
+
+    def delete_hist_imgs(self):
+        for img_id in self.s_img_hist_ids:
+            print('hist_id', img_id)
+            try:
+                temp_image = TempImage.objects.get(pk=img_id)
+                temp_mask = temp_image.mask
+                temp_image.delete()
+                temp_mask.delete()
+            except:
+                raise
+
+
+
 
 # class StateImage:
 #     def __init__(self, func_name, img_data, gray_levels=''):
@@ -162,6 +185,12 @@ class StateData:
 @timing
 def get_state_data(temp_data_arr, image_id):
     return next((state_data for state_data in temp_data_arr if state_data.s_img_ori_id == image_id), None)
+
+def find_state_data(temp_data_arr, image_id):
+    for state_data in temp_data_arr:
+        if state_data.s_img_ori_id == image_id:
+            return state_data
+    return None
 
 # if the image already had the state_data, replace it with fresh state_data
 def new_state_data(temp_data_arr, image_id):

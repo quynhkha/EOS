@@ -22,6 +22,20 @@
 
                                 <h4><strong>File name: </strong>{{ image.filename }}</h4>
                                 <h5><strong>Date uploaded: </strong> {{ image.uploaded_at }}</h5>
+                                {%  if image.dist_per_pixel %}
+                                 <h5><strong>Real distance (per pixel): </strong> {{image.dist_per_pixel }} (<span>&#181;</span>m)</h5>
+
+                                {% else %}
+                                     <h5 class="text-danger"><strong>Image scale has not been set! </strong></h5>
+                                     <form action="{% url 'uploadImage:update-image-scale-page' image.id %}"
+                                                          method="get" style="display: inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger btn-xs">
+                                                            <span class="glyphicon glyphicon-arrow-right"></span>&nbsp;
+                                                            Set image scale
+                                                        </button>
+                                                    </form>
+                                {% endif  %}
 
                             </div>
                         </div>

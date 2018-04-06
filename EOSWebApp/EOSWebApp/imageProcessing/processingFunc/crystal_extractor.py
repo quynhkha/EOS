@@ -430,6 +430,7 @@ class ProcessingFunction:
         fg_stats = stats[1:]  # index 0 = background
         file_infos = []
         crystal_datas = []
+        crystal_areas = []
         #TODO: improve efficiency
         for i in range(0, len(fg_stats)):
             stat = fg_stats[i]
@@ -437,6 +438,7 @@ class ProcessingFunction:
             y = stat[1]
             width = stat[2]
             height = stat[3]
+            area = stat[4]
 
             # Since here we skip the index 0 of background image, we need plus 1 to match the index here with the index of
             # the original labels array
@@ -454,8 +456,9 @@ class ProcessingFunction:
             file_infos.append((file_dir, file_name))
             cv2.imwrite(file_dir, crystal)
 
+            crystal_areas.append(area)
             crystal_datas.append(crystal)
-        return file_infos, crystal_datas
+        return file_infos, crystal_datas, crystal_areas
 
     # def fill_holes(self, original_image, image_mask, lo, hi, flags):
     #     img_floodfill = copy.copy(image_mask)

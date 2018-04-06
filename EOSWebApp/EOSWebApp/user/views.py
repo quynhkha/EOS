@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from EOSWebApp.imageProcessing.models import UploadedImage
+from EOSWebApp.imageProcessing.utils import get_state_data, find_state_data
 from EOSWebApp.user.forms import UserForm
 from EOSWebApp.utils import shared_data
 
@@ -57,31 +58,29 @@ def login_user(request):
 
 
 def logout_user(request):
-
-    # TODO: clear user's temp data
-    global temp_data_arr
     try:
-        for temp in temp_data_arr:
-            if temp.user_id == request.session['user_id'] and temp.image_id == request.session['image_id']:
-                temp_data_arr.remove(temp)
-    except KeyError:
-        pass
-    print('temp_data_arr', temp_data_arr)
+        images = UploadedImage.objects.filter(user=request.user)
+        for image in images:
+            try:
+                state_data = find_state_data(temp_data_arr, image.id)
 
-    # try:
-    #
-    #     uploaded_images = UploadedImage.objects.filter(user=request.user)
-    #     for uploaded_image in uploaded_images:
-    #         temp_images = TempImage.objects.filter(image)
-    # Flush session info
-    try:
-        del request.session['user_id']
-        if request.session['image_id'] is not None:
+                if state_data is not None:
+                    print('image_id', state_data.s_img_ori_id)
+                    state_data.delete_hist_imgs()
+                    temp_data_arr.remove(state_data)
+
+            except:
+                raise
+        print('temp_data_arr', temp_data_arr)
+        try:
+            del request.session['user_id']
             del request.session['image_id']
-    except KeyError:
-        pass
+        except:
+            pass
+        logout(request)
 
-    logout(request)
+    except:
+        pass
     form = UserForm(request.POST or None)
     context = {
         "form": form,
