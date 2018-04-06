@@ -62,4 +62,12 @@ def update_image_scale(request):
 
 
 
+@csrf_exempt
+def delete_image(request, image_id):
+    image_id = int(image_id)
+    image = UploadedImage.objects.get(pk=image_id)
+    image.delete()
+    images = UploadedImage.objects.filter(user=request.user)
+    return render(request, 'index.html', {'user': request.user, 'images': images})
+
 

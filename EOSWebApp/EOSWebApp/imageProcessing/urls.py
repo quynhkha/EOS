@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^update-mask/$', views.update_mask, name='update-mask'),
     url(r'^noise-removal/$', views.noise_removal, name='noise-removal'),
     url(r'^save-processed/$', views.save_processed, name='save-processed'),
-    url(r'^delete-image/(?P<image_id>[0-9]+)/$', views.delete_image, name='delete-image'),
+
     #
     # url(r'^fourier/$', views.do_fourier, name='fourier'),
     # url(r'^backproj/$', views.do_backproj, name='backproj'),
