@@ -151,12 +151,12 @@ class StateData:
             self.s_pointer = len(self.s_img_hist_ids) - 2 # ignore the original image on top
         print('pointer position', self.s_pointer)
 
-    def reset(self):
-        self.delete_hist_imgs()
-        self.s_img_cur_id = 0
-        self.s_img_mask_id = 0
-        self.s_img_hist_ids = []
-        self.s_pointer = 1
+    # def reset(self):
+    #     self.s_img_cur_id = self.s_img_hist_ids[-1]
+    #     self.delete_hist_imgs()
+    #     self.s_img_mask_id = 0
+    #     self.s_img_hist_ids = [self.s_img_cur_id]
+    #     self.s_pointer = 1
 
     def delete_hist_imgs(self):
         for img_id in self.s_img_hist_ids:
@@ -167,9 +167,7 @@ class StateData:
                 temp_image.delete()
                 temp_mask.delete()
             except:
-                raise
-
-
+                pass
 
 
 # class StateImage:

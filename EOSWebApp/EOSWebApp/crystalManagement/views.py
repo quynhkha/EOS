@@ -27,6 +27,26 @@ def library_page(request):
 
 # TODO: delete images, thumbnails, masks
 
+@csrf_exempt
+def crystal_detail_page(request, mask_id):
+    if not request.user.is_authenticated():
+        return render(request, 'user/login.html')
+    else:
+        mask_id = int(mask_id)
+        _, image_cv, mask_cv = get_image_mask(mask_id)
+        _, ori_img_data = cv_to_json(image_cv, False)
+
+        crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
+        _, crys_img_data = cv_to_json(crystal_cv, False)
+
+
+        crystal_mask = CrystalMask.objects.get(pk=mask_id)
+        crystals = Crystal.objects.filter(mask=crystal_mask)
+
+        return render_to_response('crystalManagement/crystal_detail.html', {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'crystals': crystals })
+
+
+
 #TODO: use compressed image
 @csrf_exempt
 def crystal_processing_page(request):

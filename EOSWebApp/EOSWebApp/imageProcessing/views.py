@@ -80,9 +80,9 @@ def undo(request):
 
 @csrf_exempt
 def reset(request):
-
-    json_data = s_reset(request)
-    return JsonResponse(json_data)
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+    state_data.delete_hist_imgs()
+    return processing_page(request, request.session['image_id'])
 
 
 @csrf_exempt

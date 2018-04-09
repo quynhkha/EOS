@@ -526,11 +526,6 @@ $("#btn_extract_top_crystal").click(function (e) {
 //     do_ajax_get(e, '/max-crystal/');
 // });
 
-
-$("#btn_reset").click(function (e) {
-    do_ajax_get(e, '/reset/', {'update_image': true});
-});
-
 $("#btn_base64").click(function (e) {
     do_ajax_get(e, '/base64/', {'update_image': true});
 });
@@ -564,7 +559,7 @@ set_click_ability([ctrlToCrysProcess], false);
 // });
 
 
-/************ UNDO/RESET ************************/
+/************ UNDO *********************/
 function reset_func_setting(data) {
     func_setting = data['func_setting'];
     if (data['func_setting'] != "") {
@@ -720,7 +715,7 @@ function trackDrag(onMove, onEnd) {
     addEventListener("mouseup", end);
 }
 
-tools.Line = function (event, cx, onEnd) {
+tools.Brush = function (event, cx, onEnd) {
     cx.lineCap = "round";
 
     var pos = relativePos(event, cx.canvas);
@@ -733,7 +728,7 @@ tools.Line = function (event, cx, onEnd) {
     }, onEnd);
 };
 
-tools.Erase = function (event, cx) {
+tools.Eraser = function (event, cx) {
     cx.globalCompositeOperation = "destination-out";
     tools.Line(event, cx, function () {
         cx.globalCompositeOperation = "source-over";
@@ -748,7 +743,7 @@ controls.option = function (cx) {
     // });
     // return elt("span", null, "Color: ", input);
     var input = elt("select");
-    var options = {'add': 'rgb(0, 255, 0)', 'remove': 'rgb(255, 64, 64)'};
+    var options = {'Add': 'rgb(0, 255, 0)', 'Remove': 'rgb(255, 64, 64)'};
     for (option in options) {
 
         input.appendChild(elt("option", {value: options[option]}, option));

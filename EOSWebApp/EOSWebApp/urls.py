@@ -23,7 +23,9 @@ urlpatterns = [
     url(r'^', include('EOSWebApp.imageProcessing.urls')),
     url(r'^', include('EOSWebApp.user.urls')),
     url(r'^', include('EOSWebApp.crystalManagement.urls')),
-    url(r'^', include('EOSWebApp.uploadImage.urls'))
+    url(r'^', include('EOSWebApp.uploadImage.urls')),
+    # for session timeout
+url(r'session_security/', include('session_security.urls')),
 ]
 
 if settings.DEBUG:

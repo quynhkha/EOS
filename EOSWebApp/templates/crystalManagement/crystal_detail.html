@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/processing_page.css' %}">
+{% endblock %}
+
+{% block title %}Crystal Details {% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="header">
+            <h2 class="text-center">Crystal Details</h2>
+            <input hidden id="mask_id" value= {{ mask_id }}>
+        </div>
+
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" href="#image-sec">Images</a>
+                    </h2>
+                </div>
+                <div id="image-sec" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-5">
+                                <h3 class="text-center">Original Image</h3>
+                                <img id="image" class="img-fluid centered"
+                                     src="data:image/jpeg;charset=utf-8;base64,{{ ori_img_data }}">
+                            </div>
+
+                            <div class="col-lg-5 col-lg-offset-1">
+                                <h3 class="text-center">Crystal Image</h3>
+                                <img id="image" class="img-fluid centered"
+                                     src="data:image/jpeg;charset=utf-8;base64,{{ crys_img_data }}">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" href="#conf-table-sec">Crystal details</a>
+                    </h2>
+                </div>
+                <div id="conf-table-sec" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row" style="margin-top: 100px;">
+                            <h3 class="text-center">Result table </h3>
+                            <div class="table-responsive">
+                                <table class="table text-center " style="overflow: auto; ">
+                                    {#                column name#}
+
+                                    <tr>
+                                        <th class="text-center">Crystal name</th>
+                                        <th class="text-center">Pixel area</th>
+                                        <th class="text-center">Real area</th>
+
+                                    </tr>
+
+                                    {% for crystal in crystals %}
+                                        <tr>
+                                            <td>
+                                                <button type="button"
+                                                        class="btn_modal_show_individual_crystal"
+                                                        data-toggle="modal" data-target="#showCrystal"
+                                                        value={{crystal.id }}>
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                    {{ crystal.name }}
+                                                </button>
+                                            </td>
+                                            <td>{{ crystal.pixel_area }} (pixel<sup>2</sup>)</td>
+                                            <td>{{ crystal.real_area}} (<span>&#181;</span>m<sup>2</sup>)</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+            </div>
+
+
+            <div id="showCrystal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;
+                            </button>
+                            <h4 class="modal-title" id="modal-crystal-name"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <img id="modal-crystal-img" class="centered"
+                                         width="100%"
+                                         src="">
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="{% static 'js/library_page.js' %}"></script>
+    <script src="{% static 'js/crystal_processing.js' %}"></script>
+
+{% endblock %}

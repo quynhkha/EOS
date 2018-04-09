@@ -124,20 +124,6 @@ def s_undo(request):
 
     return json_data
 
-def s_reset(request):
-    state_data = get_state_data(temp_data_arr, request.session['image_id'])
-
-    state_data.s_img_cur_id = state_data.s_img_hist_ids[-1]
-    state_data.s_img_hist_ids = []
-
-    state_data.s_pointer = 1
-    state_data.s_img_hist_ids.append(state_data.s_img_cur_id)
-    print("---reset--- img_cur_id: ", state_data.s_img_cur_id)
-
-    json_data = get_thumbnail_plus_img_json(state_data)
-
-    return json_data
-
 def s_show_all_crystal(request):
     state_data =get_state_data(temp_data_arr, request.session['image_id'])
 
@@ -394,7 +380,7 @@ def s_update_mask(request):
     rgb_mask = json_to_cv(rgb_mask_data)
 
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
-    image_cv, mask_cv = ps_func.handle_mask(rgb_mask, state_data.get_cur_image_cv(), state_data.get_ori_image_cv())
+    image_cv, mask_cv = ps_func.handle_mask(rgb_mask, state_data.get_temp_mask_cv(state_data.s_img_mask_id), state_data.get_ori_image_cv())
 
 
     func_name = get_func_name()

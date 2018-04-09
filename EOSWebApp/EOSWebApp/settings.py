@@ -39,6 +39,13 @@ USE_TZ = True
 # temp = TempData()
 # Application definition
 
+# SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 10 # set just 10 seconds to test
+# SESSION_IDLE_TIMEOUT = 10
+# SESSION_SAVE_EVERY_REQUEST = True
+SESSION_SECURITY_WARN_AFTER = 1000
+SESSION_SECURITY_EXPIRE_AFTER = 20000
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'session_security',
 
     # local apps
     'EOSWebApp.imageProcessing',
@@ -63,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'session_security.middleware.SessionSecurityMiddleware',
+    # 'EOSWebApp.imageProcessing.middleware.SessionIdleTimeout',
 ]
 
 ROOT_URLCONF = 'EOSWebApp.urls'
