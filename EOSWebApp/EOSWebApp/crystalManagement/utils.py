@@ -4,7 +4,7 @@ import cv2
 from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.imageProcessing.models import CrystalMask
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
-from EOSWebApp.utils import IMAGE_URL, TEMP_DIR, absolute_file_dir
+from EOSWebApp.utils import IMAGE_URL, TEMP_ZIP_FILE, absolute_file_dir
 
 ps_func = ProcessingFunction()
 class HistObj:

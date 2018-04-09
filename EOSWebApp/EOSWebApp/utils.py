@@ -11,7 +11,7 @@ IMAGE_URL = '/media/images/'
 THUMBNAIL_URL = '/media/thumbnails/'
 CRYSTAL_MASK_URL = '/media/masks/'
 CRYSTAL_URL = '/media/crystals/'
-TEMP_DIR = '/home/long/EOSImages/'
+TEMP_ZIP_FILE = '/media/EOSImage.zip'
 PERFORMANCE_TEST = True
 
 class SharedData:

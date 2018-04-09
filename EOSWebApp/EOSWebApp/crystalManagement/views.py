@@ -1,5 +1,6 @@
 import zipfile
 import cv2
+import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.views.decorators.csrf import csrf_exempt
@@ -8,8 +9,9 @@ from EOSWebApp.crystalManagement.models import Crystal
 from EOSWebApp.crystalManagement.utils import get_image_mask, HistProcessing
 from EOSWebApp.imageProcessing.processingFunc.crystal_extractor import ProcessingFunction
 from EOSWebApp.imageProcessing.models import UploadedImage, CrystalMask
+from EOSWebApp.settings import BASE_DIR, PROJECT_ROOT
 
-from EOSWebApp.utils import IMAGE_URL, TEMP_DIR, timing, cv_to_json, absolute_file_dir
+from EOSWebApp.utils import IMAGE_URL, TEMP_ZIP_FILE, timing, cv_to_json, absolute_file_dir
 
 ps_func = ProcessingFunction()
 hist_objs = [] #TODO: multiple users problem
@@ -105,18 +107,20 @@ def plot_histogram(request, mask_id=0):
 def download_crystal(request, mask_id=0):
     #TODO: try except, clear temp dir, save zip to media
 
-    mask, image_cv, mask_cv = get_image_mask(mask_id)
-    # crystal_cv = ps_func.show_all_crystal(image_cv, mask_cv)
-    file_infos,_, _= ps_func.save_crystals_to_file(mask.name, TEMP_DIR, image_cv, mask_cv)
-    #TODO: seperate to download and create crystal
+    mask_id = int(mask_id)
+    crystal_mask = CrystalMask.objects.get(pk=mask_id)
+    crystals = Crystal.objects.filter(mask=crystal_mask)
 
     #TODO: choose correct dir to zip
-    zf = zipfile.ZipFile('/home/long/EOSImages.zip', "w")
-    for (file_dir, file_name) in file_infos:
-        zf.write(file_dir, file_name)
+    zip_image_file= PROJECT_ROOT + TEMP_ZIP_FILE
+    print (zip_image_file)
+
+    zf = zipfile.ZipFile(zip_image_file, "w")
+    for crystal in crystals:
+        zf.write(crystal.crystal.path, crystal.name)
     zf.close()
 
-    zip_file = open('/home/long/EOSImages.zip', 'rb')
+    zip_file = open(zip_image_file, 'rb')
     response = HttpResponse(zip_file, content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="%s"' % 'EOSImages.zip'
     return response
