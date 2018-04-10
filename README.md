@@ -47,7 +47,7 @@ More precisely, modify this file "opencv-3.1.0/modules/cudalegacy/src/graphcuts.
 
 Django Session security
 ```
-pip install django-session-security
+pip3 install django-session-security
 ```
 
 Postgresql database
@@ -58,7 +58,7 @@ sudo apt-get install postgresql postgresql-contrib
 
 Django Postgresql
 ```
-pip install psycopg2
+pip3 install psycopg2
 ```
 
 ### Initial setup
