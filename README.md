@@ -7,8 +7,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 
 ### Prerequisites
+```
 Ubuntu 14.04 
 Python >3.4
+```
 
 ### Installing
 
