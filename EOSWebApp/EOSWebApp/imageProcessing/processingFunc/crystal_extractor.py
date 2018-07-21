@@ -4,6 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from skimage import measure
 from scipy import ndimage
+from scipy.stats import norm 
+from sklearn.cluster import k_means
 import argparse
 import sys
 
@@ -292,6 +294,9 @@ class ProcessingFunction:
         image = cv2.imread(image_dir)
         return image
 
+    def reverse_color_func(self, current_image):
+        return self.seg.two_channel_grayscale((255. - current_image).astype('uint8'))
+
     def laplacian_func(self, current_image):
         return self.seg.laplacian(current_image, output_dim=2)
 
@@ -359,7 +364,7 @@ class ProcessingFunction:
         removed_noise_mask = self.seg.remove_small_components(mask, 8, area_thresh)
         return removed_noise_mask
 
-    def plot_histogram(self, image, image_mask=None):
+    def plot_pixel_histogram(self, image, image_mask=None):
         if image_mask is not None:
             mask = copy.copy(image_mask)
             mask = self.seg.two_channel_grayscale(mask)
@@ -372,6 +377,17 @@ class ProcessingFunction:
         # plt.show()
         hist_y_axis = np.reshape(hist_with_mask, 256)
         hist_x_axis = np.arange(0,256) # create array of 0->255
+        return hist_y_axis, hist_x_axis
+
+    def plot_area_histogram(self, image_cv, crystals):
+        
+        pixel_areas = [crystal.pixel_area for crystal in crystals]
+        step = (max(pixel_areas) - min(pixel_areas)) // len(pixel_areas)
+        hist_x_axis = np.arange(min(pixel_areas), max(pixel_areas) + step, step)
+        hist_y_axis = np.zeros_like(hist_x_axis)
+        for i, x in enumerate(hist_x_axis):
+            hist_y_axis[i] = len([i for i in pixel_areas if abs(x - i) <= step])
+
         return hist_y_axis, hist_x_axis
 
     def closing(self, image, kernel_size, num_of_iter):
@@ -431,6 +447,10 @@ class ProcessingFunction:
         file_infos = []
         crystal_datas = []
         crystal_areas = []
+        crystal_mean = []
+        crystal_standard_deviation = []
+        crystal_height = []
+        crystal_width = []
         #TODO: improve efficiency
         for i in range(0, len(fg_stats)):
             stat = fg_stats[i]
@@ -450,15 +470,23 @@ class ProcessingFunction:
             image_w_only_crystal[crystal_mask!=255] = 255
 
             crystal = image_w_only_crystal[y:y+height, x:x+width]
-
+            data = np.ravel(crystal)
+            mean, standard_deviation = norm.fit(data[data != 255])
             file_name = name_prefix+"_"+str(i)+'.png'
-            file_dir = dir+file_name
+            file_dir = dir + file_name
             file_infos.append((file_dir, file_name))
             cv2.imwrite(file_dir, crystal)
-
+            crystal_mean.append(mean)
+            crystal_standard_deviation.append(standard_deviation)
+            crystal_height.append(height)
+            crystal_width.append(width)
             crystal_areas.append(area)
             crystal_datas.append(crystal)
-        return file_infos, crystal_datas, crystal_areas
+
+        data_to_group = np.array(list(zip(crystal_mean, crystal_standard_deviation, crystal_areas)))
+        centroids, labels, inertia = min([k_means(X=data_to_group, n_clusters=i) for i in range(1, data_to_group.shape[0])], key=lambda x: x[2])
+
+        return file_infos, crystal_datas, crystal_areas, crystal_height, crystal_width, crystal_mean, crystal_standard_deviation, centroids, labels, inertia
 
     # def fill_holes(self, original_image, image_mask, lo, hi, flags):
     #     img_floodfill = copy.copy(image_mask)
@@ -484,7 +512,6 @@ class ProcessingFunction:
     #     filled_image[filled_mask == 0] = 255
     #
     #     return filled_mask, filled_image
-
 
     def fill_holes(self, original_image, image_mask):
         img_floodfill = copy.copy(image_mask)

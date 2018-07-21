@@ -72,6 +72,11 @@ def upper_thresholding_black(request):
     return JsonResponse(json_data, safe=False)
 
 @csrf_exempt
+def reverse_color(request):
+    json_data = s_reverse_color(request)
+    return JsonResponse(json_data, safe=False)
+
+@csrf_exempt
 def undo(request):
 
     json_data = s_undo(request)

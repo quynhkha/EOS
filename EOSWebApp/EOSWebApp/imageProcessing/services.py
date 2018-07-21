@@ -14,6 +14,7 @@ CRYSTAL_DIR = '/home/long/EOS/'
 def s_laplacian(request):
     state_data = get_state_data(temp_data_arr, request.session['image_id'])
     image_cv = ps_func.laplacian_func(state_data.get_cur_image_cv())
+
     func_name = get_func_name()
     update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
     json_data = get_thumbnail_plus_img_json(state_data)
@@ -109,6 +110,16 @@ def s_upper_thresholding_black(request):
     update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv, func_setting= func_setting)
     json_data = get_thumbnail_plus_img_json(state_data)
 
+    return json_data
+
+def s_reverse_color(request):
+    state_data = get_state_data(temp_data_arr, request.session['image_id'])
+    image_cv = ps_func.reverse_color_func(state_data.get_cur_image_cv())
+    import pdb
+    pdb.set_trace()
+    func_name = get_func_name()
+    update_state_data(state_data=state_data, func_name=func_name, image_cv=image_cv)
+    json_data = get_thumbnail_plus_img_json(state_data)
     return json_data
 
 def s_undo(request):
@@ -293,19 +304,26 @@ def s_save_processed(request):
     # for (file_dir, file_name) in file_infos:
     #     crystal = Crystal.objects.create(mask=mask, name=file_name, dir=file_dir)
     #     crystal.save()
-    _, crystal_datas, crystal_areas = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
+    _, crystal_datas, crystal_areas, crystal_height, crystal_width, crystal_mean, crystal_standard_deviation, 
+    centroids, labels, inertia = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
                                                      state_data.get_temp_mask_cv(state_data.s_img_mask_id))
-
+    
     for i, crystal_data in enumerate(crystal_datas):
+        
         crystal = Crystal()
 
         # round to 2 decimal place
         pixel_area = round(float(crystal_areas[i]), 2)
         dist_per_pixel = image.dist_per_pixel
-        real_area = round(pixel_area* dist_per_pixel * dist_per_pixel, 2)
+        real_area = round(pixel_area * dist_per_pixel * dist_per_pixel, 2)
+        mean = crystal_mean[i]
+        standard_deviation = crystal_standard_deviation[i]
+        height = crystal_height[i]
+        width = crystal_width[i]
 
         crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data,
-                     pixel_area= pixel_area, real_area = real_area)
+                     pixel_area=pixel_area, real_area=real_area, mean=mean, standard_deviation=standard_deviation, 
+                     height=height, width=width)
     json_data = {'mask_id': crystal_mask.id}
     return json_data
 

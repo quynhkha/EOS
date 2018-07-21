@@ -867,3 +867,44 @@ function setCanvasWrapperSize() {
     canvasWrapper.style.height = canvasWrapperHeight.toString() + 'px';
 
 }
+
+function FindPosition(oElement)
+{
+  if(typeof( oElement.offsetParent ) != "undefined")
+  {
+    for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+    {
+      posX += oElement.offsetLeft;
+      posY += oElement.offsetTop;
+    }
+      return [ posX, posY ];
+    }
+    else
+    {
+      return [ oElement.x, oElement.y ];
+    }
+}
+
+function GetPixel(e)
+{
+    var img = new Image();
+    img.src = "data:image/jpeg;charset=utf-8;base64,{{ image_data }}";
+    var ctx = myCanvas.getContext("2d");
+    img.onload = function(){
+        ctx.drawImage(img, 0, 0);
+        img.style.display = 'none';
+    };
+    function pick(event){
+        var x = event.layerX;
+        var y = event.layerY;
+        var pixel = ctx.getImageData(x, y, 1, 1);
+        var data = pixel.data;
+        document.getElementById("pixel_intensity").innerHTML = data[0];
+    }
+    myCanvas.addEventListener('mousemove', pick);
+}
+
+function ResetPixel(e)
+{
+    document.getElementById("pixel_intensity").innerHTML = "";
+}

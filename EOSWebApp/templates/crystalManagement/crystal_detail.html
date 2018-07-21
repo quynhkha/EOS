@@ -56,11 +56,13 @@
                                 <table class="table text-center " style="overflow: auto; ">
                                     {#                column name#}
 
-                                    <tr>
+                                    <tr>                                        
                                         <th class="text-center">Crystal name</th>
+                                        <th class="text-center">Mean</th>
+                                        <th class="text-center">Standard deviation</th>
                                         <th class="text-center">Pixel area</th>
                                         <th class="text-center">Real area</th>
-
+                                        <th class="text-center">Height, Width (pixel)</th>
                                     </tr>
 
                                     {% for crystal in crystals %}
@@ -74,9 +76,11 @@
                                                     {{ crystal.name }}
                                                 </button>
                                             </td>
+                                            <td>{{crystal.mean}}</td>
+                                            <td>{{crystal.standard_deviation}}</td>
                                             <td>{{ crystal.pixel_area }} (pixel<sup>2</sup>)</td>
                                             <td>{{ crystal.real_area}} (<span>&#181;</span>m<sup>2</sup>)</td>
-
+                                            <td>{{crystal.height}}, {{crystal.width}}</td>
                                         </tr>
                                     {% endfor %}
                                 </table>

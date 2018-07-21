@@ -32,7 +32,7 @@
                     <div id="imageView">
 
                         <img id="image" class="img-fluid centered"
-                             src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" hidden>
+                             src="data:image/jpeg;charset=utf-8;base64,{{ image_data }}" hidden >
                         <p id="temp-index" hidden>{{ temp_index }}</p>
 
                     </div>
@@ -49,7 +49,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" href="#pro-1">Processing 1</a>
+                                    <a data-toggle="collapse" href="#pro-1">Whiten Filtering</a>
                                 </h2>
                             </div>
                             <div id="pro-1" class="panel-collapse collapse">
@@ -81,7 +81,7 @@
 
                                     <div class="form-group row">
                                         <div class="col-lg-5">
-                                            <label class="control-label"> Lower threshold</label>
+                                            <label class="control-label"> Lower threshold </label>
                                         </div>
                                         <div class="col-lg-5">
                                             <input id="slider-lower-thresh-white" type="range" min="1" max="255"
@@ -123,7 +123,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" href="#pro-2">Processing 2</a>
+                                    <a data-toggle="collapse" href="#pro-2">Blacken Filtering</a>
                                 </h2>
                             </div>
                             <div id="pro-2" class="panel-collapse collapse">
@@ -489,7 +489,13 @@
                         </div>
                     </div>
 
-
+                    <div class="form-group row">
+                        <div class="col-lg-2">
+                            <button id="btn_reverse_color" type="button" class="btn btn-primary">
+                                Reverse color
+                            </button>
+                        </div>
+                    </div>
                     {#Undo, Reset, Save#}
                     <div class="form-group row">
                         <div class="col-lg-2">
@@ -511,7 +517,12 @@
                             </button>
                         </div>
                     </div>
-
+                    <div class="blocktext">
+                        <p>
+                            "Pixel intensity: "
+                            <span id="pixel_intensity"></span>
+                        </p>
+                    </div>
                     <div class="form-group row">
                         <div class="col-lg-2">
                             <form action="{% url 'crystalManagement:crystal-processing-page' %}"
@@ -589,4 +600,41 @@
     <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
     <script src="{% static 'js/jquery.elevatezoom.js' %}"></script>
     <script>initPaint(document.getElementById('canvas-wrapper'));</script>
+<!--     <script>
+        var myCanvas = document.getElementById("canvas-main");
+        
+        var img = new Image();
+        img.src = "data:image/jpeg;charset=utf-8;base64,{{ image_data }}";
+        var ctx = myCanvas.getContext("2d");
+        img.onload = function(){
+            ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
+            img.style.display = 'none';
+        };
+        function pick(event){
+            var x = event.layerX;
+            var y = event.layerY;
+            var pixel = ctx.getImageData(x, y, 1, 1);
+            var data = pixel.data;
+            document.getElementById("pixel_intensity").innerHTML = data[0];
+        }
+
+        function drop(event){
+            document.getElementById("pixel_intensity").innerHTML = "";
+        }
+
+        function click(event){
+            var x = event.layerX;
+            var y = event.layerY;
+            var pixel = ctx.getImageData(x, y, 1, 1);
+            var data = pixel.data;
+            document
+        }
+
+        myCanvas.addEventListener('mousemove', pick);
+        myCanvas.addEventListener('mouseout', drop);
+
+    </script>
+    <script>
+
+    </script> -->
 {% endblock %}

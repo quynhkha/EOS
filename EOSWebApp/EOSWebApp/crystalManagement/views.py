@@ -97,10 +97,27 @@ def gen_crystal_processing_result(request):
 
 # Compare
 @csrf_exempt
-def plot_histogram(request, mask_id=0):
+def plot_pixel_histogram(request, mask_id=0):
+
+    print(mask_id)
     _, image_cv, mask_cv = get_image_mask(mask_id)
-    hist_y_axis, hist_x_axis = ps_func.plot_histogram(image_cv, mask_cv)
+    hist_y_axis, hist_x_axis = ps_func.plot_pixel_histogram(image_cv, mask_cv)
     json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
+
+    return JsonResponse(json_data)
+
+@csrf_exempt
+def plot_area_histogram(request, mask_id=0):
+
+    _, image_cv, mask_cv = get_image_mask(mask_id)
+    mask_id = int(mask_id)
+    crystal_mask = CrystalMask.objects.get(pk=mask_id)
+    crystals = Crystal.objects.filter(mask=crystal_mask)
+
+
+    hist_y_axis, hist_x_axis = ps_func.plot_area_histogram(image_cv, crystals)
+    json_data = {'x': hist_x_axis.tolist(), 'y': hist_y_axis.tolist()}
+
     return JsonResponse(json_data)
 
 @csrf_exempt

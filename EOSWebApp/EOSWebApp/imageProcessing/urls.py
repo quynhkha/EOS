@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^upper-thresholding-black/$', views.upper_thresholding_black, name='upper-thesholding-black'),
     url(r'^kmeans/$', views.kmeans, name='kmeans'),
     url(r'^laplacian/$', views.laplacian, name='laplacian'),
+    url(r'^reverse_color/$', views.reverse_color, name='reverse_color'),
     url(r'^undo/$', views.undo, name="undo"),
     url(r'^fill-holes/$', views.fill_holes, name="fill-holes"),
 

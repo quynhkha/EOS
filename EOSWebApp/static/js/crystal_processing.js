@@ -67,7 +67,7 @@ var truncated_hist = {};
 var composition_hist = {};
 
 // var truncated_hist = {};
-function plot_histogram(data) {
+function plot_pixel_histogram(data) {
 
     original_hist = {x: data["x"], y: data["y"]};
     console.log(original_hist);
@@ -79,7 +79,22 @@ function plot_histogram(data) {
         // {#                y: [10,11,12],#}
         type: 'bar'
     }];
-    Plotly.newPlot('histogram', hist_data);
+    Plotly.newPlot('pixel_histogram', hist_data);
+}
+
+function plot_area_histogram(data) {
+
+    original_hist = {x: data["x"], y: data["y"]};
+    console.log(original_hist);
+
+    var hist_data = [{
+        x: data["x"],
+        y: data["y"],
+        // {#                x: [1,2,3],#}
+        // {#                y: [10,11,12],#}
+        type: 'bar'
+    }];
+    Plotly.newPlot('area_histogram', hist_data);
 }
 
 function plot_truncated_histogram(data, min_thresh, max_thresh) {
@@ -200,15 +215,33 @@ function plot_composition(data, a, b) {
 }
 
 
-$("#btn_histogram").click(function (e) {
+$("#btn_pixel_histogram").click(function (e) {
      e.preventDefault();
        mask_id = $(this).val();
     $.ajax({
         type: "GET",
-        url: "/histogram/" + mask_id.toString() + "/" ,
+        url: "/pixel_histogram/" + mask_id.toString() + "/" ,
 
         success: function (data) {
-            plot_histogram(data);
+            plot_pixel_histogram(data);
+            console.log(data);
+        },
+        error: function (data) {
+            console.log(data);
+            alert('error');
+        }
+    });
+});
+
+$("#btn_area_histogram").click(function (e) {
+     e.preventDefault();
+       mask_id = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "/area_histogram/" + mask_id.toString() + "/" ,
+
+        success: function (data) {
+            plot_area_histogram(data);
             console.log(data);
         },
         error: function (data) {

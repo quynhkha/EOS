@@ -13,20 +13,30 @@ class Crystal(models.Model):
     crystal =  models.ImageField(upload_to="crystals/", null=True)
     pixel_area = models.IntegerField(null=True)
     real_area = models.IntegerField(null=True)
+    mean = models.DecimalField(null=True, max_digits=5, decimal_places=2)
+    standard_deviation = models.DecimalField(null=True, max_digits=5, decimal_places=2)
+    height = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
     # dir = models.CharField(max_length=255, blank=True)
     #
     # @classmethod
     # def create(cls, mask, name, crystal_dir):
     #     return cls(mask=mask, name=name, crystal_dir=crystal_dir)
 
-    def save(self, mask = None, name=None, crystal_data = None, pixel_area = None, real_area = None):
+    def save(self, mask=None, name=None, crystal_data=None, pixel_area=None, real_area=None, mean=None, \
+                standard_deviation=None, height=None, width=None):
         if crystal_data is not None:
             self.mask = mask
             self.name = name
             self.pixel_area = pixel_area
             self.real_area = real_area
+            self.mean = mean
+            self.standard_deviation = standard_deviation
+            self.height = height
+            self.width = width
+            self.shape = (height, width)
             crystal_bytesIO = cv_to_bytesIO(crystal_data, format="PNG")
-            self.crystal.save(name+'.png', content=ContentFile(crystal_bytesIO.getvalue()), save=False)
+            self.crystal.save(name + '.png', content=ContentFile(crystal_bytesIO.getvalue()), save=False)
         super(Crystal, self).save()
 
     def delete(self):
