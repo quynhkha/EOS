@@ -1,15 +1,21 @@
 FROM python:3.5
 
-WORKDIR /home/EOS/EOSWebApp
 COPY requirements.txt ./
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
                       postgresql \
                       postgresql-contrib \
                    && pip install --upgrade pip \
-                   && pip install -r requirements.txt \
+                   && pip install -r \
+                          Pillow==5.1.0 \
+                          django==1.11.2 \
+                          numpy==1.14.5 \
+                          scipy==1.1.0 \
+                          scikit-learn \
+                          matplotlib==2.2.2 \
+                          opencv-python \
+                          django-session-security \
+                          psycopg2 \
                    && rm -rf /var/lib/apt/list/*
                    
-COPY . .
-
 EXPOSE 8000                      
