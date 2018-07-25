@@ -1,12 +1,10 @@
 FROM python:3.5
 
-COPY requirements.txt ./
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
                       postgresql \
                       postgresql-contrib \
                    && pip install --upgrade pip \
-                   && pip install -r \
+                   && pip install \
                           Pillow==5.1.0 \
                           django==1.11.2 \
                           numpy==1.14.5 \
