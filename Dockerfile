@@ -10,10 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                           numpy==1.14.5 \
                           scipy==1.1.0 \
                           scikit-learn \
+                          scikit-image \
                           matplotlib==2.2.2 \
                           opencv-python \
                           django-session-security \
                           psycopg2 \
                    && rm -rf /var/lib/apt/list/*
                    
-EXPOSE 8000                      
+EXPOSE 8000
+EXPOSE 5432
