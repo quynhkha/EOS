@@ -29,7 +29,7 @@ SECRET_KEY = '!(fia^9g*f97$b^cmvzuli1!h57==(-b@$&6j1k^fdn04&(o-6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['155.69.160.73', 'localhost', '10.27.66.6', '127.0.0.1', '10.27.87.176']
+ALLOWED_HOSTS = ['*']
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 USE_TZ = True
 # TIME_ZONE = 'SG'
@@ -114,12 +114,11 @@ WSGI_APPLICATION = 'EOSWebApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'eos_master',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'petitdino1110',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
