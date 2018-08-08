@@ -1,7 +1,7 @@
 import cv2
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
-from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile, File
 from django.db import models
 from django.utils import timezone
 
@@ -17,17 +17,22 @@ class CrystalMask(models.Model):
     name = models.CharField(max_length=255, default="no name")
     uploaded_at = models.DateTimeField(default=timezone.now)
     # mask_dir = models.CharField(max_length=255, blank=True)
-
+    cluster = models.FileField(upload_to='csv/', null=True)
     # @classmethod
     # def create(cls, image, mask_dir):
     #     return cls(image=image, mask_dir=mask_dir)
-    def save(self, image=None, name=None, mask_data=None):
+    def save(self, image=None, csv_data=None,name=None, mask_data=None):
         if mask_data is not None:
             self.image = image
             self.name = name
             mask_full_name = name + "_mask.png"
+            csv_full_name = name + '_3d_clustering.csv'
             mask_bytesIO = cv_to_bytesIO(mask_data, format="PNG")
             self.mask.save(mask_full_name, content=ContentFile(mask_bytesIO.getvalue()), save=False)
+            csv_data.to_csv(csv_full_name)
+            file = open(csv_full_name)
+            self.cluster.save(csv_full_name, content=File(file))
+            print(self.cluster.path)
 
         super(CrystalMask, self).save()
 

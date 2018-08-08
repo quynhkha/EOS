@@ -7,6 +7,9 @@ from EOSWebApp.imageProcessing.utils import get_state_data, update_state_data, g
 from EOSWebApp.utils import shared_data, get_func_name, compress_image, cv_to_json, absolute_file_dir, CRYSTAL_MASK_URL, \
     json_to_cv
 import numpy as np
+import pandas as pd 
+from sklearn.cluster import KMeans
+from django.core.files.base import File
 
 ps_func = ProcessingFunction()
 temp_data_arr = shared_data.temp_data_arr
@@ -295,18 +298,24 @@ def s_save_processed(request):
     # cv2.imwrite(mask_dir, temp.s_mask_cur.img_data)
     # mask = CrystalMask.objects.create(name= crystal_name, image = image, mask_dir = mask_dir)
     # mask.save()
+    img_height, img_width = state_data.get_ori_image_cv().shape[:2]
     image = state_data.get_ori_image()
+    file_infos, crystal_datas, crystal_areas, crystal_height, crystal_width, crystal_mean, crystal_standard_deviation, centroids, labels, inertia = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
+                                                     state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+
+    df = pd.DataFrame(data=np.array(crystal_mean) / 255., columns=['Mean'])
+    df['Standard Deviation'] = np.array(crystal_standard_deviation) / 255.
+    df['Pixel Area'] = np.array(crystal_areas) / img_height / img_width 
+
     crystal_mask = CrystalMask()
-    crystal_mask.save(image=image, name=crystal_name, mask_data=state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+    crystal_mask.save(image=image, csv_data=df, name=crystal_name, mask_data=state_data.get_temp_mask_cv(state_data.s_img_mask_id))
 
 
     # file_infos = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, temp.s_img_ori.img_data, temp.s_mask_cur.img_data)
     # for (file_dir, file_name) in file_infos:
     #     crystal = Crystal.objects.create(mask=mask, name=file_name, dir=file_dir)
     #     crystal.save()
-    _, crystal_datas, crystal_areas, crystal_height, crystal_width, crystal_mean, crystal_standard_deviation, 
-    centroids, labels, inertia = ps_func.save_crystals_to_file(crystal_name, CRYSTAL_DIR, state_data.get_ori_image_cv(),
-                                                     state_data.get_temp_mask_cv(state_data.s_img_mask_id))
+    
     
     for i, crystal_data in enumerate(crystal_datas):
         
@@ -324,6 +333,7 @@ def s_save_processed(request):
         crystal.save(mask=crystal_mask, name=crystal_name+"_"+str(i), crystal_data=crystal_data,
                      pixel_area=pixel_area, real_area=real_area, mean=mean, standard_deviation=standard_deviation, 
                      height=height, width=width)
+
     json_data = {'mask_id': crystal_mask.id}
     return json_data
 

@@ -93,6 +93,31 @@
                     </div>
                     <div class="panel-footer"></div>
                 </div>
+
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" href="#crys-cluster">Crystal Clusters</a>
+                    </h2>
+                </div>
+                <div id="crys-cluster" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="column">
+                                <div id="3d-cluster" style="width:100%; height:100%">
+                                </div>
+                            </div>
+
+                            <div class="column">
+                                    
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+
             </div>
 
 
@@ -140,5 +165,78 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="{% static 'js/library_page.js' %}"></script>
     <script src="{% static 'js/crystal_processing.js' %}"></script>
+    <script type="text/javascript">
+        var path = "{{csv_path}}"
+        Plotly.d3.csv(path, function(err, rows){
+            function unpack(rows, key){
+                return rows.map(function(row){return row[key];
+                });
+            }
+
+            var data = [{
+                x: unpack(rows, 'Mean'),
+                y: unpack(rows, 'Standard Deviation'),
+                z: unpack(rows, 'Pixel Area'),
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    color: 'rgb(23, 190, 207)',
+                    size: 3
+                }
+            },{
+                alphahull: 2,
+                opacity: 0.1,
+                type: 'mesh3d',
+                x: unpack(rows, 'Mean'),
+                y: unpack(rows, 'Standard Deviation'),
+                z: unpack(rows, 'Pixel Area')
+            }];
+
+            var layout = {
+                autosize: true,
+                height: 700,
+                scene: {
+                    aspectratio: {
+                        x: 1,
+                        y: 1,
+                        z: 1
+                    },
+                    camera: {
+                        center: {
+                            x: 0,
+                            y: 0,
+                            z: 0
+                        },
+                        eye: {
+                            x: 1.25,
+                            y: 1.25,
+                            z: 1.25
+                        },
+                        up: {
+                            x: 0,
+                            y: 0,
+                            z: 1
+                        }
+                    },
+                    xaxis: {
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    yaxis: {
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    zaxis: {
+                        type: 'linear',
+                        zeroline: false
+                    }
+                },
+                title: '3d point clustering',
+                width: 700
+            };
+
+            Plotly.newPlot('3d-cluster', data, layout);
+        });
+    </script>
 
 {% endblock %}

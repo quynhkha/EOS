@@ -45,7 +45,7 @@ def crystal_detail_page(request, mask_id):
         crystal_mask = CrystalMask.objects.get(pk=mask_id)
         crystals = Crystal.objects.filter(mask=crystal_mask)
 
-        return render_to_response('crystalManagement/crystal_detail.html', {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'crystals': crystals })
+        return render_to_response('crystalManagement/crystal_detail.html', {'ori_img_data': ori_img_data, 'crys_img_data': crys_img_data, 'crystals': crystals, 'csv_path': crystal_mask.cluster.url })
 
 
 

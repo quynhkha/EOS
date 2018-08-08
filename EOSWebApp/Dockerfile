@@ -11,6 +11,7 @@ RUN pip install --upgrade pip && pip --no-cache-dir install \
 	scipy \
 	scikit-learn \
 	scikit-image \
-	matplotlib
+	matplotlib \
+	pandas
 
 ADD . /code/
