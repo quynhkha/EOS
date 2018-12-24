@@ -115,10 +115,11 @@ WSGI_APPLICATION = 'EOSWebApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
+        'NAME': 'eosWebApp',
+        'USER': 'kha',
+        'HOST': 'localhost',
         'PORT': 5432,
+        'PASSWORD': 'eos12345',
     }
 }
 

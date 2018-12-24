@@ -1,3 +1,16 @@
+# version: '3'
+
+# services:
+#   db:
+#     image: postgres:10.1-alpine
+#   web:
+#     build: .
+#     command: python3 manage.py migrate --noinput
+#     command: python3 manage.py runserver 0.0.0.0:8888
+#     ports:
+#       - "8888:8888"
+#     depends_on:
+#       - db
 version: '3'
 
 services:
@@ -5,7 +18,6 @@ services:
     image: postgres:10.1-alpine
   web:
     build: .
-    command: python3 manage.py migrate --noinput
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -13,4 +25,3 @@ services:
       - "8000:8000"
     depends_on:
       - db
-
